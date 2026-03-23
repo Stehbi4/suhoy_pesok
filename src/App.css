@@ -226,3 +226,31 @@ button:active {
     animation-duration: 0.4s;
   }
 }
+
+/* Scroll-triggered animations */
+.animate-on-scroll {
+  opacity: 0;
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.animate-on-scroll.slide-in-right {
+  transform: translateX(150px);
+}
+
+.animate-on-scroll.slide-in-left {
+  transform: translateX(-150px);
+}
+
+.animate-on-scroll.fade-in-up {
+  transform: translateY(60px);
+}
+
+.animate-on-scroll.visible {
+  opacity: 1;
+  transform: translateX(0) translateY(0);
+}
+
+.animate-on-scroll.animation-delay-200 { transition-delay: 0.2s; }
+.animate-on-scroll.animation-delay-300 { transition-delay: 0.3s; }
+.animate-on-scroll.animation-delay-400 { transition-delay: 0.4s; }
+.animate-on-scroll.animation-delay-500 { transition-delay: 0.5s; }

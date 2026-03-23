@@ -231,7 +231,20 @@ export const products = [
     "fraction": "0,0-0,315 мм",
     "gost": "ГОСТ 8736-2014",
     "description": "Кварцевый песок фракции 0,0–0,315 мм — это мелкодисперсный природный минеральный материал, имеющий узкий фракционный состав. Состоит преимущественно из диоксида кремния, характеризуется высокой чистотой, однородностью гранулометрического состава и устойчивостью к внешним воздействиям.",
-    "image": "/img_fo_products/sent_01.jpg",
+    "images": {
+      "thumb": "/img_fo_products/0,0-0,315/thumb.jpg",
+      "main": "/img_fo_products/0,0-0,315/main.jpg",
+      "hero": "/img_fo_products/0,0-0,315/hero.jpg",
+      "gallery": [
+        "/img_fo_products/0,0-0,315/gallery_1.jpg",
+        "/img_fo_products/0,0-0,315/gallery_2.jpg",
+        "/img_fo_products/0,0-0,315/gallery_3.jpg",
+        "/img_fo_products/0,0-0,315/gallery_4.jpg",
+        "/img_fo_products/0,0-0,315/gallery_5.jpg"
+      ],
+      "bg": "/img_fo_products/0,0-0,315/bg.jpg",
+      "gradient": "/img_fo_products/0,0-0,315/gradient.jpg"
+    },
     "packaging": [
       "навал",
       "МКР (биг-бэг)"
@@ -295,7 +308,20 @@ export const products = [
     "fraction": "0,315-0,63 мм",
     "gost": "ГОСТ 8736-2014",
     "description": "Кварцевый песок фракции 0,315-0,63 мм — это мелкозернистый природный минеральный материал, имеющий узкий фракционный состав. Состоит преимущественно из диоксида кремния, характеризуется высокой чистотой, однородностью гранулометрического состава и устойчивостью к внешним воздействиям.",
-    "image": "/img_fo_products/sent_01.jpg",
+    "images": {
+      "thumb": "/img_fo_products/0,315-0,63/thumb.jpg",
+      "main": "/img_fo_products/0,315-0,63/main.jpg",
+      "hero": "/img_fo_products/0,315-0,63/hero.jpg",
+      "gallery": [
+        "/img_fo_products/0,315-0,63/gallery_1.jpg",
+        "/img_fo_products/0,315-0,63/gallery_2.jpg",
+        "/img_fo_products/0,315-0,63/gallery_3.jpg",
+        "/img_fo_products/0,315-0,63/gallery_4.jpg",
+        "/img_fo_products/0,315-0,63/gallery_5.jpg"
+      ],
+      "bg": "/img_fo_products/0,315-0,63/bg.jpg",
+      "gradient": "/img_fo_products/0,315-0,63/gradient.jpg"
+    },
     "packaging": [
       "навал",
       "МКР (биг-бэг)"
@@ -362,7 +388,20 @@ export const products = [
     "fraction": "0,0–0,63 мм",
     "gost": "ГОСТ 8736-2014",
     "description": "Кварцевый песок фракции 0,0–0,63 мм — это мелкозернистый природный минеральный материал. Состоит преимущественно из диоксида кремния, характеризуется высокой чистотой, однородностью гранулометрического состава и устойчивостью к внешним воздействиям.",
-    "image": "/img_fo_products/sent_01.jpg",
+    "images": {
+      "thumb": "/img_fo_products/0,0–0,63/thumb.jpg",
+      "main": "/img_fo_products/0,0–0,63/main.jpg",
+      "hero": "/img_fo_products/0,0–0,63/hero.jpg",
+      "gallery": [
+        "/img_fo_products/0,0–0,63/gallery_1.jpg",
+        "/img_fo_products/0,0–0,63/gallery_2.jpg",
+        "/img_fo_products/0,0–0,63/gallery_3.jpg",
+        "/img_fo_products/0,0–0,63/gallery_4.jpg",
+        "/img_fo_products/0,0–0,63/gallery_5.jpg"
+      ],
+      "bg": "/img_fo_products/0,0–0,63/bg.jpg",
+      "gradient": "/img_fo_products/0,0–0,63/gradient.jpg"
+    },
     "packaging": [
       "навал",
       "МКР (биг-бэг)"
@@ -428,7 +467,20 @@ export const products = [
     "fraction": "0,63-2,5 мм",
     "gost": "ГОСТ 8736-2014",
     "description": "Кварцевый песок фракции 0,63–2,5 мм — это среднезернистый природный минеральный материал. Состоит преимущественно из диоксида кремния, характеризуется высокой чистотой, равномерностью гранулометрического состава и устойчивостью к внешним воздействиям.",
-    "image": "/img_fo_products/sent_01.jpg",
+    "images": {
+      "thumb": "/img_fo_products/0,63-2,5/thumb.jpg",
+      "main": "/img_fo_products/0,63-2,5/main.jpg",
+      "hero": "/img_fo_products/0,63-2,5/hero.jpg",
+      "gallery": [
+        "/img_fo_products/0,63-2,5/gallery_1.jpg",
+        "/img_fo_products/0,63-2,5/gallery_2.jpg",
+        "/img_fo_products/0,63-2,5/gallery_3.jpg",
+        "/img_fo_products/0,63-2,5/gallery_4.jpg",
+        "/img_fo_products/0,63-2,5/gallery_5.jpg"
+      ],
+      "bg": "/img_fo_products/0,63-2,5/bg.jpg",
+      "gradient": "/img_fo_products/0,63-2,5/gradient.jpg"
+    },
     "packaging": [
       "навал",
       "МКР (биг-бэг)"
@@ -492,7 +544,20 @@ export const products = [
     "fraction": "0,315-0,63 мм",
     "gost": "ГОСТ Р 51641-2000",
     "description": "Кварцевый песок фракции 0,315-0,63 мм — это мелкозернистый природный минеральный материал, имеющий узкий фракционный состав. Специально для фильтрации и водоподготовки.",
-    "image": "/img_fo_products/sent_01.jpg",
+    "images": {
+      "thumb": "/img_fo_products/0,315-0,63/thumb.jpg",
+      "main": "/img_fo_products/0,315-0,63/main.jpg",
+      "hero": "/img_fo_products/0,315-0,63/hero.jpg",
+      "gallery": [
+        "/img_fo_products/0,315-0,63/gallery_1.jpg",
+        "/img_fo_products/0,315-0,63/gallery_2.jpg",
+        "/img_fo_products/0,315-0,63/gallery_3.jpg",
+        "/img_fo_products/0,315-0,63/gallery_4.jpg",
+        "/img_fo_products/0,315-0,63/gallery_5.jpg"
+      ],
+      "bg": "/img_fo_products/0,315-0,63/bg.jpg",
+      "gradient": "/img_fo_products/0,315-0,63/gradient.jpg"
+    },
     "packaging": [
       "навал",
       "МКР (биг-бэг)"
@@ -504,7 +569,7 @@ export const products = [
       "Форма зёрен": "окатанная",
       "Коэффициент неравномерности": "≤ 1,5"
     },
-    
+
     "technicalData": {
       "Фракция песка, мм": "0,315–0,63",
       "Содержание оксида кремния (SiO₂), %, не менее": 85,
@@ -550,7 +615,20 @@ export const products = [
     "fraction": "0,0–0,63 мм",
     "gost": "ГОСТ Р 51641-2000",
     "description": "Кварцевый песок фракции 0,0–0,63 мм — это мелкозернистый природный минеральный материал. Специально для фильтрации и водоподготовки.",
-    "image": "/img_fo_products/sent_01.jpg",
+    "images": {
+      "thumb": "/img_fo_products/0,0–0,63/thumb.jpg",
+      "main": "/img_fo_products/0,0–0,63/main.jpg",
+      "hero": "/img_fo_products/0,0–0,63/hero.jpg",
+      "gallery": [
+        "/img_fo_products/0,0–0,63/gallery_1.jpg",
+        "/img_fo_products/0,0–0,63/gallery_2.jpg",
+        "/img_fo_products/0,0–0,63/gallery_3.jpg",
+        "/img_fo_products/0,0–0,63/gallery_4.jpg",
+        "/img_fo_products/0,0–0,63/gallery_5.jpg"
+      ],
+      "bg": "/img_fo_products/0,0–0,63/bg.jpg",
+      "gradient": "/img_fo_products/0,0–0,63/gradient.jpg"
+    },
     "packaging": [
       "навал",
       "МКР (биг-бэг)"
@@ -562,7 +640,7 @@ export const products = [
       "Форма зёрен": "окатанная",
       "Коэффициент неравномерности": "≤ 1,6"
     },
-    
+
     "technicalData": {
       "Фракция песка, мм": "0–0,63",
       "Содержание оксида кремния (SiO₂), %, не менее": 85,
@@ -608,7 +686,20 @@ export const products = [
     "fraction": "0,63-2,5 мм",
     "gost": "ГОСТ Р 51641-2000",
     "description": "Кварцевый песок фракции 0,63–2,5 мм — это среднезернистый природный минеральный материал. Специально для фильтрации и водоподготовки.",
-    "image": "/img_fo_products/sent_01.jpg",
+    "images": {
+      "thumb": "/img_fo_products/0,63-2,5/thumb.jpg",
+      "main": "/img_fo_products/0,63-2,5/main.jpg",
+      "hero": "/img_fo_products/0,63-2,5/hero.jpg",
+      "gallery": [
+        "/img_fo_products/0,63-2,5/gallery_1.jpg",
+        "/img_fo_products/0,63-2,5/gallery_2.jpg",
+        "/img_fo_products/0,63-2,5/gallery_3.jpg",
+        "/img_fo_products/0,63-2,5/gallery_4.jpg",
+        "/img_fo_products/0,63-2,5/gallery_5.jpg"
+      ],
+      "bg": "/img_fo_products/0,63-2,5/bg.jpg",
+      "gradient": "/img_fo_products/0,63-2,5/gradient.jpg"
+    },
     "packaging": [
       "навал",
       "МКР (биг-бэг)"
@@ -620,7 +711,7 @@ export const products = [
       "Форма зёрен": "окатанная",
       "Коэффициент неравномерности": "≤ 1,5"
     },
-   
+
     "technicalData": {
       "Фракция песка, мм": "0,63–2,5",
       "Содержание оксида кремния (SiO₂), %, не менее": 85,
@@ -666,7 +757,20 @@ export const products = [
     "fraction": "2,5-20,0 мм",
     "gost": "-",
     "description": "Кварцевый отсев фракции 2,5-20,0 мм — это средне- и крупнозернистый природный минеральный материал, который образуется в процессе просеивания (фракционирования) кварцевого песка.",
-    "image": "/img_fo_products/sent_01.jpg",
+    "images": {
+      "thumb": "/img_fo_products/2,5-20,0/thumb.jpg",
+      "main": "/img_fo_products/2,5-20,0/main.jpg",
+      "hero": "/img_fo_products/2,5-20,0/hero.jpg",
+      "gallery": [
+        "/img_fo_products/2,5-20,0/gallery_1.jpg",
+        "/img_fo_products/2,5-20,0/gallery_2.jpg",
+        "/img_fo_products/2,5-20,0/gallery_3.jpg",
+        "/img_fo_products/2,5-20,0/gallery_4.jpg",
+        "/img_fo_products/2,5-20,0/gallery_5.jpg"
+      ],
+      "bg": "/img_fo_products/2,5-20,0/bg.jpg",
+      "gradient": "/img_fo_products/2,5-20,0/gradient.jpg"
+    },
     "packaging": [
       "навал",
       "МКР (биг-бэг)"

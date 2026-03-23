@@ -11,7 +11,7 @@ const Header = () => {
 
   const location = useLocation();
   
-  const lightPages = ['/catalog', '/articles', '/product'];
+  const lightPages = ['/catalog', '/articles'];
   const isLightPage = lightPages.some(page => location.pathname.startsWith(page));
   const shadowClass = isScrolled ? 'shadow-lg shadow-black/10' : '';
 
@@ -69,7 +69,7 @@ const Header = () => {
         ${shadowClass} 
         ${bgClass}`}>
       <div className="w-full px-[1cm]">
-        <div className="flex items-center justify-between h-20 md:h-24">
+        <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo with Name */}
           <Link to="/" className="flex items-center gap-3 sm:gap-4 group">
             <img
