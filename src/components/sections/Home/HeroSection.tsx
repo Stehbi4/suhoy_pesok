@@ -64,7 +64,7 @@ const characteristics = [
         
 
         {/* Bottom Row: Description, Buttons, and Stats */}
-        <div className="absolute bottom-[100vh] right-0 w-full px-[1cm] flex justify-end items-start lg:items-end gap-6">
+        <div className="absolute bottom-[105vh] right-0 w-full px-[1cm] flex justify-end items-start lg:items-end gap-6">
           
           <div className="w-full max-w-md text-right">
             <p className="text-gray-400 text-lg md:text-lg max-w-md mb-8 leading-relaxed">
@@ -92,7 +92,7 @@ const characteristics = [
         </div>
         
         {/* Scroll Indicator */}
-        <div className="absolute top-[95vh] left-[1cm] z-10 flex flex-col items-center gap-2">
+        <div className="absolute top-[90vh] left-[1cm] z-10 flex flex-col items-center gap-2">
         <span className="text-gray-500 text-xs tracking-[0.3em] uppercase">Листайте</span>
         <ChevronDown className="w-5 h-5 text-gray-500 animate-bounce" />
         </div>
