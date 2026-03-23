@@ -14,9 +14,7 @@ const KeyFeaturesSection = () => {
       <div className="container-custom grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
         {features.map((f, i) => (
           <div key={i} className="text-center">
-            <div className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-6 rounded-full bg-[#f80000]/10 flex items-center justify-center">
-              <f.icon className="w-8 h-8 md:w-10 md:h-10 text-[#f80000]" />
-            </div>
+            <f.icon className="w-7 h-7 text-white mx-auto mb-6" />
             <div className="text-4xl md:text-6xl font-light mb-3">{f.value}</div>
             <div className="text-gray-400 text-lg md:text-xl uppercase tracking-wider">{f.label}</div>
           </div>

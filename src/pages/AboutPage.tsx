@@ -122,28 +122,28 @@ const AboutPage = () => {
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[250px] border border-[#333333] rounded-full" />
               
               <div className="relative grid grid-cols-2 gap-6">
-                <div className="card-dark p-8 card-hover text-center hover:border-[#f80000]/30 transition-all duration-300 card-hover">
+                <div className="card-dark card-hover p-8 text-center hover:border-[#f80000]/30">
                   <div className="text-5xl font-light text-whight mb-2">25<span className="text-[#f80000]">+</span></div>
                   <div className="text-gray-500 text-sm tracking-wider uppercase">
                     Лет опыта
                   </div>
                 </div>
                 
-                <div className="card-dark p-8 card-hover text-center hover:border-[#f80000]/30 transition-all duration-300 card-hover">
+                <div className="card-dark card-hover p-8 text-center hover:border-[#f80000]/30">
                   <div className="text-5xl font-light text-white mb-2">500<span className="text-[#f80000]">+</span></div>
                   <div className="text-gray-500 text-sm tracking-wider uppercase">
                     Клиентов
                   </div>
                 </div>
                 
-                <div className="card-dark p-8 card-hover text-center hover:border-[#f80000]/30 transition-all duration-300 card-hover">
+                <div className="card-dark card-hover p-8 text-center hover:border-[#f80000]/30">
                   <div className="text-5xl font-light text-white mb-2">8</div>
                   <div className="text-gray-500 text-sm tracking-wider uppercase">
                     Фракций
                   </div>
                 </div>
                 
-                <div className="card-dark p-8 card-hover text-center hover:border-[#f80000]/30 transition-all duration-300 card-hover">
+                <div className="card-dark card-hover p-8 text-center hover:border-[#f80000]/30">
                   <div className="text-5xl font-light text-white mb-2">24<span className="text-[#f80000]">/</span>7</div>
                   <div className="text-gray-500 text-sm tracking-wider uppercase">
                     Производство
@@ -200,11 +200,9 @@ const AboutPage = () => {
                 return (
                   <div
                     key={index}
-                    className="bg-[#111111] border border-[#222222] rounded-lg p-8 hover:border-[#f80000]/30 transition-all duration-300 card-hover"
+                    className="card-dark card-hover p-8 hover:border-[#f80000]/30"
                   >
-                    <div className="w-14 h-14 rounded-lg bg-[#f80000]/10 flex items-center justify-center mb-6">
-                      <Icon className="w-7 h-7 text-white" />
-                    </div>
+                    <Icon className="w-7 h-7 text-white mb-6" />
                     <h3 className="text-xl font-light text-white mb-3">
                       {advantage.title}
                     </h3>

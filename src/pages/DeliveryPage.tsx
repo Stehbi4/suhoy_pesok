@@ -69,11 +69,9 @@ const DeliveryPage = () => {
               return (
                 <div
                   key={index}
-                  className="bg-[#111111] border border-[#222222] rounded-lg p-8 hover:border-[#f80000]/50 transition-all duration-300 card-hover"
+                  className="card-dark card-hover p-8 hover:border-[#f80000]/30"
                 >
-                  <div className="w-14 h-14 rounded-lg bg-blue-500/10 flex items-center justify-center mb-6">
-                    <Icon className="w-7 h-7 text-white" />
-                  </div>
+                  <Icon className="w-7 h-7 text-white mb-6" />
                   <h3 className="text-xl font-light text-white mb-3">
                     {option.title}
                   </h3>

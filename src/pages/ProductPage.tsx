@@ -96,47 +96,49 @@ const ProductPage = () => {
 
             {/* Левый столбец */}
             <div>
+              {/* 1. Описание */}
               <div className="animate-on-scroll slide-in-left">
-                <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium">Характеристика материала</span>
-                <div className="mt-8 text-xl text-gray-300 leading-relaxed">
+                <div className="text-2xl lg:text-3xl text-gray-300 leading-relaxed">
                   {product.description}
                 </div>
+              </div>
 
+              {/* 2. Характеристики */}
+              <div className="mt-20 animate-on-scroll fade-in-up">
+                <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium">Характеристика материала</span>
+              </div>
+
+              <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-5">
+                <div className="animate-on-scroll slide-in-left animation-delay-100 card-dark card-hover p-8 hover:border-[#f80000]/30">
+                  <Droplets className="w-7 h-7 text-white mb-6" />
+                  <h3 className="text-xl font-light text-white mb-3">&gt; {sio2Value}% SiO₂</h3>
+                  <p className="text-gray-400">Высокое содержание диоксида кремния</p>
+                </div>
+
+                <div className="animate-on-scroll fade-in-up animation-delay-300 card-dark card-hover p-8 hover:border-[#f80000]/30">
+                  <Circle className="w-7 h-7 text-white mb-6" />
+                  <h3 className="text-xl font-light text-white mb-3">Окатанное зерно</h3>
+                  <p className="text-gray-400">Минимальное сопротивление потоку</p>
+                </div>
+
+                <div className="animate-on-scroll slide-in-right animation-delay-500 card-dark card-hover p-8 hover:border-[#f80000]/30">
+                  <Wind className="w-7 h-7 text-white mb-6" />
+                  <h3 className="text-xl font-light text-white mb-3">Влажность ≤ 0,5%</h3>
+                  <p className="text-gray-400">Сухой песок для любых задач</p>
+                </div>
+              </div>
+
+              {/* 3. Скачать спецификацию */}
+              <div className="mt-16 animate-on-scroll fade-in-up animation-delay-500">
+                <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium block mb-6">Скачать спецификацию</span>
                 <a
                   href={docPath}
                   download
-                  className="mt-10 inline-flex items-center gap-3 bg-[#f80000] hover:bg-[#ff3333] text-white px-8 py-4 rounded-xl font-medium transition-all duration-300 hover:shadow-[0_0_30px_rgba(248,0,0,0.4)]"
+                  className="bg-[#f80000] text-white px-8 py-4 rounded-lg font-semibold tracking-wide hover:bg-gray-100 transition-colors inline-flex items-center justify-center gap-2"
                 >
                   <Download className="w-5 h-5" />
-                  Скачать ТЗ
+                  Скачать PDF
                 </a>
-              </div>
-
-              {/* Ключевые показатели */}
-              <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-5">
-                <div className="animate-on-scroll fade-in-up animation-delay-100 bg-[#111111] border border-[#222222] rounded-2xl p-7 hover:border-[#f80000]/40 transition-all duration-300">
-                  <Droplets className="w-8 h-8 text-[#f80000] mb-4" />
-                  <div className="text-4xl font-mono font-light text-white">&gt; {sio2Value}%</div>
-                  <div className="text-xs text-gray-500 mt-3 leading-relaxed">
-                    SiO₂ — высокое содержание диоксида кремния
-                  </div>
-                </div>
-
-                <div className="animate-on-scroll fade-in-up animation-delay-300 bg-[#111111] border border-[#222222] rounded-2xl p-7 hover:border-[#f80000]/40 transition-all duration-300">
-                  <Circle className="w-8 h-8 text-[#f80000] mb-4" />
-                  <div className="text-4xl font-mono font-light text-white">Окатанное</div>
-                  <div className="text-xs text-gray-500 mt-3 leading-relaxed">
-                    Форма зерна — минимальное сопротивление потоку
-                  </div>
-                </div>
-
-                <div className="animate-on-scroll fade-in-up animation-delay-500 bg-[#111111] border border-[#222222] rounded-2xl p-7 hover:border-[#f80000]/40 transition-all duration-300">
-                  <Wind className="w-8 h-8 text-[#f80000] mb-4" />
-                  <div className="text-4xl font-mono font-light text-white">≤ 0,5%</div>
-                  <div className="text-xs text-gray-500 mt-3 leading-relaxed">
-                    Влажность — сухой песок
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -166,7 +168,6 @@ const ProductPage = () => {
       <section className="py-24 lg:py-32">
         <div className="px-6 sm:px-10 lg:px-[1cm]">
           <div className="animate-on-scroll">
-            <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium">Ситовой анализ</span>
             <h2 className="text-4xl lg:text-5xl font-light mt-4">Гранулометрический состав</h2>
           </div>
 
@@ -232,58 +233,29 @@ const ProductPage = () => {
             <h2 className="text-4xl lg:text-5xl font-light mt-4">Полные характеристики</h2>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 animate-on-scroll animation-delay-200">
-            {/* Физико-механические */}
-            <div className="bg-[#111111]/80 backdrop-blur-sm border border-[#222222] rounded-2xl overflow-hidden">
+          <div className="max-w-5xl mx-auto animate-on-scroll animation-delay-200">
+            <div className="card-dark overflow-hidden">
               <div className="px-8 py-5 border-b border-[#222222]">
                 <h4 className="text-sm uppercase tracking-widest text-gray-400">Физико-механические свойства</h4>
               </div>
-              {Object.entries(product.technicalData || {})
-                .filter(([k]) => !k.includes('радионуклид') && !k.includes('pH') && !k.includes('вредных'))
-                .map(([key, value]) => (
-                  <div
-                    key={key}
-                    className="flex items-center justify-between px-8 py-5 border-b border-[#1a1a1a] hover:bg-[#1a1a1a] transition-colors cursor-pointer group"
-                    onClick={() => handleCopyRow(key, String(value))}
-                  >
-                    <span className="text-gray-400 text-sm pr-4">{key}</span>
-                    <div className="flex items-center gap-3 flex-shrink-0">
-                      <span className="font-mono text-white">{String(value)}</span>
-                      {copiedRow === key ? (
-                        <Check className="w-4 h-4 text-green-500" />
-                      ) : (
-                        <Copy className="w-4 h-4 text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity" />
-                      )}
-                    </div>
+              {Object.entries(product.technicalData || {}).map(([key, value]) => (
+                <div
+                  key={key}
+                  className="flex items-center justify-between px-8 py-5 border-b border-[#1a1a1a] hover:bg-[#1a1a1a] transition-colors cursor-pointer group"
+                  onClick={() => handleCopyRow(key, String(value))}
+                >
+                  <span className="text-gray-400 text-sm pr-4">{key}</span>
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    <span className="font-mono text-white">{String(value)}</span>
+                    {copiedRow === key ? (
+                      <Check className="w-4 h-4 text-green-500" />
+                    ) : (
+                      <Copy className="w-4 h-4 text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    )}
                   </div>
-                ))}
-            </div>
-
-            {/* Экологическая безопасность */}
-            <div className="bg-[#111111]/80 backdrop-blur-sm border border-[#222222] rounded-2xl overflow-hidden">
-              <div className="px-8 py-5 border-b border-[#222222]">
-                <h4 className="text-sm uppercase tracking-widest text-gray-400">Экологическая безопасность</h4>
-              </div>
-              {Object.entries(product.technicalData || {})
-                .filter(([k]) => k.includes('радионуклид') || k.includes('pH') || k.includes('вредных'))
-                .map(([key, value]) => (
-                  <div
-                    key={key}
-                    className="flex items-center justify-between px-8 py-5 border-b border-[#1a1a1a] hover:bg-[#1a1a1a] transition-colors cursor-pointer group"
-                    onClick={() => handleCopyRow(key, String(value))}
-                  >
-                    <span className="text-gray-400 text-sm pr-4">{key}</span>
-                    <div className="flex items-center gap-3 flex-shrink-0">
-                      <span className="font-mono text-white">{String(value)}</span>
-                      {copiedRow === key ? (
-                        <Check className="w-4 h-4 text-green-500" />
-                      ) : (
-                        <Copy className="w-4 h-4 text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity" />
-                      )}
-                    </div>
-                  </div>
-                ))}
-              <div className="px-8 py-5 border-b border-[#1a1a1a]">
+                </div>
+              ))}
+              <div className="px-8 py-5">
                 <span className="text-gray-400 text-sm">Стандарт</span>
                 <span className="float-right font-mono text-[#f80000]">{product.gost}</span>
               </div>
@@ -312,9 +284,9 @@ const ProductPage = () => {
                   key={element}
                   className={`animate-on-scroll fade-in-up ${
                     isSiO2
-                      ? 'col-span-2 sm:col-span-1 bg-[#f80000]/10 border-[#f80000]/30'
-                      : 'bg-[#111111] border-[#222222]'
-                  } border rounded-2xl p-6 text-center transition-all duration-300 hover:scale-105`}
+                      ? 'col-span-2 sm:col-span-1 bg-[#f80000]/10 border border-[#f80000]/30'
+                      : 'card-dark'
+                  } card-hover p-6 text-center hover:border-[#f80000]/30`}
                   style={{ animationDelay: `${i * 80}ms` }}
                 >
                   <div className={`font-mono font-light ${isSiO2 ? 'text-5xl text-[#f80000]' : 'text-3xl text-white'}`}>
@@ -346,20 +318,20 @@ const ProductPage = () => {
                 <div className="flex gap-3">
                   <button
                     onClick={() => setCalcShape('cylinder')}
-                    className={`flex-1 py-4 rounded-xl font-medium transition-all duration-300 ${
+                    className={`flex-1 py-4 rounded-lg font-semibold tracking-wide transition-all duration-300 ${
                       calcShape === 'cylinder'
-                        ? 'bg-[#f80000] text-white'
-                        : 'bg-[#111111] border border-[#222222] text-gray-400 hover:border-[#f80000]/40'
+                        ? 'bg-[#f80000] text-white hover:bg-gray-100'
+                        : 'card-dark text-gray-400 hover:border-[#f80000]/30'
                     }`}
                   >
                     Цилиндр
                   </button>
                   <button
                     onClick={() => setCalcShape('rectangle')}
-                    className={`flex-1 py-4 rounded-xl font-medium transition-all duration-300 ${
+                    className={`flex-1 py-4 rounded-lg font-semibold tracking-wide transition-all duration-300 ${
                       calcShape === 'rectangle'
-                        ? 'bg-[#f80000] text-white'
-                        : 'bg-[#111111] border border-[#222222] text-gray-400 hover:border-[#f80000]/40'
+                        ? 'bg-[#f80000] text-white hover:bg-gray-100'
+                        : 'card-dark text-gray-400 hover:border-[#f80000]/30'
                     }`}
                   >
                     Прямоугольник
@@ -375,7 +347,7 @@ const ProductPage = () => {
                     value={calcDiameter}
                     onChange={(e) => setCalcDiameter(e.target.value)}
                     placeholder="1.2"
-                    className="w-full bg-[#111111] border border-[#222222] rounded-xl px-6 py-4 text-white font-mono text-lg focus:border-[#f80000] focus:outline-none transition-colors"
+                    className="w-full bg-[#111111] border border-[#222222] rounded-lg px-6 py-4 text-white font-mono text-lg focus:border-[#f80000]/50 focus:outline-none transition-colors"
                   />
                 </div>
               ) : (
@@ -387,7 +359,7 @@ const ProductPage = () => {
                       value={calcWidth}
                       onChange={(e) => setCalcWidth(e.target.value)}
                       placeholder="2.0"
-                      className="w-full bg-[#111111] border border-[#222222] rounded-xl px-6 py-4 text-white font-mono text-lg focus:border-[#f80000] focus:outline-none transition-colors"
+                      className="w-full bg-[#111111] border border-[#222222] rounded-lg px-6 py-4 text-white font-mono text-lg focus:border-[#f80000]/50 focus:outline-none transition-colors"
                     />
                   </div>
                   <div>
@@ -397,7 +369,7 @@ const ProductPage = () => {
                       value={calcLength}
                       onChange={(e) => setCalcLength(e.target.value)}
                       placeholder="3.0"
-                      className="w-full bg-[#111111] border border-[#222222] rounded-xl px-6 py-4 text-white font-mono text-lg focus:border-[#f80000] focus:outline-none transition-colors"
+                      className="w-full bg-[#111111] border border-[#222222] rounded-lg px-6 py-4 text-white font-mono text-lg focus:border-[#f80000]/50 focus:outline-none transition-colors"
                     />
                   </div>
                 </div>
@@ -410,13 +382,13 @@ const ProductPage = () => {
                   value={calcHeight}
                   onChange={(e) => setCalcHeight(e.target.value)}
                   placeholder="0.8"
-                  className="w-full bg-[#111111] border border-[#222222] rounded-xl px-6 py-4 text-white font-mono text-lg focus:border-[#f80000] focus:outline-none transition-colors"
+                  className="w-full bg-[#111111] border border-[#222222] rounded-lg px-6 py-4 text-white font-mono text-lg focus:border-[#f80000]/50 focus:outline-none transition-colors"
                 />
               </div>
             </div>
 
             <div className="flex flex-col justify-center">
-              <div className="bg-[#111111] border border-[#222222] rounded-3xl p-10">
+              <div className="card-dark p-10">
                 <div className="text-xs uppercase tracking-widest text-gray-500 mb-8">Результат расчёта</div>
                 <div className="space-y-8">
                   <div>
@@ -458,7 +430,7 @@ const ProductPage = () => {
             {product.applicationAreas?.map((area, i) => (
               <div
                 key={i}
-                className="animate-on-scroll card-hover bg-[#111111] border border-[#222222] rounded-2xl p-10 hover:border-[#f80000]/40 transition-all duration-300"
+                className="animate-on-scroll card-dark card-hover p-10 hover:border-[#f80000]/30"
                 style={{ animationDelay: `${i * 100}ms` }}
               >
                 <div className="text-[#f80000] font-mono text-sm mb-4">
@@ -479,15 +451,15 @@ const ProductPage = () => {
               <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium">Логистика</span>
               <h2 className="text-4xl font-light mt-4 mb-12">Упаковка и отгрузка</h2>
               <div className="grid grid-cols-2 gap-6">
-                <div className="bg-[#111111] border border-[#222222] rounded-2xl p-8 text-center hover:border-[#f80000]/40 transition-all duration-300">
-                  <Truck className="w-12 h-12 text-[#f80000] mx-auto mb-4" />
-                  <div className="text-xl font-light">Навал</div>
-                  <div className="text-sm text-gray-500 mt-2">Самосвал / полуприцеп</div>
+                <div className="card-dark card-hover p-8 hover:border-[#f80000]/30">
+                  <Truck className="w-7 h-7 text-white mb-6" />
+                  <h3 className="text-xl font-light text-white mb-3">Навал</h3>
+                  <p className="text-gray-400">Самосвал / полуприцеп</p>
                 </div>
-                <div className="bg-[#111111] border border-[#222222] rounded-2xl p-8 text-center hover:border-[#f80000]/40 transition-all duration-300">
-                  <Package className="w-12 h-12 text-[#f80000] mx-auto mb-4" />
-                  <div className="text-xl font-light">МКР</div>
-                  <div className="text-sm text-gray-500 mt-2">Биг-бэг ≈ 1 тонна</div>
+                <div className="card-dark card-hover p-8 hover:border-[#f80000]/30">
+                  <Package className="w-7 h-7 text-white mb-6" />
+                  <h3 className="text-xl font-light text-white mb-3">МКР</h3>
+                  <p className="text-gray-400">Биг-бэг ≈ 1 тонна</p>
                 </div>
               </div>
             </div>
@@ -505,7 +477,7 @@ const ProductPage = () => {
                     key={doc.name}
                     href={doc.file}
                     download
-                    className="flex items-center justify-between bg-[#111111] border border-[#222222] rounded-xl px-8 py-5 hover:border-[#f80000]/40 transition-all duration-300 group"
+                    className="flex items-center justify-between card-dark card-hover px-8 py-5 hover:border-[#f80000]/30 group"
                   >
                     <span className="text-white font-light">{doc.name}</span>
                     <Download className="w-5 h-5 text-gray-600 group-hover:text-[#f80000] transition-colors" />

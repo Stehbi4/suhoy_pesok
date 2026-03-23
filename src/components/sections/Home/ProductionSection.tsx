@@ -63,7 +63,7 @@ const ProductionSection = () => {
               {features.map((feature, index) => (
                 <div
                   key={index}
-                  className="flex items-start gap-3 p-3 rounded-lg bg-[#111111] border border-[#222222] hover:border-[#f80000]/30 transition-colors"
+                  className="flex items-start gap-3 p-3 rounded-lg bg-[#111111] border border-[#222222] card-hover hover:border-[#f80000]/30"
                 >
                   <CheckCircle2 className="w-5 h-5 text-whites flex-shrink-0 mt-0.5" />
                   <span className="text-gray-300 text-sm">{feature}</span>

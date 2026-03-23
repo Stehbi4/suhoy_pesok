@@ -9,11 +9,9 @@ export function useAnimateOnScroll() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
-            // observer.unobserve(entry.target); // если анимация нужна только один раз
+          } else {
+            entry.target.classList.remove('visible');
           }
-          // else {
-          //   entry.target.classList.remove('visible'); // если хочешь повтор при скролле вверх
-          // }
         });
       },
       {
