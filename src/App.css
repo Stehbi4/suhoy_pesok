@@ -1,0 +1,228 @@
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background-color: rgba(248, 0, 0, 0.3);
+  color: #ffffff;
+}
+
+*:focus-visible {
+  outline: 2px solid #f80000;
+  outline-offset: 2px;
+}
+
+img {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.card-hover {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+.link-underline {
+  position: relative;
+}
+
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #f80000;
+  transition: width 0.3s ease;
+}
+
+.link-underline:hover::after {
+  width: 100%;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #f80000 0%, #ff3333 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glass {
+  background: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.section-divider {
+  position: relative;
+}
+
+.section-divider::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, #f80000, #ff3333);
+  border-radius: 2px;
+}
+
+.btn-primary {
+  background-color: #f80000;
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-primary:hover {
+  background-color: #ff3333;
+  box-shadow: 0 0 30px rgba(248, 0, 0, 0.4);
+}
+
+.card-dark {
+  background-color: #111111;
+  border: 1px solid #222222;
+  border-radius: 0.5rem;
+}
+
+.glow-red {
+  box-shadow: 0 0 40px rgba(248, 0, 0, 0.3);
+}
+
+.hero-gradient {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a0505 50%, #0a0a0a 100%);
+}
+
+@media (hover: none) {
+  .card-hover:hover {
+    transform: none;
+  }
+}
+
+@media print {
+  header,
+  footer {
+    display: none;
+  }
+  
+  .no-print {
+    display: none;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+
+.hero-background {
+  background-image: url('/HeroSent/sand-pile.png'); 
+  background-position: center top;     /* ← привязка к верху */
+  background-size: cover;
+}
+
+.stats-grid {
+  background: rgba(17, 17, 17, 0.8); 
+  border-radius: 0.5rem;
+  padding: 1rem;
+  z-index: 10;
+}
+
+
+
+.mission-background {
+  background-image: url('/About_BG.jpg');  
+  background-position: center center;  
+  background-size: cover;  
+  background-repeat: no-repeat;  
+}
+
+.image-set-background {
+  background-image: url('/Image_Set_BG.png');  
+  background-position: center center;  
+  background-size: cover;  
+  background-repeat: no-repeat;  
+}
+
+.about-hero-set-background {
+  background-image: url('/P_About_Build_1.png');  
+  background-position: center center;  
+  background-size: cover;  
+  background-repeat: no-repeat;  
+}
+
+.product-hero-set-background {
+  background-image: url('/P_Product_Send_1.png');  
+  background-position: center center;  
+  background-size: cover;  
+  background-repeat: no-repeat;  
+}
+
+.mission-background .absolute.inset-0 {  
+  opacity: 0.5;  
+  background: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.3));  
+}
+
+@media (max-width: 1024px) {  
+  .mission-background {
+    background-position: 100% 50%;  
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+  opacity: 0; 
+}
+
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+
+@media (max-width: 768px) {
+  .animate-fade-in {
+    animation-duration: 0.4s;
+  }
+}
