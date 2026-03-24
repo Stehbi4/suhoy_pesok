@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Download, Droplets, Circle, Wind, Copy, Check, Truck, Package, ChevronDown } from 'lucide-react';
 import { products } from '@/data/articles';
-import { useAnimateOnScroll } from '@/hooks/useAnimateOnScroll';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const ProductPage = () => {
   const { slug } = useParams();
@@ -14,8 +14,6 @@ const ProductPage = () => {
   const [calcWidth, setCalcWidth] = useState('');
   const [calcLength, setCalcLength] = useState('');
   const [calcHeight, setCalcHeight] = useState('');
-
-  useAnimateOnScroll();
 
   const calcResult = useMemo(() => {
     const h = parseFloat(calcHeight) || 0;
@@ -67,7 +65,7 @@ const ProductPage = () => {
         <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-b from-transparent to-black" />
 
         <div className="relative z-10 w-full px-6 sm:px-10 lg:px-[1cm] pb-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-end">
-          <div className="animate-on-scroll slide-in-left">
+          <ScrollReveal type="slide-left">
             <div
               className="relative inline-block px-10 py-8"
               style={{
@@ -78,14 +76,14 @@ const ProductPage = () => {
                 {product.shortName}
               </h1>
             </div>
-          </div>
+          </ScrollReveal>
 
-          <div className="flex justify-center lg:justify-end animate-on-scroll fade-in-up animation-delay-300">
+          <ScrollReveal type="fade-up" delay={0.2} className="flex justify-center lg:justify-end">
             <div className="group flex flex-col items-center cursor-pointer">
               <span className="text-gray-500 text-xs tracking-[0.3em] uppercase">Подробнее</span>
               <ChevronDown className="w-5 h-5 text-gray-500 animate-bounce" />
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -97,39 +95,39 @@ const ProductPage = () => {
             {/* Левый столбец */}
             <div>
               {/* 1. Описание */}
-              <div className="animate-on-scroll slide-in-left">
+              <ScrollReveal type="slide-left">
                 <div className="text-2xl lg:text-3xl text-gray-300 leading-relaxed">
                   {product.description}
                 </div>
-              </div>
+              </ScrollReveal>
 
               {/* 2. Характеристики */}
-              <div className="mt-20 animate-on-scroll fade-in-up">
+              <ScrollReveal type="fade-up" delay={0.1} className="mt-20">
                 <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium">Характеристика материала</span>
-              </div>
+              </ScrollReveal>
 
               <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-5">
-                <div className="animate-on-scroll slide-in-left animation-delay-100 card-dark card-hover p-8 hover:border-[#f80000]/30">
+                <ScrollReveal type="slide-left" delay={0.05} className="card-dark card-hover p-8 hover:border-[#f80000]/30">
                   <Droplets className="w-7 h-7 text-white mb-6" />
                   <h3 className="text-xl font-light text-white mb-3">&gt; {sio2Value}% SiO₂</h3>
                   <p className="text-gray-400">Высокое содержание диоксида кремния</p>
-                </div>
+                </ScrollReveal>
 
-                <div className="animate-on-scroll fade-in-up animation-delay-300 card-dark card-hover p-8 hover:border-[#f80000]/30">
+                <ScrollReveal type="fade-up" delay={0.15} className="card-dark card-hover p-8 hover:border-[#f80000]/30">
                   <Circle className="w-7 h-7 text-white mb-6" />
                   <h3 className="text-xl font-light text-white mb-3">Окатанное зерно</h3>
                   <p className="text-gray-400">Минимальное сопротивление потоку</p>
-                </div>
+                </ScrollReveal>
 
-                <div className="animate-on-scroll slide-in-right animation-delay-500 card-dark card-hover p-8 hover:border-[#f80000]/30">
+                <ScrollReveal type="slide-right" delay={0.25} className="card-dark card-hover p-8 hover:border-[#f80000]/30">
                   <Wind className="w-7 h-7 text-white mb-6" />
                   <h3 className="text-xl font-light text-white mb-3">Влажность ≤ 0,5%</h3>
                   <p className="text-gray-400">Сухой песок для любых задач</p>
-                </div>
+                </ScrollReveal>
               </div>
 
               {/* 3. Скачать спецификацию */}
-              <div className="mt-16 animate-on-scroll fade-in-up animation-delay-500">
+              <ScrollReveal type="fade-up" delay={0.2} className="mt-16">
                 <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium block mb-6">Скачать спецификацию</span>
                 <a
                   href={docPath}
@@ -139,7 +137,7 @@ const ProductPage = () => {
                   <Download className="w-5 h-5" />
                   Скачать PDF
                 </a>
-              </div>
+              </ScrollReveal>
             </div>
 
             {/* Правый столбец — фото */}
@@ -167,11 +165,11 @@ const ProductPage = () => {
       {/* ═══ 3. ГРАНУЛОМЕТРИЯ ═══ */}
       <section className="py-24 lg:py-32">
         <div className="px-6 sm:px-10 lg:px-[1cm]">
-          <div className="animate-on-scroll">
+          <ScrollReveal type="fade-up">
             <h2 className="text-4xl lg:text-5xl font-light mt-4">Гранулометрический состав</h2>
-          </div>
+          </ScrollReveal>
 
-          <div className="mt-16 animate-on-scroll animation-delay-200">
+          <ScrollReveal type="fade-up" delay={0.1} className="mt-16">
             <div className="flex items-end gap-3 h-[400px]">
               {Object.entries(product.sieveAnalysis || {}).map(([sieve, pct]) => {
                 const percent = Number(pct);
@@ -215,11 +213,11 @@ const ProductPage = () => {
                 );
               })}
             </div>
-          </div>
+          </ScrollReveal>
 
-          <div className="mt-8 text-center text-gray-500 text-sm animate-on-scroll animation-delay-300">
+          <ScrollReveal type="fade-in" delay={0.2} className="mt-8 text-center text-gray-500 text-sm">
             Наведите на столбец для детализации · Частные остатки на ситах, %
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -228,12 +226,12 @@ const ProductPage = () => {
         <div className="absolute inset-0 bg-black/90" />
 
         <div className="relative z-10 px-6 sm:px-10 lg:px-[1cm]">
-          <div className="animate-on-scroll mb-16">
+          <ScrollReveal type="fade-up" className="mb-16">
             <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium">Технические данные</span>
             <h2 className="text-4xl lg:text-5xl font-light mt-4">Полные характеристики</h2>
-          </div>
+          </ScrollReveal>
 
-          <div className="max-w-5xl mx-auto animate-on-scroll animation-delay-200">
+          <ScrollReveal type="fade-up" delay={0.1} className="max-w-5xl mx-auto">
             <div className="card-dark overflow-hidden">
               <div className="px-8 py-5 border-b border-[#222222]">
                 <h4 className="text-sm uppercase tracking-widest text-gray-400">Физико-механические свойства</h4>
@@ -260,34 +258,35 @@ const ProductPage = () => {
                 <span className="float-right font-mono text-[#f80000]">{product.gost}</span>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
 
-          <div className="mt-6 text-center text-gray-600 text-xs animate-on-scroll animation-delay-300">
+          <ScrollReveal type="fade-in" delay={0.2} className="mt-6 text-center text-gray-600 text-xs">
             Нажмите на строку, чтобы скопировать для проектной документации
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* ═══ 5. ХИМИЧЕСКИЙ СОСТАВ ═══ */}
       <section className="py-24 lg:py-32">
         <div className="px-6 sm:px-10 lg:px-[1cm]">
-          <div className="animate-on-scroll">
+          <ScrollReveal type="fade-up">
             <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium">Молекулярная чистота</span>
             <h2 className="text-4xl lg:text-5xl font-light mt-4">Химический состав</h2>
-          </div>
+          </ScrollReveal>
 
           <div className="mt-16 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4">
             {Object.entries(product.chemicalComposition || {}).map(([element, pct], i) => {
               const isSiO2 = element === 'SiO₂';
               return (
-                <div
+                <ScrollReveal
                   key={element}
-                  className={`animate-on-scroll fade-in-up ${
+                  type="scale"
+                  delay={i * 0.06}
+                  className={`${
                     isSiO2
                       ? 'col-span-2 sm:col-span-1 bg-[#f80000]/10 border border-[#f80000]/30'
                       : 'card-dark'
                   } card-hover p-6 text-center hover:border-[#f80000]/30`}
-                  style={{ animationDelay: `${i * 80}ms` }}
                 >
                   <div className={`font-mono font-light ${isSiO2 ? 'text-5xl text-[#f80000]' : 'text-3xl text-white'}`}>
                     {pct}%
@@ -295,7 +294,7 @@ const ProductPage = () => {
                   <div className={`mt-3 text-sm ${isSiO2 ? 'text-[#f80000]' : 'text-gray-500'}`}>
                     {element}
                   </div>
-                </div>
+                </ScrollReveal>
               );
             })}
           </div>
@@ -305,13 +304,13 @@ const ProductPage = () => {
       {/* ═══ 6. КАЛЬКУЛЯТОР ═══ */}
       <section className="py-24 lg:py-32 bg-[#080808]">
         <div className="px-6 sm:px-10 lg:px-[1cm]">
-          <div className="animate-on-scroll">
+          <ScrollReveal type="fade-up">
             <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium">Расчёт</span>
             <h2 className="text-4xl lg:text-5xl font-light mt-4">Смарт-калькулятор</h2>
             <p className="text-gray-500 mt-4">Рассчитайте необходимое количество материала</p>
-          </div>
+          </ScrollReveal>
 
-          <div className="mt-16 grid lg:grid-cols-2 gap-16 animate-on-scroll animation-delay-200">
+          <ScrollReveal type="fade-up" delay={0.1} className="mt-16 grid lg:grid-cols-2 gap-16">
             <div className="space-y-8">
               <div>
                 <label className="text-xs uppercase tracking-widest text-gray-500 mb-3 block">Форма фильтра</label>
@@ -414,30 +413,31 @@ const ProductPage = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* ═══ 7. ОБЛАСТИ ПРИМЕНЕНИЯ ═══ */}
       <section className="py-24 lg:py-32">
         <div className="px-6 sm:px-10 lg:px-[1cm]">
-          <div className="animate-on-scroll">
+          <ScrollReveal type="fade-up">
             <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium">Кейсы</span>
             <h2 className="text-4xl lg:text-5xl font-light mt-4">Области применения</h2>
-          </div>
+          </ScrollReveal>
 
           <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {product.applicationAreas?.map((area, i) => (
-              <div
+              <ScrollReveal
                 key={i}
-                className="animate-on-scroll card-dark card-hover p-10 hover:border-[#f80000]/30"
-                style={{ animationDelay: `${i * 100}ms` }}
+                type="scale"
+                delay={i * 0.07}
+                className="card-dark card-hover p-10 hover:border-[#f80000]/30"
               >
                 <div className="text-[#f80000] font-mono text-sm mb-4">
                   {String(i + 1).padStart(2, '0')}
                 </div>
                 <h4 className="text-2xl font-light leading-tight">{area}</h4>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -447,7 +447,7 @@ const ProductPage = () => {
       <section className="py-24 lg:py-32 bg-[#080808]">
         <div className="px-6 sm:px-10 lg:px-[1cm]">
           <div className="grid lg:grid-cols-2 gap-16">
-            <div className="animate-on-scroll">
+            <ScrollReveal type="slide-left">
               <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium">Логистика</span>
               <h2 className="text-4xl font-light mt-4 mb-12">Упаковка и отгрузка</h2>
               <div className="grid grid-cols-2 gap-6">
@@ -462,9 +462,9 @@ const ProductPage = () => {
                   <p className="text-gray-400">Биг-бэг ≈ 1 тонна</p>
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
 
-            <div className="animate-on-scroll animation-delay-300">
+            <ScrollReveal type="slide-right" delay={0.15}>
               <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium">Загрузки</span>
               <h2 className="text-4xl font-light mt-4 mb-12">Документация</h2>
               <div className="space-y-4">
@@ -484,14 +484,14 @@ const ProductPage = () => {
                   </a>
                 ))}
               </div>
-            </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
 
       {/* ═══ НАЗАД В КАТАЛОГ ═══ */}
       <section className="py-32 bg-black">
-        <div className="px-6 sm:px-10 lg:px-[1cm] text-center animate-on-scroll">
+        <ScrollReveal type="fade-up" className="px-6 sm:px-10 lg:px-[1cm] text-center">
           <Link
             to="/catalog"
             className="group inline-flex items-center gap-8 text-5xl font-light hover:text-[#f80000] transition-colors"
@@ -500,7 +500,7 @@ const ProductPage = () => {
             Вернуться в каталог
           </Link>
           <p className="text-gray-500 mt-10 text-lg">Нужен расчёт стоимости? Напишите нам</p>
-        </div>
+        </ScrollReveal>
       </section>
     </main>
   );

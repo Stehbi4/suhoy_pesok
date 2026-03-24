@@ -11,6 +11,7 @@ import ArticlePage from '@/pages/ArticlePage';
 import ContactsPage from '@/pages/ContactsPage';
 import ScrollToTop from '@/components/Scroll/ScrollToTop';
 import BackToTop from '@/components/Scroll/BackToTop';
+import SmoothScroll from '@/components/ui/SmoothScroll';
 import './App.css';
 
 const FULLSCREEN_ROUTES = ['/articles'];
@@ -21,6 +22,7 @@ function AppLayout() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#0a0a0a]">
+      <SmoothScroll />
       {!isFullscreen && <Header />}
       <div className="flex-grow">
         <ScrollToTop />

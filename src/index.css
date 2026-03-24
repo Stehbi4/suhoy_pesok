@@ -52,10 +52,6 @@
     @apply border-border;
   }
   
-  html {
-    scroll-behavior: smooth;
-  }
-  
   body {
     @apply bg-[#0a0a0a] text-white antialiased;
     font-family: 'Manrope', system-ui, -apple-system, sans-serif;

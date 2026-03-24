@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { Factory, Shield, Handshake, MapPin } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useAnimateOnScroll } from '@/hooks/useAnimateOnScroll';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const advantages = [
   {
@@ -35,12 +35,12 @@ const AdvantageItem = ({ advantage, index }: { advantage: typeof advantages[0]; 
 
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ['start end', 'center center'],
+    offset: ['start 0.95', 'start 0.35'],
   });
 
-  const scale = useTransform(scrollYProgress, [0, 1], [0.85, 1]);
-  const opacity = useTransform(scrollYProgress, [0, 1], [0.15, 1]);
-  const y = useTransform(scrollYProgress, [0, 1], [40, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [0.88, 1]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [0.1, 1]);
+  const y = useTransform(scrollYProgress, [0, 1], [30, 0]);
 
   return (
     <motion.div
@@ -64,8 +64,6 @@ const AdvantageItem = ({ advantage, index }: { advantage: typeof advantages[0]; 
 };
 
 const AdvantagesSection = () => {
-  useAnimateOnScroll();
-
   return (
     <section className="py-20 md:py-32 bg-[#e8e8e8] relative overflow-hidden">
       <div className="px-6 sm:px-10 lg:px-[1cm] relative z-10">
@@ -73,8 +71,8 @@ const AdvantagesSection = () => {
         {/* Заголовок */}
         <div className="mb-28 overflow-hidden">
           <h2 className="text-6xl md:text-7xl lg:text-8xl font-light text-gray-800 leading-tight text-center flex items-baseline justify-center gap-[0.3em]">
-            <span className="inline-block animate-on-scroll slide-in-left">Наши</span>
-            <span className="inline-block animate-on-scroll slide-in-right animation-delay-200">преимущества</span>
+            <ScrollReveal type="slide-left" inline>Наши</ScrollReveal>
+            <ScrollReveal type="slide-right" delay={0.15} inline>преимущества</ScrollReveal>
           </h2>
         </div>
 

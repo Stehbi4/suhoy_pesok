@@ -1,10 +1,8 @@
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Beaker, ChevronDown, Droplets, FileCheck, Thermometer } from 'lucide-react';
-import { useAnimateOnScroll } from '@/hooks/useAnimateOnScroll';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const HeroSection = () => {
-  useAnimateOnScroll();
-
   const characteristics = [
     {
       icon: FileCheck,
@@ -111,11 +109,11 @@ const HeroSection = () => {
         {/* Левая колонка — slide-in-left по одной */}
         <div className="space-y-2 lg:space-y-8 w-full lg:w-auto lg:text-right">
           {characteristics.slice(0, 3).map((char, idx) => (
-            <div
+            <ScrollReveal
               key={idx}
-              className={`animate-on-scroll slide-in-left card-dark card-hover p-6 hover:border-[#f80000]/30 flex items-center gap-4 lg:flex-row-reverse backdrop-blur-sm bg-[#111111]/60 ${
-                idx === 0 ? 'animation-delay-100' : idx === 1 ? 'animation-delay-300' : 'animation-delay-500'
-              }`}
+              type="slide-left"
+              delay={idx * 0.12}
+              className="card-dark card-hover p-6 hover:border-[#f80000]/30 flex items-center gap-4 lg:flex-row-reverse backdrop-blur-sm bg-[#111111]/60"
             >
               <char.icon className="w-7 h-7 text-white shrink-0" />
               <div>
@@ -129,18 +127,18 @@ const HeroSection = () => {
                   {char.description}
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
 
         {/* Правая колонка — slide-in-right по одной */}
         <div className="space-y-2 lg:space-y-8 w-full lg:w-auto lg:text-left">
           {characteristics.slice(3, 6).map((char, idx) => (
-            <div
+            <ScrollReveal
               key={idx}
-              className={`animate-on-scroll slide-in-right card-dark card-hover p-6 hover:border-[#f80000]/30 flex items-center gap-4 backdrop-blur-sm bg-[#111111]/60 ${
-                idx === 0 ? 'animation-delay-100' : idx === 1 ? 'animation-delay-300' : 'animation-delay-500'
-              }`}
+              type="slide-right"
+              delay={idx * 0.12}
+              className="card-dark card-hover p-6 hover:border-[#f80000]/30 flex items-center gap-4 backdrop-blur-sm bg-[#111111]/60"
             >
               <char.icon className="w-7 h-7 text-white shrink-0" />
               <div>
@@ -154,7 +152,7 @@ const HeroSection = () => {
                   {char.description}
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       </div>
