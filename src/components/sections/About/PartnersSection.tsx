@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { partners } from '@/data/partners';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 
@@ -7,24 +7,23 @@ const loopedPartners = [...partners, ...partners];
 
 const PartnersSection = () => {
   const trackRef = useRef<HTMLDivElement>(null);
-  const [isPaused, setIsPaused] = useState(false);
+  // Use a ref instead of state so isPaused changes don't re-run useEffect (which resets offset)
+  const isPausedRef = useRef(false);
 
-  // CSS animation-based infinite scroll
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
 
-    // Measure half-width (original set) for seamless reset
     const halfWidth = track.scrollWidth / 2;
 
     let offset = 0;
     let lastTime = performance.now();
     let animId: number;
 
-    const speed = 0.5; // px per ms → ~30px/s
+    const speed = 0.03; // px per ms → ~30px/s
 
     const animate = (now: number) => {
-      if (!isPaused) {
+      if (!isPausedRef.current) {
         const dt = now - lastTime;
         offset += speed * dt;
         if (offset >= halfWidth) offset -= halfWidth;
@@ -36,7 +35,7 @@ const PartnersSection = () => {
 
     animId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animId);
-  }, [isPaused]);
+  }, []); // empty deps — runs once, no offset reset on hover
 
   return (
     <section className="py-24 lg:py-32 bg-[#0a0a0a] overflow-hidden">
@@ -50,8 +49,8 @@ const PartnersSection = () => {
       {/* Carousel */}
       <div
         className="relative"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
+        onMouseEnter={() => { isPausedRef.current = true; }}
+        onMouseLeave={() => { isPausedRef.current = false; }}
       >
         <div
           ref={trackRef}
