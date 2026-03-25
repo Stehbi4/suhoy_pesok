@@ -189,7 +189,7 @@ const ContactsPage = () => {
           {/* Contact Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {/* Phone */}
-            <div className="bg-[#111111] border border-[#222222] rounded-lg p-6 hover:border-[#f80000]/50 transition-all duration-300">
+            <div className="card-dark card-hover p-8 hover:border-[#f80000]/30 rounded-lg transition-all duration-300">
               <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4">
                 <Phone className="w-6 h-6 text-white" />
               </div>
@@ -225,7 +225,7 @@ const ContactsPage = () => {
             </div>
 
             {/* Email */}
-            <div className="bg-[#111111] border border-[#222222] rounded-lg p-6 hover:border-[#f80000]/50 transition-all duration-300">
+            <div className="card-dark card-hover p-8 hover:border-[#f80000]/30 rounded-lg transition-all duration-300">
               <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4">
                 <Mail className="w-6 h-6 text-white" />
               </div>
@@ -248,7 +248,7 @@ const ContactsPage = () => {
             </div>
 
             {/* Working Hours */}
-            <div className="bg-[#111111] border border-[#222222] rounded-lg p-6 hover:border-[#f80000]/50 transition-all duration-300">
+            <div className="card-dark card-hover p-8 hover:border-[#f80000]/30 rounded-lg transition-all duration-300">
               <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4">
                 <Clock className="w-6 h-6 text-white" />
               </div>
@@ -266,25 +266,16 @@ const ContactsPage = () => {
             </div>
 
             {/* Address */}
-            <div className="bg-[#111111] border border-[#222222] rounded-lg p-6 hover:border-[#f80000]/50 transition-all duration-300">
+            <div className="card-dark card-hover p-8 hover:border-[#f80000]/30 rounded-lg transition-all duration-300">
               <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4">
                 <MapPin className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-sm text-gray-500 uppercase tracking-wider mb-3">
                 Адрес
               </h3>
-              <p className="text-white text-sm leading-relaxed">
-                Офис:<br />
-                <p className="text-white text-xs leading-relaxed">
-                  Россия, Ленинградская область,<br />
-                  Сапкт-Петербург,<br />
-                  Гражданский проспект, д. 26, отиф 1-15
-                </p>
-              </p>
-              <br />
-              <p className="text-white text-sm leading-relaxed">
+              <p className="text-white text-lg leading-relaxed">
                 Поизводство:<br />
-                <p className="text-white text-xs leading-relaxed">
+                <p className="text-white text-sm leading-relaxed">
                   Россия, Ленинградская область,<br />
                   Всеволожский район, Мурино,<br />
                   Центральный проезд, 10
@@ -297,7 +288,7 @@ const ContactsPage = () => {
         {/* Full Width Map */}
         <div className="w-full py-16 md:py-24">
           <iframe
-            src="https://yandex.ru/map-widget/v1/?ll=30.389295%2C60.006293&z=14&pt=30.389295%2C60.006293%2Ccomma"
+            src="https://yandex.ru/map-widget/v1/?ll=30.487752%2C60.039149&z=14&pt=30.487752%2C60.039149&%2Ccomma"
             width="100%"
             height="650"
             frameBorder="0"

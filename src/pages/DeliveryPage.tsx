@@ -101,7 +101,7 @@ const DeliveryPage = () => {
             {pricing.map((item, index) => (
               <div
                 key={index}
-                className="bg-[#111111] border border-[#222222] rounded-lg p-8 text-center hover:border-[#f80000]/50 transition-all duration-300"
+                className="card-dark card-hover p-8 hover:border-[#f80000]/30 rounded-lg text-center transition-all duration-300"
               >
                 <div className="text-2xl font-light text-white mb-2">
                   {item.volume}
@@ -149,7 +149,7 @@ const DeliveryPage = () => {
             {workProcess.map((step, index) => (
               <div
                 key={index}
-                className="relative bg-[#111111] border border-[#222222] rounded-lg p-8 hover:border-[#f80000]/50 transition-all duration-300"
+                className="card-dark card-hover p-8 hover:border-[#f80000]/30 rounded-lg  transition-all duration-300"
               >
                 <div className="text-5xl font-bold text-[#1a1a1a] mb-4">
                   {step.step}
@@ -195,23 +195,22 @@ const DeliveryPage = () => {
               <h2 className="text-3xl md:text-4xl font-light text-white mb-8">
                 Удобная оплата 
               </h2>
-
               <div className="space-y-4">
-                <div className="flex items-start gap-4 p-5 bg-[#111111] border border-[#222222] rounded-lg hover:border-[#f80000]/50 transition-all duration-300">
+                <div className="flex items-start card-dark card-hover p-6 hover:border-[#f80000]/30 rounded-lg hover:border-[#f80000]/50 transition-all duration-300">
                   <CheckCircle2 className="w-6 h-6 text-white flex-shrink-0 mt-0.5" />
                   <div>
                     <h3 className="text-lg text-white mb-1">Безналичный расчёт</h3>
                     <p className="text-gray-400">Для юридических лиц по договору</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-4 p-5 bg-[#111111] border border-[#222222] rounded-lg hover:border-[#f80000]/50 transition-all duration-300">
+                <div className="flex items-start card-dark card-hover p-6 hover:border-[#f80000]/30 rounded-lg hover:border-[#f80000]/50 transition-all duration-300">
                   <CheckCircle2 className="w-6 h-6 text-white flex-shrink-0 mt-0.5" />
                   <div>
                     <h3 className="text-lg text-white mb-1">!Наличный расчёт!?</h3>
                     <p className="text-gray-400">Для физических лиц</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-4 p-5 bg-[#111111] border border-[#222222] rounded-lg hover:border-[#f80000]/50 transition-all duration-300">
+                <div className="flex items-start card-dark card-hover p-6 hover:border-[#f80000]/30 rounded-lg hover:border-[#f80000]/50 transition-all duration-300">
                   <CheckCircle2 className="w-6 h-6 text-white flex-shrink-0 mt-0.5" />
                   <div>
                     <h3 className="text-lg text-white mb-1">Отсрочка платежа??</h3>
