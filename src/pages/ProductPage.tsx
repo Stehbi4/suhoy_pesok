@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Download, Droplets, Circle, Wind, Copy, Check, Truck, Package, ChevronDown } from 'lucide-react';
+import { ArrowLeft, Download, Droplets, Circle, Wind, Copy, Check, Truck, Package, ChevronDown, X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
 import { products } from '@/data/articles';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 
@@ -14,6 +14,33 @@ const ProductPage = () => {
   const [calcWidth, setCalcWidth] = useState('');
   const [calcLength, setCalcLength] = useState('');
   const [calcHeight, setCalcHeight] = useState('');
+
+  // Лайтбокс: миниатюры + главное фото
+  const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
+  const galleryImages = useMemo(() => {
+    if (!product) return [];
+    return [...product.images.gallery.slice(0, 4), product.images.main];
+  }, [product]);
+
+  const closeLightbox = useCallback(() => setLightboxIdx(null), []);
+  const prevLightbox  = useCallback(() => setLightboxIdx(i => i === null ? null : (i - 1 + galleryImages.length) % galleryImages.length), [galleryImages.length]);
+  const nextLightbox  = useCallback(() => setLightboxIdx(i => i === null ? null : (i + 1) % galleryImages.length), [galleryImages.length]);
+
+  useEffect(() => {
+    if (lightboxIdx === null) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape')     closeLightbox();
+      if (e.key === 'ArrowLeft')  prevLightbox();
+      if (e.key === 'ArrowRight') nextLightbox();
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [lightboxIdx, closeLightbox, prevLightbox, nextLightbox]);
+
+  useEffect(() => {
+    document.body.style.overflow = lightboxIdx !== null ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [lightboxIdx]);
 
   const calcResult = useMemo(() => {
     const h = parseFloat(calcHeight) || 0;
@@ -103,7 +130,7 @@ const ProductPage = () => {
 
               {/* 2. Характеристики */}
               <ScrollReveal type="fade-up" delay={0.1} className="mt-20">
-                <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium">Характеристика материала</span>
+                <span className="uppercase text-gray-300 tracking-[0.3em] text-xs font-medium">Характеристика материала</span>
               </ScrollReveal>
 
               <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-5">
@@ -128,11 +155,11 @@ const ProductPage = () => {
 
               {/* 3. Скачать спецификацию */}
               <ScrollReveal type="fade-up" delay={0.2} className="mt-16">
-                <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium block mb-6">Скачать спецификацию</span>
+                <span className="uppercase text-gray-300 tracking-[0.3em] text-xs font-medium block mb-6">Скачать спецификацию</span>
                 <a
                   href={docPath}
                   download
-                  className="bg-[#f80000] text-white px-8 py-4 rounded-lg font-semibold tracking-wide hover:bg-gray-100 transition-colors inline-flex items-center justify-center gap-2"
+                  className="bg-[#f80000] text-white px-8 py-4 rounded-lg font-semibold tracking-wide hover:bg-[#ff3333] transition-colors inline-flex items-center justify-center gap-2"
                 >
                   <Download className="w-5 h-5" />
                   Скачать PDF
@@ -144,25 +171,81 @@ const ProductPage = () => {
             <div className="flex gap-4 h-[85vh] sticky top-[1cm]">
               <div className="flex flex-col gap-4 flex-shrink-0">
                 {img.gallery.slice(0, 4).map((src, i) => (
-                  <img
+                  <div
                     key={i}
-                    src={src}
-                    alt={`${product.shortName} — вид ${i + 1}`}
-                    className="w-[125px] h-[150px] object-cover rounded-2xl border border-[#222222]"
-                  />
+                    className="relative group cursor-zoom-in flex-shrink-0"
+                    onClick={() => setLightboxIdx(i)}
+                  >
+                    <img
+                      src={src}
+                      alt={`${product.shortName} — вид ${i + 1}`}
+                      className="w-[125px] h-[150px] object-cover rounded-2xl border border-[#222222] transition-opacity duration-300 group-hover:opacity-75"
+                    />
+                    <ZoomIn className="absolute top-2 right-2 w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
                 ))}
               </div>
-              <img
-                src={img.main}
-                alt={product.name}
-                className="flex-1 h-full object-cover rounded-3xl"
-              />
+              <div
+                className="relative flex-1 h-full cursor-zoom-in group"
+                onClick={() => setLightboxIdx(4)}
+              >
+                <img
+                  src={img.main}
+                  alt={product.name}
+                  className="w-full h-full object-cover rounded-3xl transition-opacity duration-300 group-hover:opacity-90"
+                />
+                <ZoomIn className="absolute top-4 right-4 w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ═══ 3. ГРАНУЛОМЕТРИЯ ═══ */}
+      
+      {/* ═══ 4. ТЕХНИЧЕСКИЙ ХАБ ═══ */}
+      <section className="relative py-24 lg:py-32 bg-cover bg-center bg-fixed" style={{ backgroundImage: `url(${img.bg})` }}>
+        <div className="absolute inset-0 bg-black/90" />
+
+        <div className="relative z-10 px-6 sm:px-10 lg:px-[1cm]">
+          <ScrollReveal type="fade-up" className="mb-16">
+            <h2 className="text-4xl lg:text-5xl font-light mt-4">Полные характеристики</h2>
+          </ScrollReveal>
+
+          <ScrollReveal type="fade-up" delay={0.1} className="max-w-5xl mx-auto">
+            <div className="card-dark overflow-hidden">
+              <div className="px-8 py-5 border-b border-[#222222]">
+                <h4 className="text-sm uppercase tracking-widest text-gray-400">Физико-механические свойства</h4>
+              </div>
+              {Object.entries(product.technicalData || {}).map(([key, value]) => (
+                <div
+                  key={key}
+                  className="flex items-center justify-between px-8 py-5 border-b border-[#1a1a1a] hover:bg-[#1a1a1a] transition-colors cursor-pointer group"
+                  onClick={() => handleCopyRow(key, String(value))}
+                >
+                  <span className="text-gray-400 text-sm pr-4">{key}</span>
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    <span className="font-mono text-white">{String(value)}</span>
+                    {copiedRow === key ? (
+                      <Check className="w-4 h-4 text-green-500" />
+                    ) : (
+                      <Copy className="w-4 h-4 text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    )}
+                  </div>
+                </div>
+              ))}
+              <div className="px-8 py-5">
+                <span className="text-gray-400 text-sm">Стандарт</span>
+                <span className="float-right font-mono text-[#f80000]">{product.gost}</span>
+              </div>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal type="fade-in" delay={0.2} className="mt-6 text-center text-gray-600 text-xs">
+            Нажмите на строку, чтобы скопировать для проектной документации
+          </ScrollReveal>
+        </div>
+      </section>
+{/* ═══ 3. ГРАНУЛОМЕТРИЯ ═══ */}
       <section className="py-24 lg:py-32">
         <div className="px-6 sm:px-10 lg:px-[1cm]">
           <ScrollReveal type="fade-up">
@@ -221,56 +304,10 @@ const ProductPage = () => {
         </div>
       </section>
 
-      {/* ═══ 4. ТЕХНИЧЕСКИЙ ХАБ ═══ */}
-      <section className="relative py-24 lg:py-32 bg-cover bg-center bg-fixed" style={{ backgroundImage: `url(${img.bg})` }}>
-        <div className="absolute inset-0 bg-black/90" />
-
-        <div className="relative z-10 px-6 sm:px-10 lg:px-[1cm]">
-          <ScrollReveal type="fade-up" className="mb-16">
-            <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium">Технические данные</span>
-            <h2 className="text-4xl lg:text-5xl font-light mt-4">Полные характеристики</h2>
-          </ScrollReveal>
-
-          <ScrollReveal type="fade-up" delay={0.1} className="max-w-5xl mx-auto">
-            <div className="card-dark overflow-hidden">
-              <div className="px-8 py-5 border-b border-[#222222]">
-                <h4 className="text-sm uppercase tracking-widest text-gray-400">Физико-механические свойства</h4>
-              </div>
-              {Object.entries(product.technicalData || {}).map(([key, value]) => (
-                <div
-                  key={key}
-                  className="flex items-center justify-between px-8 py-5 border-b border-[#1a1a1a] hover:bg-[#1a1a1a] transition-colors cursor-pointer group"
-                  onClick={() => handleCopyRow(key, String(value))}
-                >
-                  <span className="text-gray-400 text-sm pr-4">{key}</span>
-                  <div className="flex items-center gap-3 flex-shrink-0">
-                    <span className="font-mono text-white">{String(value)}</span>
-                    {copiedRow === key ? (
-                      <Check className="w-4 h-4 text-green-500" />
-                    ) : (
-                      <Copy className="w-4 h-4 text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    )}
-                  </div>
-                </div>
-              ))}
-              <div className="px-8 py-5">
-                <span className="text-gray-400 text-sm">Стандарт</span>
-                <span className="float-right font-mono text-[#f80000]">{product.gost}</span>
-              </div>
-            </div>
-          </ScrollReveal>
-
-          <ScrollReveal type="fade-in" delay={0.2} className="mt-6 text-center text-gray-600 text-xs">
-            Нажмите на строку, чтобы скопировать для проектной документации
-          </ScrollReveal>
-        </div>
-      </section>
-
       {/* ═══ 5. ХИМИЧЕСКИЙ СОСТАВ ═══ */}
       <section className="py-24 lg:py-32">
         <div className="px-6 sm:px-10 lg:px-[1cm]">
           <ScrollReveal type="fade-up">
-            <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium">Молекулярная чистота</span>
             <h2 className="text-4xl lg:text-5xl font-light mt-4">Химический состав</h2>
           </ScrollReveal>
 
@@ -305,7 +342,6 @@ const ProductPage = () => {
       <section className="py-24 lg:py-32 bg-[#080808]">
         <div className="px-6 sm:px-10 lg:px-[1cm]">
           <ScrollReveal type="fade-up">
-            <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium">Расчёт</span>
             <h2 className="text-4xl lg:text-5xl font-light mt-4">Смарт-калькулятор</h2>
             <p className="text-gray-500 mt-4">Рассчитайте необходимое количество материала</p>
           </ScrollReveal>
@@ -421,7 +457,6 @@ const ProductPage = () => {
       <section className="py-24 lg:py-32">
         <div className="px-6 sm:px-10 lg:px-[1cm]">
           <ScrollReveal type="fade-up">
-            <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium">Кейсы</span>
             <h2 className="text-4xl lg:text-5xl font-light mt-4">Области применения</h2>
           </ScrollReveal>
 
@@ -433,7 +468,7 @@ const ProductPage = () => {
                 delay={i * 0.07}
                 className="card-dark card-hover p-10 hover:border-[#f80000]/30"
               >
-                <div className="text-[#f80000] font-mono text-sm mb-4">
+                <div className="text-white font-mono text-sm mb-4">
                   {String(i + 1).padStart(2, '0')}
                 </div>
                 <h4 className="text-2xl font-light leading-tight">{area}</h4>
@@ -448,7 +483,6 @@ const ProductPage = () => {
         <div className="px-6 sm:px-10 lg:px-[1cm]">
           <div className="grid lg:grid-cols-2 gap-16">
             <ScrollReveal type="slide-left">
-              <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium">Логистика</span>
               <h2 className="text-4xl font-light mt-4 mb-12">Упаковка и отгрузка</h2>
               <div className="grid grid-cols-2 gap-6">
                 <div className="card-dark card-hover p-8 hover:border-[#f80000]/30">
@@ -465,7 +499,6 @@ const ProductPage = () => {
             </ScrollReveal>
 
             <ScrollReveal type="slide-right" delay={0.15}>
-              <span className="uppercase text-[#f80000] tracking-[0.3em] text-xs font-medium">Загрузки</span>
               <h2 className="text-4xl font-light mt-4 mb-12">Документация</h2>
               <div className="space-y-4">
                 {[
@@ -502,6 +535,55 @@ const ProductPage = () => {
           <p className="text-gray-500 mt-10 text-lg">Нужен расчёт стоимости? Напишите нам</p>
         </ScrollReveal>
       </section>
+      {/* ═══ ЛАЙТБОКС ═══ */}
+      {lightboxIdx !== null && (
+        <div
+          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+          onClick={closeLightbox}
+        >
+          <button className="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors z-10" onClick={closeLightbox}>
+            <X className="w-7 h-7" />
+          </button>
+
+          <div className="absolute top-6 left-1/2 -translate-x-1/2 text-gray-500 text-sm font-mono tracking-widest">
+            {String(lightboxIdx + 1).padStart(2, '0')} / {String(galleryImages.length).padStart(2, '0')}
+          </div>
+
+          <button
+            className="absolute left-4 sm:left-8 text-gray-400 hover:text-white transition-colors z-10 p-2"
+            onClick={(e) => { e.stopPropagation(); prevLightbox(); }}
+          >
+            <ChevronLeft className="w-10 h-10" />
+          </button>
+
+          <img
+            key={lightboxIdx}
+            src={galleryImages[lightboxIdx]}
+            alt={`${product.shortName} — ${lightboxIdx + 1}`}
+            className="max-h-[85vh] max-w-[85vw] object-contain rounded-xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+
+          <button
+            className="absolute right-4 sm:right-8 text-gray-400 hover:text-white transition-colors z-10 p-2"
+            onClick={(e) => { e.stopPropagation(); nextLightbox(); }}
+          >
+            <ChevronRight className="w-10 h-10" />
+          </button>
+
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
+            {galleryImages.map((_, i) => (
+              <button
+                key={i}
+                onClick={(e) => { e.stopPropagation(); setLightboxIdx(i); }}
+                className={`rounded-full transition-all duration-300 ${
+                  i === lightboxIdx ? 'w-6 h-2 bg-[#f80000]' : 'w-2 h-2 bg-gray-600 hover:bg-gray-400'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </main>
   );
 };

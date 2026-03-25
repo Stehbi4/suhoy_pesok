@@ -1,5 +1,6 @@
 import HeritageSection from '@/components/sections/About/HeritageSection';
 import ActivitiesSection from '@/components/sections/About/ActivitiesSection';
+import QuoteSection from '@/components/sections/About/QuoteSection';
 import PositioningSection from '@/components/sections/About/PositioningSection';
 import PhotoAlbumSection from '@/components/sections/About/PhotoAlbumSection';
 import PartnersSection from '@/components/sections/About/PartnersSection';
@@ -16,6 +17,9 @@ const AboutPage = () => {
       {/* 03 — Позиционирование + CTA */}
       <PositioningSection />
 
+      {/* 02 — Цитата */}
+      <QuoteSection />
+      
       {/* 04 — Фотоальбом (Фибоначчи) */}
       <PhotoAlbumSection />
 

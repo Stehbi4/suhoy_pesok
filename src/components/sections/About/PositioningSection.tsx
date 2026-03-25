@@ -7,7 +7,7 @@ const PositioningSection = () => {
       {/* Background image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/Production_Site/4.png')" }}
+        style={{ backgroundImage: "url('/Production_Site/BG.png')" }}
       />
       <div className="absolute inset-0 bg-black/80" />
 
@@ -15,10 +15,6 @@ const PositioningSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Left — statement */}
           <div>
-            <ScrollReveal type="fade-up">
-              <span className="text-[#f80000] font-mono text-sm tracking-[0.3em] uppercase">03 — Позиционирование</span>
-            </ScrollReveal>
-
             <ScrollReveal type="slide-left" delay={0.1}>
               <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light text-white leading-[1.1] mt-8">
                 Мы имеем огромный опыт

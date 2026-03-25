@@ -86,16 +86,22 @@ const HeritageSection = () => {
               прозрачным, цветные пиксели логотипа проявляются поверх
               тёмного фона сайта                                       */}
         <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
+          {/* webm (VP9) поддерживает альфа-канал → прозрачный фон нативно.
+              mp4 fallback — для браузеров без webm, mix-blend-mode: screen
+              симулирует прозрачность если лого светлое на чёрном фоне.
+              Конвертация: ffmpeg -i Logo_Animation.mp4 -c:v libvpx-vp9 -pix_fmt yuva420p Logo_Animation.webm */}
           <video
             ref={videoRef}
-            src="/Logo/Logo_Animation.webm"
             autoPlay
             loop
             muted
             playsInline
             style={{ mixBlendMode: 'screen' }}
             className="w-[400px] h-[400px] md:w-[520px] md:h-[520px] lg:w-[600px] lg:h-[600px] object-contain opacity-60"
-          />
+          >
+            <source src="/Logo/Logo_Animation.webm" type="video/webm" />
+            <source src="/Logo/Logo_Animation.mp4"  type="video/mp4"  />
+          </video>
         </div>
 
         {/* ── СЛОЙ 10: горизонтальный трек со слайдами ──────────────── */}
@@ -108,18 +114,15 @@ const HeritageSection = () => {
               key={slide.id}
               className="relative w-screen h-full flex-shrink-0 flex items-center px-6 sm:px-10 lg:px-[1cm]"
             >
-              {/* Лейбл — левый верхний угол */}
-              <div className="absolute top-8 left-6 sm:left-10 lg:left-[1cm]">
-                <span className="text-[#f80000] font-mono text-sm tracking-[0.3em] uppercase">
-                  {String(i + 1).padStart(2, '0')} — Наследие
-                </span>
-                <div className="mt-2 text-gray-500 text-lg font-light">{slide.period}</div>
+              {/* Период — левый верхний угол, top-24 чтобы не перекрывался хедером */}
+              <div className="absolute top-24 left-6 sm:left-10 lg:left-[1cm]">
+                <div className="text-gray-500 text-lg font-light">{slide.period}</div>
               </div>
 
               {/* Год фоном — правый нижний угол */}
               <div className="absolute bottom-16 right-6 sm:right-10 lg:right-[1cm] pointer-events-none select-none">
                 <span className="text-[15vw] font-extrabold leading-none text-white/[0.03]">
-                  {slide.period.split('–')[0]}
+                  {slide.period.split('–').pop()}
                 </span>
               </div>
 
@@ -150,9 +153,11 @@ const HeritageSection = () => {
         <div className="absolute bottom-8 left-6 sm:left-10 lg:left-[1cm] right-6 sm:right-10 lg:right-[1cm] z-20">
           {/* Годы */}
           <div className="flex justify-between mb-4">
-            {historySlides.map((slide) => (
+            {historySlides.map((slide, i) => (
               <span key={slide.id} className="text-xs text-gray-600 font-mono">
-                {slide.period.split('–')[0]}
+                {i === historySlides.length - 1
+                  ? slide.period.split('–').pop()
+                  : slide.period.split('–')[0]}
               </span>
             ))}
           </div>

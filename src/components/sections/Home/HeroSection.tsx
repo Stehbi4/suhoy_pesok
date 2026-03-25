@@ -96,12 +96,11 @@ const HeroSection = () => {
       <div className="absolute bottom-[50vh] relative z-10 h-full flex items-start justify-start px-[1cm] pt-[100px]">
         <div className="flex justify-start items-start">
           <p className="text-white text-4xl md:text-5xl lg:text-6xl font-light leading-[1.05] tracking-tight">
-            Мы закупаем наще сырьё <br />
-            с <span className="text-[#f80000] text-5xl md:text-65xl lg:text-7xl font-medium">проверенных </span> карьеров <br />
-            Ленинградской области
-          </p>
+            Каждая песчинка — кирпичик величия: <br />  
+            прочность огромного всегда держится на <br />надёжности самого малого <br />
+            </p>
         </div>
-      </div>
+      </div>Каждая песчинка — кирпичик величия: прочность огромного всегда держится на надёжности самого малого
 
       {/* Характеристики — карточки */}
       <div className="absolute bottom-0 lg:bottom-[15vh] left-0 right-0 px-[1cm] flex flex-col lg:flex-row justify-between items-start gap-6">

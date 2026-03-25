@@ -41,7 +41,6 @@ const PartnersSection = () => {
     <section className="py-24 lg:py-32 bg-[#0a0a0a] overflow-hidden">
       <div className="px-6 sm:px-10 lg:px-[1cm] mb-16">
         <ScrollReveal type="fade-up">
-          <span className="text-[#f80000] font-mono text-sm tracking-[0.3em] uppercase">05 — Партнёры</span>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-white mt-4">Партнёры</h2>
         </ScrollReveal>
       </div>

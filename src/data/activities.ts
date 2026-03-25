@@ -30,7 +30,7 @@ export const divisions: Division[] = [
     shortName: 'ТехШкола',
     description:
       'Инженерно-технологическое сопровождение строительных и ремонтных работ. Разработка регламентов, проектирование составов, выезды на объекты, обучение подрядчиков.',
-    image: '/Production_Site/1.png',
+    image: '/activity/1.Tech_Shcool.jpg',
     activities: [
       {
         id: 'ts_01',
@@ -70,7 +70,7 @@ export const divisions: Division[] = [
     shortName: 'Лаборатория',
     description:
       'Собственный аккредитованный Научно-исследовательский центр. От анализа сырья до сертификационных испытаний.',
-    image: '/Production_Site/2.png',
+    image: '/activity/2.Lab.jpg',
     activities: [
       {
         id: 'lab_01',
@@ -104,7 +104,7 @@ export const divisions: Division[] = [
     shortName: 'Производство',
     description:
       'Высокотехнологичное производство в Санкт-Петербурге. Более 100 наименований, мощность свыше 180 тыс. тонн в год.',
-    image: '/Production_Site/3.png',
+    image: '/activity/3.Facktory.jpg',
     activities: [
       {
         id: 'prod_01',

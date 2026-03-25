@@ -3,18 +3,17 @@ import { X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 
 // Fibonacci-spiral layout: blocks sized by Fibonacci sequence
-// Grid: 5 cols × 3 rows
+// Grid: 4 cols × 3 rows
 // Row 1-2 left (col 1-3): largest block (Fib 5)
-// Row 1 right (col 4-5): medium block (Fib 3)
+// Row 2 right (col 4): medium block (Fib 3)
 // Row 2 right (col 4-5): medium block (Fib 2)
 // Row 3: 2+2+1 = 5 cols → (Fib 2) + (Fib 2) + (Fib 1)
 const photos = [
-  { src: '/Production_Site/5.png', alt: 'Производство — линия сушки',          span: 'col-span-3 row-span-2' },
-  { src: '/Production_Site/6.png', alt: 'Производство — фракционирование',     span: 'col-span-2 row-span-1' },
-  { src: '/Production_Site/1.png', alt: 'Производство — контроль качества',    span: 'col-span-2 row-span-1' },
-  { src: '/Production_Site/7.png', alt: 'Производство — упаковка',             span: 'col-span-2 row-span-1' },
-  { src: '/Production_Site/2.png', alt: 'Производство — лаборатория',          span: 'col-span-2 row-span-1' },
-  { src: '/Production_Site/3.png', alt: 'Производство — отгрузка',             span: 'col-span-1 row-span-1' },
+  { src: '/Production_Site/1.png', alt: 'Производство — главный корпус',       span: 'col-span-3 row-span-2' },
+  { src: '/Production_Site/2.png', alt: 'Производство — территория с воздуха', span: 'col-span-1 row-span-1' },
+  { src: '/Production_Site/3.png', alt: 'Производство — склад',                span: 'col-span-1 row-span-2' },
+  { src: '/Production_Site/4.png', alt: 'Производство — конвейер',             span: 'col-span-2 row-span-1' },
+  { src: '/Production_Site/5.png', alt: 'Производство',                        span: 'col-span-1 row-span-1' },
 ];
 
 const PhotoAlbumSection = () => {
@@ -53,7 +52,7 @@ const PhotoAlbumSection = () => {
       <section className="bg-[#0a0a0a] py-16 lg:py-24">
         <div className="px-[1cm]">
           <ScrollReveal type="fade-up">
-            <div className="grid grid-cols-5 grid-rows-3 gap-3 h-[calc(100vh-2cm)]">
+            <div className="grid grid-cols-4 grid-rows-3 gap-3 h-[calc(100vh-2cm)]">
               {photos.map((photo, i) => (
                 <div
                   key={i}
