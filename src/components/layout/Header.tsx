@@ -49,7 +49,7 @@ const Header = () => {
   const textClass = isLightPage ? 'text-gray-900' : 'text-white';
   const hoverTextClass = isLightPage ? 'hover:text-gray-600' : 'hover:text-gray-300';
   const activeTextClass = isLightPage ? 'text-gray-900 font-medium' : 'text-white font-medium';
-  const logoSrc = isLightPage ? '/logo-light.png' : '/logo-dark.png';
+  const logoSrc = isLightPage ? 'Logo/logo-light.png' : 'Logo/logo-dark.png';
   
   // Border styles for buttons
   const borderClass = isLightPage 

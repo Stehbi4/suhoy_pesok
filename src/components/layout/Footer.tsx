@@ -14,7 +14,7 @@ const Footer = () => {
   const textClass = isLightPage ? 'text-gray-900' : 'text-white';
   const mutedTextClass = isLightPage ? 'text-gray-500' : 'text-gray-500';
   const borderClass = isLightPage ? 'border-gray-200' : 'border-[#222222]';
-  const logoSrc = isLightPage ? '/logo-light.png' : '/logo-dark.png';
+  const logoSrc = isLightPage ? '/Logo/logo-light.png' : '/Logo/logo-dark.png';
 
   return (
     <footer className={`${bgClass} border-t`}>
