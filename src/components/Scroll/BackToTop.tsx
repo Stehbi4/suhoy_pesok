@@ -27,7 +27,7 @@ const BackToTop = () => {
       onClick={scrollToTop}
       className={`
         fixed bottom-8 right-8 z-[60]
-        bg-[#f80000] hover:bg-[#ff3333]
+        bg-brand-red hover:bg-brand-red-light
         text-white 
         w-16 h-16 
         rounded-full 

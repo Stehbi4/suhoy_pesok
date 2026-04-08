@@ -5,6 +5,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // ── Brand tokens ──────────────────────────────────────────────────
+        'brand-red':       '#f80000',   // primary accent
+        'brand-red-light': '#ff3333',   // hover / lighter variant
+        'brand-dark':      '#1A1A1B',   // light-theme primary text
+        'brand-page':      '#F5F4F2',   // light-theme page bg
+        'brand-alt':       '#EDECEA',   // light-theme alt bg
+        'brand-bg':        '#0d0d0d',   // dark-theme page bg
+        'brand-bg-alt':    '#111111',   // dark-theme secondary bg
+        'brand-graphite':  '#0a0a0a',  // about-page bg
+        // ──────────────────────────────────────────────────────────────────
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

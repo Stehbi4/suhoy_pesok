@@ -7,7 +7,7 @@ const ArticlesPage = () => {
   const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   return (
-    <main className="h-screen overflow-hidden bg-[#0a0a0a] flex">
+    <main className="h-screen overflow-hidden bg-brand-bg flex">
 
       {/* Левая часть — картинка, 1/3 ширины, 2/3 высоты, прибита к низу */}
       <div className="hidden lg:flex w-1/3 flex-shrink-0 flex-col justify-end px-[1cm] pb-[1cm]">

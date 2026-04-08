@@ -34,7 +34,7 @@ const ContactsPage = () => {
           {/* Contact Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {/* Phone */}
-            <div className="bg-[#111111] border border-[#222222] rounded-lg p-6 hover:border-[#f80000]/50 transition-all duration-300">
+            <div className="bg-[#111111] border border-[#222222] rounded-lg p-6 card-hover hover:border-brand-red/50">
               <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4">
                 <Phone className="w-6 h-6 text-white" />
               </div>
@@ -44,19 +44,19 @@ const ContactsPage = () => {
               <div className="space-y-1">
                 <a
                   href="tel:+78122909660"
-                  className="text-lg font-light text-white hover:text-[#f80000]/50 transition-colors block"
+                  className="text-lg font-light text-white hover:text-brand-red/50 transition-colors block"
                 >
                   +7 (812) 290-96-60
                 </a>
                 <a
                   href="tel:+79990335733"
-                  className="text-lg font-light text-white hover:text-[#f80000]/50 transition-colors block"
+                  className="text-lg font-light text-white hover:text-brand-red/50 transition-colors block"
                 >
                   +7 (999) 033-57-33
                 </a>
                 <a
                   href="tel:+78125352102"
-                  className="text-lg font-light text-white hover:text-[#f80000]/50 transition-colors block"
+                  className="text-lg font-light text-white hover:text-brand-red/50 transition-colors block"
                 >
                   +7 (812) 535-21-02 доб. 5
                 </a>
@@ -64,7 +64,7 @@ const ContactsPage = () => {
             </div>
 
             {/* Email */}
-            <div className="bg-[#111111] border border-[#222222] rounded-lg p-6 hover:border-[#f80000]/50 transition-all duration-300">
+            <div className="bg-[#111111] border border-[#222222] rounded-lg p-6 card-hover hover:border-brand-red/50">
               <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4">
                 <Mail className="w-6 h-6 text-white" />
               </div>
@@ -73,14 +73,14 @@ const ContactsPage = () => {
               </h3>
               <a
                 href="mailto:zakaz@np-cmid.ru"
-                className="text-lg font-light text-white hover:text-[#f80000]/50 transition-colors block"
+                className="text-lg font-light text-white hover:text-brand-red/50 transition-colors block"
               >
                 zakaz@np-cmid.ru
               </a>
             </div>
 
             {/* Working Hours */}
-            <div className="bg-[#111111] border border-[#222222] rounded-lg p-6 hover:border-[#f80000]/50 transition-all duration-300">
+            <div className="bg-[#111111] border border-[#222222] rounded-lg p-6 card-hover hover:border-brand-red/50">
               <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4">
                 <Clock className="w-6 h-6 text-white" />
               </div>
@@ -98,7 +98,7 @@ const ContactsPage = () => {
             </div>
 
             {/* Address */}
-            <div className="bg-[#111111] border border-[#222222] rounded-lg p-6 hover:border-[#f80000]/50 transition-all duration-300">
+            <div className="bg-[#111111] border border-[#222222] rounded-lg p-6 card-hover hover:border-brand-red/50">
               <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4">
                 <MapPin className="w-6 h-6 text-white" />
               </div>

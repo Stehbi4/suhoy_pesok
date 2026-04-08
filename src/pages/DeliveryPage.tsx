@@ -39,7 +39,7 @@ const DeliveryPage = () => {
   ];
 
   return (
-    <main className="min-h-screen pt-24 md:pt-0 bg-[#0a0a0a]">
+    <main className="min-h-screen pt-24 md:pt-0 bg-brand-bg">
       {/* Page Header */}
       <section className="relative min-h-screen py-16 md:py-24 overflow-hidden bg-cover bg-center" style={{ backgroundImage: "url('/Car_Cem_Dilivery.jpg')" }}>
         <div className="absolute inset-0 bg-gradient-radial from-blue-900/10 to-transparent opacity-30" />
@@ -69,7 +69,7 @@ const DeliveryPage = () => {
               return (
                 <div
                   key={index}
-                  className="card-dark card-hover p-8 hover:border-[#f80000]/30"
+                  className="card-dark card-hover p-8 hover:border-brand-red/30"
                 >
                   <Icon className="w-7 h-7 text-white mb-6" />
                   <h3 className="text-xl font-light text-white mb-3">
@@ -86,7 +86,7 @@ const DeliveryPage = () => {
       </section>
 
       {/* Pricing */}
-      <section className="py-16 md:py-24 bg-[#0a0a0a] relative overflow-hidden">
+      <section className="py-16 md:py-24 bg-brand-bg relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-radial from-blue-900/10 to-transparent opacity-20" />
         
         <div className="container-custom relative z-10">
@@ -101,7 +101,7 @@ const DeliveryPage = () => {
             {pricing.map((item, index) => (
               <div
                 key={index}
-                className="card-dark card-hover p-8 hover:border-[#f80000]/30 rounded-lg text-center transition-all duration-300"
+                className="card-dark card-hover p-8 hover:border-brand-red/30 rounded-lg text-center transition-all duration-300"
               >
                 <div className="text-2xl font-light text-white mb-2">
                   {item.volume}
@@ -149,7 +149,7 @@ const DeliveryPage = () => {
             {workProcess.map((step, index) => (
               <div
                 key={index}
-                className="card-dark card-hover p-8 hover:border-[#f80000]/30 rounded-lg  transition-all duration-300"
+                className="card-dark card-hover p-8 hover:border-brand-red/30 rounded-lg  transition-all duration-300"
               >
                 <div className="text-5xl font-bold text-[#1a1a1a] mb-4">
                   {step.step}
@@ -178,7 +178,7 @@ const DeliveryPage = () => {
         />
       </div>
       {/* Payment */}
-      <section className="py-16 md:py-24 bg-[#0a0a0a] relative overflow-hidden">
+      <section className="py-16 md:py-24 bg-brand-bg relative overflow-hidden">
         <div className="absolute inset-0 orange-glow opacity-20" />
         
         <div className="container-custom relative z-10">
@@ -196,21 +196,21 @@ const DeliveryPage = () => {
                 Удобная оплата 
               </h2>
               <div className="space-y-4">
-                <div className="flex items-start card-dark card-hover p-6 hover:border-[#f80000]/30 rounded-lg hover:border-[#f80000]/50 transition-all duration-300">
+                <div className="flex items-start card-dark card-hover p-6 hover:border-brand-red/30 rounded-lg hover:border-brand-red/50 transition-all duration-300">
                   <CheckCircle2 className="w-6 h-6 text-white flex-shrink-0 mt-0.5" />
                   <div>
                     <h3 className="text-lg text-white mb-1">Безналичный расчёт</h3>
                     <p className="text-gray-400">Для юридических лиц по договору</p>
                   </div>
                 </div>
-                <div className="flex items-start card-dark card-hover p-6 hover:border-[#f80000]/30 rounded-lg hover:border-[#f80000]/50 transition-all duration-300">
+                <div className="flex items-start card-dark card-hover p-6 hover:border-brand-red/30 rounded-lg hover:border-brand-red/50 transition-all duration-300">
                   <CheckCircle2 className="w-6 h-6 text-white flex-shrink-0 mt-0.5" />
                   <div>
                     <h3 className="text-lg text-white mb-1">!Наличный расчёт!?</h3>
                     <p className="text-gray-400">Для физических лиц</p>
                   </div>
                 </div>
-                <div className="flex items-start card-dark card-hover p-6 hover:border-[#f80000]/30 rounded-lg hover:border-[#f80000]/50 transition-all duration-300">
+                <div className="flex items-start card-dark card-hover p-6 hover:border-brand-red/30 rounded-lg hover:border-brand-red/50 transition-all duration-300">
                   <CheckCircle2 className="w-6 h-6 text-white flex-shrink-0 mt-0.5" />
                   <div>
                     <h3 className="text-lg text-white mb-1">Отсрочка платежа??</h3>
@@ -221,7 +221,7 @@ const DeliveryPage = () => {
             </div>
 
             {/* Contact CTA */}
-            <div className="bg-[#111111]  border border-[#222222] rounded-lg p-8 md:p-12">
+            <div className="bg-brand-bg-alt border border-[#222] rounded-lg p-8 md:p-12">
               <h3 className="text-2xl md:text-3xl font-light text-white mb-4">
                 Узнать стоимость доставки
               </h3>
@@ -239,7 +239,7 @@ const DeliveryPage = () => {
                 </a>
                 <Link
                   to="/contacts"
-                  className="block w-full bg-[#f80000] text-white py-4 rounded-lg font-semibold tracking-[#f80000] hover:bg-[#ff3333] transition-colors text-center"
+                  className="block w-full bg-brand-red text-white py-4 rounded-lg font-semibold tracking-brand-red hover:bg-brand-red-light transition-colors text-center"
                 >
                   Оставить заявку
                 </Link>

@@ -4,10 +4,13 @@ import QuoteSection from '@/components/sections/About/QuoteSection';
 import PositioningSection from '@/components/sections/About/PositioningSection';
 import PhotoAlbumSection from '@/components/sections/About/PhotoAlbumSection';
 import PartnersSection from '@/components/sections/About/PartnersSection';
+import ProductionSection from '@/components/sections/About/ProductionSection';
+import QualitySection from '@/components/sections/About/QualitySection';
+import LogisticsSection from '@/components/sections/About/LogisticsSection';
 
 const AboutPage = () => {
   return (
-    <main className="bg-[#0a0a0a] text-white">
+    <main className="bg-brand-graphite text-white">
       {/* 01 — Наследие (горизонтальный скролл-таймлайн) */}
       <HeritageSection />
 
@@ -17,13 +20,22 @@ const AboutPage = () => {
       {/* 03 — Позиционирование + CTA */}
       <PositioningSection />
 
-      {/* 02 — Цитата */}
+      {/* 04 — Цитата */}
       <QuoteSection />
-      
-      {/* 04 — Фотоальбом (Фибоначчи) */}
+
+      {/* 05 — Производство */}
+      <ProductionSection />
+
+      {/* 06 — Контроль качества */}
+      <QualitySection />
+
+      {/* 07 — Логистика */}
+      <LogisticsSection />
+
+      {/* 08 — Фотоальбом (Фибоначчи) */}
       <PhotoAlbumSection />
 
-      {/* 05 — Партнёры */}
+      {/* 09 — Партнёры */}
       <PartnersSection />
     </main>
   );

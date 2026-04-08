@@ -1,73 +1,84 @@
 import { useState } from 'react';
 import { divisions } from '@/data/activities';
-import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const ActivitiesSection = () => {
-  // По умолчанию активен первый пункт — картинка видна сразу
-  const [activeIdx, setActiveIdx] = useState(0);
+  const [activeIdx, setActiveIdx] = useState<number | null>(null);
 
   return (
-    <section className="bg-[#0a0a0a] overflow-hidden">
-      <div className="flex min-h-screen">
+    <section className="bg-brand-graphite overflow-hidden">
+      <div className="flex justify-between min-h-screen">
 
-        {/* ── ЛЕВАЯ ЧАСТЬ: 2/3 ─────────────────────────────────────── */}
-        <div className="flex-1 px-6 sm:px-10 lg:px-[1cm] py-24 lg:py-32 flex flex-col">
+        {/* ── ЛЕВАЯ ЧАСТЬ ──────────────────────────────────────────── */}
+        <div className="w-[43.75%] flex-shrink-0 pl-[1cm] pr-8 sm:pr-12 py-24 lg:py-32 flex flex-col">
 
-          {/* Заголовок */}
-          <ScrollReveal type="fade-up">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-white mb-20">
-              Наша деятельность
-            </h2>
-          </ScrollReveal>
+          {/* Список направлений — привязан к верху */}
+          <div className="flex flex-col">
+            {divisions.map((div, i) => {
+              const isActive = activeIdx === i;
+              const isOther = activeIdx !== null && !isActive;
 
-          {/* Список */}
-          <div className="flex-1 flex flex-col justify-center">
-            {divisions.map((div, i) => (
-              <ScrollReveal key={div.id} type="fade-up" delay={i * 0.08}>
+              return (
                 <div
-                  className="group py-10  cursor-pointer"
+                  key={div.id}
+                  className="cursor-pointer py-4"
                   onMouseEnter={() => setActiveIdx(i)}
+                  onMouseLeave={() => setActiveIdx(null)}
                 >
-                  <div className="flex items-start gap-10 md:gap-16">
-
+                  <div className="flex items-baseline gap-5">
                     {/* Номер */}
-                    <span className="text-white/30 font-mono text-sm flex-shrink-0 w-10 pt-1">
+                    <span
+                      className="font-mono text-[10px] flex-shrink-0 w-7 transition-colors duration-300"
+                      style={{ color: isActive ? 'rgba(255,255,255,0.45)' : 'rgba(255,255,255,0.35)' }}
+                    >
                       {String(i + 1).padStart(2, '0')}.
                     </span>
 
-                    {/* Контент */}
-                    <div className="flex-1">
-                      <h3
-                        className="font-light text-white leading-tight mb-4 transition-all duration-300"
-                        style={{ fontSize: activeIdx === i ? '2rem' : '1.75rem' }}
-                      >
-                        {div.name}
-                      </h3>
-                      <p className="text-white/60 text-base md:text-lg leading-relaxed max-w-xl">
-                        {div.description}
-                      </p>
-                    </div>
+                    {/* Заголовок */}
+                    <h3
+                      className="font-light text-white leading-tight transition-all duration-300"
+                      style={{
+                        fontSize: isActive ? 'clamp(2.3rem, 3.8vw, 3.2rem)' : 'clamp(1.55rem, 2.5vw, 2.05rem)',
+                        opacity: isOther ? 0.3 : isActive ? 1 : 1,
+                      }}
+                    >
+                      {div.name}
+                    </h3>
+                  </div>
 
+                  {/* Описание — появляется при наведении, с отступом */}
+                  <div
+                    className="overflow-hidden transition-all duration-300"
+                    style={{
+                      maxHeight: isActive ? '12rem' : '0',
+                      opacity: isActive ? 1 : 0,
+                    }}
+                  >
+                    <p
+                      className="text-white/50 text-2xl leading-relaxed mt-2"
+                      style={{ paddingLeft: 'calc(1.75rem + 1.25rem)' }}
+                    >
+                      {div.description}
+                    </p>
                   </div>
                 </div>
-              </ScrollReveal>
-            ))}
+              );
+            })}
           </div>
         </div>
 
-        {/* ── ПРАВАЯ ЧАСТЬ: 1/3, картинка на всю высоту ───────────── */}
-        <div className="hidden lg:block w-[33.333%] flex-shrink-0 relative py-8">
+        {/* ── ПРАВАЯ ЧАСТЬ: ~45% ширины, фото ──────────────────────── */}
+        <div className="hidden lg:block w-1/2 flex-shrink-0 relative">
           {divisions.map((div, i) => (
             <img
               key={div.id}
               src={div.image}
               alt={div.name}
-              className="absolute inset-x-0 top-8 bottom-8 w-full h-[calc(100%-4rem)] object-cover object-left rounded-2xl transition-opacity duration-700"
+              className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
               style={{ opacity: activeIdx === i ? 1 : 0 }}
             />
           ))}
-          {/* Лёгкий градиент чтобы стык не был резким */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-transparent to-transparent w-16 pointer-events-none" />
+          {/* Градиент стыка */}
+          <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-brand-graphite to-transparent pointer-events-none" />
         </div>
 
       </div>

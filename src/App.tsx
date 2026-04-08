@@ -21,7 +21,7 @@ function AppLayout() {
   const isFullscreen = FULLSCREEN_ROUTES.includes(location.pathname);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#0a0a0a]">
+    <div className="flex flex-col min-h-screen bg-brand-bg">
       <SmoothScroll />
       {!isFullscreen && <Header />}
       <div className="flex-grow">

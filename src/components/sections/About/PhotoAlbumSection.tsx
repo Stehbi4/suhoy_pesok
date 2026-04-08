@@ -49,7 +49,7 @@ const PhotoAlbumSection = () => {
 
   return (
     <>
-      <section className="bg-[#0a0a0a] py-16 lg:py-24">
+      <section className="bg-brand-graphite py-16 lg:py-24">
         <div className="px-[1cm]">
           <ScrollReveal type="fade-up">
             <div className="grid grid-cols-4 grid-rows-3 gap-3 h-[calc(100vh-2cm)]">
@@ -135,7 +135,7 @@ const PhotoAlbumSection = () => {
                 onClick={(e) => { e.stopPropagation(); setActiveIndex(i); }}
                 className={`rounded-full transition-all duration-300 ${
                   i === activeIndex
-                    ? 'w-6 h-2 bg-[#f80000]'
+                    ? 'w-6 h-2 bg-brand-red'
                     : 'w-2 h-2 bg-gray-600 hover:bg-gray-400'
                 }`}
               />

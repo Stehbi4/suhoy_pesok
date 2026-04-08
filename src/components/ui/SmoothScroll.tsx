@@ -1,6 +1,11 @@
 import { useEffect } from 'react';
 import Lenis from 'lenis';
 
+// Singleton — доступен в других компонентах (например, ScrollToTop)
+let lenisInstance: Lenis | null = null;
+
+export const getLenis = () => lenisInstance;
+
 const SmoothScroll = () => {
   useEffect(() => {
     const lenis = new Lenis({
@@ -8,6 +13,8 @@ const SmoothScroll = () => {
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       touchMultiplier: 2,
     });
+
+    lenisInstance = lenis;
 
     const raf = (time: number) => {
       lenis.raf(time);
@@ -18,6 +25,7 @@ const SmoothScroll = () => {
 
     return () => {
       lenis.destroy();
+      lenisInstance = null;
     };
   }, []);
 

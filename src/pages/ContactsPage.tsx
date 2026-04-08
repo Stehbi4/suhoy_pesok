@@ -46,8 +46,8 @@ const ContactsPage = () => {
   };
   
   return (
-    <main className="min-h-screen pt-6 md:pt-8 bg-[#0a0a0a]">
-    <section className="py-16 md:py-12 bg-[#0a0a0a]">
+    <main className="min-h-screen pt-6 md:pt-8 bg-brand-bg">
+    <section className="py-16 md:py-12 bg-brand-bg">
     <div className="p-8 md:p-12">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
       
@@ -56,11 +56,11 @@ const ContactsPage = () => {
         <h2 className="text-4xl md:text-5xl font-light leading-tight text-white mb-6">
           Свяжитесь с нами
           <br />
-          для <span className="text-6xl text-[#f80000]">сотрудничества</span>
+          для <span className="text-6xl text-brand-red">сотрудничества</span>
         </h2>
         <p className="text-xl text-gray-400 max-w-2xl">
           Получите консультацию, расчёт стоимости или обсудите условия партнёрства. 
-          Мы <span className="text-3xl text-[#f80000]">ответим </span>в течение 1 рабочего дня.
+          Мы <span className="text-3xl text-brand-red">ответим </span>в течение 1 рабочего дня.
         </p>
       </div>
 
@@ -78,7 +78,7 @@ const ContactsPage = () => {
                   name="name" 
                   required 
                   className="w-full bg-transparent border-b-2 border-white pb-4 text-white text-lg 
-                    placeholder:text-gray-500 focus:border-[#f80000] outline-none transition-all" 
+                    placeholder:text-gray-500 focus:border-brand-red outline-none transition-all" 
                   placeholder="Ваше имя" 
                 />
               </div>
@@ -89,7 +89,7 @@ const ContactsPage = () => {
                   name="email" 
                   required 
                   className="w-full bg-transparent border-b-2 border-white pb-4 text-white text-lg 
-                    placeholder:text-gray-500 focus:border-[#f80000] outline-none transition-all" 
+                    placeholder:text-gray-500 focus:border-brand-red outline-none transition-all" 
                   placeholder="your@email.com" 
                 />
               </div> 
@@ -98,7 +98,7 @@ const ContactsPage = () => {
                 <input type="tel"
                   name="phone" 
                   className="w-full bg-transparent border-b-2 border-white pb-4 text-white text-lg 
-                    placeholder:text-gray-500 focus:border-[#f80000] outline-none transition-all" 
+                    placeholder:text-gray-500 focus:border-brand-red outline-none transition-all" 
                   placeholder="+7 (___) ___-__-__" 
                 />
               </div>
@@ -109,7 +109,7 @@ const ContactsPage = () => {
                   name="company" 
                   required 
                   className="w-full bg-transparent border-b-2 border-white pb-4 text-white text-lg 
-                    placeholder:text-gray-500 focus:border-[#f80000] outline-none transition-all" 
+                    placeholder:text-gray-500 focus:border-brand-red outline-none transition-all" 
                   placeholder="ООО Ромашка" 
                 />
               </div>
@@ -125,7 +125,7 @@ const ContactsPage = () => {
                     onClick={() => setSelectedSubject(subj)}
                     className={`py-2 rounded-2xl border text-sm font-light transition-all ${
                       selectedSubject === subj 
-                        ? 'bg-[#f80000] border-[#f80000] text-white' 
+                        ? 'bg-brand-red border-brand-red text-white' 
                         : 'border-[#333333] hover:border-[#555] text-gray-300'
                     }`}
                   >
@@ -141,7 +141,7 @@ const ContactsPage = () => {
               <textarea 
                 name="message" 
                 rows={3}
-                className="w-full bg-transparent border-b-2 border-white px-6 py-4 text-white focus:border-[#f80000] outline-none resize-y transition-colors"
+                className="w-full bg-transparent border-b-2 border-white px-6 py-4 text-white focus:border-brand-red outline-none resize-y transition-colors"
                 placeholder="Опишите ваш запрос..."
                 required
               />
@@ -154,11 +154,11 @@ const ContactsPage = () => {
                 name="privacy" 
                 id="privacy" 
                 required 
-                className="mt-1 accent-[#f80000]" 
+                className="mt-1 accent-brand-red" 
               />
               <label htmlFor="privacy" className="text-sm text-gray-400 cursor-pointer">
                 Я согласен с{' '}
-                <a href="/privacy" className="text-white hover:text-[#f80000] underline">Политикой конфиденциальности</a>
+                <a href="/privacy" className="text-white hover:text-brand-red underline">Политикой конфиденциальности</a>
               </label>
             </div>
 
@@ -166,7 +166,7 @@ const ContactsPage = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-8 md:px-12 bg-[#f80000] hover:bg-[#ff1a1a] transition-all py-3 rounded-2xl text-lg font-medium disabled:opacity-70"
+              className="px-8 md:px-12 bg-brand-red hover:bg-brand-red-light transition-all py-3 rounded-2xl text-lg font-medium disabled:opacity-70"
             >
               {isSubmitting ? 'Отправляем...' : 'Отправить сообщение'}
             </button>
@@ -189,7 +189,7 @@ const ContactsPage = () => {
           {/* Contact Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {/* Phone */}
-            <div className="card-dark card-hover p-8 hover:border-[#f80000]/30 rounded-lg transition-all duration-300">
+            <div className="card-dark card-hover p-8 hover:border-brand-red/30 rounded-lg transition-all duration-300">
               <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4">
                 <Phone className="w-6 h-6 text-white" />
               </div>
@@ -199,25 +199,25 @@ const ContactsPage = () => {
               <div className="space-y-1">
                 <a
                   href="tel:+78125352102"
-                  className="text-lg font-light text-white hover:text-[#f80000]/50 transition-colors block"
+                  className="text-lg font-light text-white hover:text-brand-red/50 transition-colors block"
                 >
                   +7 (812) 535-21-02 доб. 5
                 </a>
                 <a
                   href="tel:+78122909660"
-                  className="text-lg font-light text-white hover:text-[#f80000]/50 transition-colors block"
+                  className="text-lg font-light text-white hover:text-brand-red/50 transition-colors block"
                 >
                   +7 (812) 290-96-60
                 </a>
                 <a
                   href="tel:+79213523822"
-                  className="text-lg font-light text-white hover:text-[#f80000]/50 transition-colors block"
+                  className="text-lg font-light text-white hover:text-brand-red/50 transition-colors block"
                 >
                   +7 (921) 352-38-22
                 </a>
                 <a
                   href="tel:+79990335733"
-                  className="text-lg font-light text-white hover:text-[#f80000]/50 transition-colors block"
+                  className="text-lg font-light text-white hover:text-brand-red/50 transition-colors block"
                 >
                   +7 (999) 033-57-33
                 </a>
@@ -225,7 +225,7 @@ const ContactsPage = () => {
             </div>
 
             {/* Email */}
-            <div className="card-dark card-hover p-8 hover:border-[#f80000]/30 rounded-lg transition-all duration-300">
+            <div className="card-dark card-hover p-8 hover:border-brand-red/30 rounded-lg transition-all duration-300">
               <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4">
                 <Mail className="w-6 h-6 text-white" />
               </div>
@@ -234,21 +234,21 @@ const ContactsPage = () => {
               </h3>
               <a
                 href="mailto:zakaz@np-cmid.ru"
-                className="text-lg font-light text-white hover:text-[#f80000]/50 transition-colors block"
+                className="text-lg font-light text-white hover:text-brand-red/50 transition-colors block"
               >
                 zakaz@np-cmid.ru
               </a>
               
               <a
                 href="mailto:ym.schinin@np-cmid.ru"
-                className="text-lg font-light text-white hover:text-[#f80000]/50 transition-colors block"
+                className="text-lg font-light text-white hover:text-brand-red/50 transition-colors block"
               >
                 ym.schinin@np-cmid.ru
               </a>
             </div>
 
             {/* Working Hours */}
-            <div className="card-dark card-hover p-8 hover:border-[#f80000]/30 rounded-lg transition-all duration-300">
+            <div className="card-dark card-hover p-8 hover:border-brand-red/30 rounded-lg transition-all duration-300">
               <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4">
                 <Clock className="w-6 h-6 text-white" />
               </div>
@@ -266,7 +266,7 @@ const ContactsPage = () => {
             </div>
 
             {/* Address */}
-            <div className="card-dark card-hover p-8 hover:border-[#f80000]/30 rounded-lg transition-all duration-300">
+            <div className="card-dark card-hover p-8 hover:border-brand-red/30 rounded-lg transition-all duration-300">
               <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4">
                 <MapPin className="w-6 h-6 text-white" />
               </div>

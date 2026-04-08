@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
 import { historySlides } from '@/data/companyHistory';
+import { RED } from '@/styles/theme';
 
 const SLIDE_COUNT = historySlides.length;
 
@@ -26,12 +27,12 @@ const DotIndicator = ({
   const color = useTransform(
     scrollYProgress,
     [Math.max(0, mid - 0.05), mid],
-    ['#333333', '#f80000'],
+    ['#333333', RED],
   );
 
   return (
     <motion.div
-      className="absolute top-1/2 rounded-full border-2 bg-[#0a0a0a]"
+      className="absolute top-1/2 rounded-full border-2 bg-brand-graphite"
       style={{
         left: `${pct * 100}%`,
         width: size,
@@ -76,7 +77,7 @@ const HeritageSection = () => {
       className="relative"
     >
       {/* ── Sticky-обёртка: занимает 100vh и прилипает при скролле ── */}
-      <div className="sticky top-0 h-screen overflow-hidden bg-[#0a0a0a]">
+      <div className="sticky top-0 h-screen overflow-hidden bg-brand-graphite">
 
         {/* ── СЛОЙ 0: видео логотипа ──────────────────────────────────
             • absolute inset-0 — покрывает весь sticky-блок
@@ -165,7 +166,7 @@ const HeritageSection = () => {
           {/* Трек */}
           <div className="relative h-[2px] bg-[#222]">
             <motion.div
-              className="absolute left-0 top-0 h-full bg-[#f80000]"
+              className="absolute left-0 top-0 h-full bg-brand-red"
               style={{ width: progressWidth }}
             />
             {historySlides.map((_, i) => (

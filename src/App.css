@@ -143,9 +143,10 @@ button:active {
 .stagger-5 { animation-delay: 0.5s; }
 
 .hero-background {
-  background-image: url('/HeroSent/sand-pile.png'); 
-  background-position: center top;     /* ← привязка к верху */
-  background-size: cover;
+  background-image: url('/HeroSent/sand-pile.png');
+  background-position: center top;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
 }
 
 .stats-grid {

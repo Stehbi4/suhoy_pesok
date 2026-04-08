@@ -1,14 +1,21 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { getLenis } from '@/components/ui/SmoothScroll';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0); // Сброс скролла наверх
-  }, [pathname]); // Срабатывает при изменении пути (URL)
+    const lenis = getLenis();
+    if (lenis) {
+      // Мгновенный сброс через Lenis — без анимации
+      lenis.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname]);
 
-  return null; // Компонент ничего не рендерит
+  return null;
 };
 
 export default ScrollToTop;

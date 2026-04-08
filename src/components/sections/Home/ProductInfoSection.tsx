@@ -3,7 +3,7 @@ import { ArrowUpRight } from 'lucide-react';
 const ProductInfoSection = () => {
   
   return (
-    <section className="relative min-h-screen bg-black overflow-hidden">
+    <section className="relative min-h-screen bg-brand-bg overflow-hidden">
       <div className="relative z-10 flex min-h-screen flex-col justify-between px-6 sm:px-10 lg:px-[1cm] py-12 lg:py-16">
         
       <div className="flex-grow flex items-center">
@@ -11,11 +11,11 @@ const ProductInfoSection = () => {
           {/* Content */}
           <div>
                                   
-            <p className="text-gray-200 text-4xl sm:text-4xl lg:text-6xl py-8 mb-8">
-              <span className="text-7xl text-[#f80000] font-medium">Наш</span> сухой кварцевый песок проходит <br/> многоступенчатую обработку: 
+            <p className="text-gray-200 text-3xl sm:text-3xl lg:text-5xl py-8 mb-8">
+              <span className="text-5xl lg:text-6xl text-brand-red font-medium">Наш</span> сухой кварцевый песок проходит <br/> многоступенчатую обработку:
               <br/>
               <br/>
-              фракционирование, сушку и очистку. Это обеспечивает  <span className="text-7xl text-[#f80000] font-medium"> стабильное качество   </span>, 
+              фракционирование, сушку и очистку. Это обеспечивает  <span className="text-5xl lg:text-6xl text-brand-red font-medium"> стабильное качество   </span>,
               узкий фракционный состав и минимальное содержание влаги.
             </p>
 
@@ -31,7 +31,7 @@ const ProductInfoSection = () => {
               </a>
               <a
                 href="/contacts"
-                className="px-6 py-3 border border-gray-700 text-white rounded-lg font-semibold tracking-wide hover:border-[#f80000] hover:text-white transition-all duration-300 flex items-center justify-center gap-3"
+                className="px-6 py-3 border border-gray-700 text-white rounded-lg font-semibold tracking-wide hover:border-brand-red hover:text-white transition-all duration-300 flex items-center justify-center gap-3"
               >
                 <span>Получить консультацию</span>
               </a>

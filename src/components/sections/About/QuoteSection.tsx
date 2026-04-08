@@ -9,7 +9,7 @@ const Quote = () => {
         <div className="text-center max-w-[900px]">
           <p className="text-white text-4xl md:text-5xl lg:text-6xl font-light leading-[1.05] tracking-tight">
            Здесь нужна какая то фраза <br />
-             Прям - <span className="text-[#f80000] text-5xl md:text-65xl lg:text-7xl font-medium">Цитатой </span> назавём это <br />
+             Прям - <span className="text-brand-red text-5xl md:text-65xl lg:text-7xl font-medium">Цитатой </span> назавём это <br />
             наших виликих умов
           </p>
         </div>

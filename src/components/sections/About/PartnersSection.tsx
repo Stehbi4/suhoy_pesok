@@ -38,7 +38,7 @@ const PartnersSection = () => {
   }, []); // empty deps — runs once, no offset reset on hover
 
   return (
-    <section className="py-24 lg:py-32 bg-[#0a0a0a] overflow-hidden">
+    <section className="py-24 lg:py-32 bg-brand-graphite overflow-hidden">
       <div className="px-6 sm:px-10 lg:px-[1cm] mb-16">
         <ScrollReveal type="fade-up">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-white mt-4">Партнёры</h2>
@@ -59,7 +59,7 @@ const PartnersSection = () => {
           {loopedPartners.map((partner, i) => (
             <div
               key={`${partner.name}-${i}`}
-              className="w-[360px] flex-shrink-0 card-dark p-8 hover:border-[#f80000]/30 transition-colors duration-300"
+              className="w-[360px] flex-shrink-0 card-dark card-hover p-8 hover:border-brand-red/30"
             >
               {/* Logo placeholder */}
               <div className="h-12 mb-6 flex items-center">
@@ -70,7 +70,7 @@ const PartnersSection = () => {
               </div>
 
               {/* Category tag */}
-              <span className="text-[#f80000] text-xs font-mono tracking-wider uppercase">
+              <span className="text-brand-red text-xs font-mono tracking-wider uppercase">
                 {partner.category}
               </span>
 

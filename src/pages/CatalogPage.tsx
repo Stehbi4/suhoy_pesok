@@ -89,7 +89,7 @@ const CatalogPage = () => {
               <Filter className="w-5 h-5" />
               <span>Фильтры</span>
               {hasActiveFilters && (
-                <span className="w-2 h-2 bg-[#f80000] rounded-full" />
+                <span className="w-2 h-2 bg-brand-red rounded-full" />
               )}
             </button>
           </div>
@@ -97,16 +97,16 @@ const CatalogPage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Sidebar - Filters */}
             <div className={`lg:col-span-1 ${showMobileFilters ? 'block' : 'hidden lg:block'}`}>
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 lg:top-28">
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 lg:top-28 card-hover hover:border-brand-red/30">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-lg font-medium text-gray-900 flex items-center gap-3">
-                    <Filter className="w-5 h-5 text-[#f80000]" />
+                    <Filter className="w-5 h-5 text-brand-red" />
                     Фильтры
                   </h2>
                   {hasActiveFilters && (
                     <button
                       onClick={clearFilters}
-                      className="text-sm text-[#f80000] hover:text-[#1d4ed8] transition-colors"
+                      className="text-sm text-brand-red hover:text-[#1d4ed8] transition-colors"
                     >
                       Сбросить
                     </button>
@@ -127,10 +127,10 @@ const CatalogPage = () => {
                       >
                         <Checkbox
                           checked={selectedAreas.includes(area.value)}
-                          className="mt-0.5 border-gray-300 data-[state=checked]:bg-[#f80000] data-[state=checked]:border-[#f80000]"
+                          className="mt-0.5 border-gray-300 data-[state=checked]:bg-brand-red data-[state=checked]:border-brand-red"
                         />
                         <span
-                          className={`text-sm leading-tight group-hover:text-[#f80000] transition-colors ${
+                          className={`text-sm leading-tight group-hover:text-brand-red transition-colors ${
                             selectedAreas.includes(area.value)
                               ? 'text-gray-900'
                               : 'text-gray-600'
@@ -159,10 +159,10 @@ const CatalogPage = () => {
                       >
                         <Checkbox
                           checked={selectedFractions.includes(fraction.value)}  
-                          className="mt-0.5 border-gray-300 data-[state=checked]:bg-[#f80000] data-[state=checked]:border-[#f80000]"
+                          className="mt-0.5 border-gray-300 data-[state=checked]:bg-brand-red data-[state=checked]:border-brand-red"
                         />
                         <span
-                          className={`text-sm leading-tight group-hover:text-[#f80000] transition-colors ${
+                          className={`text-sm leading-tight group-hover:text-brand-red transition-colors ${
                             selectedFractions.includes(fraction.value)
                               ? 'text-gray-900'
                               : 'text-gray-600'
@@ -191,10 +191,10 @@ const CatalogPage = () => {
                       >
                         <Checkbox
                           checked={selectedGosts.includes(gost.value)}
-                          className="mt-0.5 border-gray-300 data-[state=checked]:bg-[#f80000] data-[state=checked]:border-[#f80000]"
+                          className="mt-0.5 border-gray-300 data-[state=checked]:bg-brand-red data-[state=checked]:border-brand-red"
                         />
                         <span
-                          className={`text-sm leading-tight group-hover:text-[#f80000] transition-colors ${
+                          className={`text-sm leading-tight group-hover:text-brand-red transition-colors ${
                             selectedGosts.includes(gost.value)
                               ? 'text-gray-900'
                               : 'text-gray-600'
@@ -217,7 +217,7 @@ const CatalogPage = () => {
                     <Link
                       key={product.id}
                       to={`/product/${product.slug}`}
-                      className="group block bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-[#f80000]/50 transition-all duration-300"
+                      className="group block bg-white border border-gray-200 rounded-lg overflow-hidden card-hover hover:border-brand-red/50"
                     >
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
                         {/* Product Image */}
@@ -233,13 +233,13 @@ const CatalogPage = () => {
                         {/* Product Info */}
                         <div className="md:col-span-2 p-6">
                           <div className="flex flex-wrap gap-2 mb-3">
-                            <Badge className="bg-[#f80000] text-white">
+                            <Badge className="bg-brand-red text-white">
                               {product.fraction}
                             </Badge>
                             
                           </div>
 
-                          <h3 className="text-xl font-medium text-gray-900 mb-2 group-hover:text-[#f80000] transition-colors">
+                          <h3 className="text-xl font-medium text-gray-900 mb-2 group-hover:text-brand-red transition-colors">
                             {product.name}
                           </h3>
                           
@@ -249,11 +249,11 @@ const CatalogPage = () => {
 
                           <div className="space-y-2 mb-4">
                             <div className="flex items-center gap-2 text-sm">
-                              <Check className="w-4 h-4 text-[#f80000]" />
+                              <Check className="w-4 h-4 text-brand-red" />
                               <span className="text-gray-700">{product.gost}</span>
                             </div>
                             <div className="flex items-center gap-2 text-sm">
-                              <Check className="w-4 h-4 text-[#f80000]" />
+                              <Check className="w-4 h-4 text-brand-red" />
                               <span className="text-gray-700">
                                 Фасовка: {product.packaging.join(', ')}
                               </span>
@@ -275,7 +275,7 @@ const CatalogPage = () => {
                   ))}
                 </div>
               ) : (
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-16 text-center">
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-16 text-center card-hover hover:border-brand-red/30">
                   <Package className="w-16 h-16 text-gray-300 mx-auto mb-6" />
                   <h3 className="text-2xl font-light text-gray-900 mb-3">
                     Товары не найдены
@@ -285,7 +285,7 @@ const CatalogPage = () => {
                   </p>
                   <button
                     onClick={clearFilters}
-                    className="bg-[#f80000] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#1d4ed8] transition-colors"
+                    className="bg-brand-red text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#1d4ed8] transition-colors"
                   >
                     Сбросить фильтры
                   </button>

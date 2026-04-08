@@ -1,160 +1,36 @@
+import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Beaker, ChevronDown, Droplets, FileCheck, Thermometer } from 'lucide-react';
-import ScrollReveal from '@/components/ui/ScrollReveal';
+import { ArrowUpRight, ChevronDown } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 const HeroSection = () => {
-  const characteristics = [
-    {
-      icon: FileCheck,
-      label: 'Стандарт',
-      value: 'ГОСТ 8736-2014',
-      description: 'Соответствие государственным стандартам',
-    },
-    {
-      icon: Thermometer,
-      label: 'Термостойкость',
-      value: 'До 1200°C',
-      description: 'Высокая устойчивость к температурам',
-    },
-    {
-      icon: FileCheck,
-      label: 'Качество',
-      value: 'Идиально хранить',
-      description: 'Соответствие',
-    },
-    {
-      icon: Beaker,
-      label: 'SiO₂',
-      value: '> 85%',
-      description: 'Высокое содержание диоксида кремния',
-    },
-    {
-      icon: Droplets,
-      label: 'Влажность',
-      value: '≤ 0.5%',
-      description: 'Минимальное содержание влаги',
-    },
-    {
-      icon: FileCheck,
-      label: 'что то ещё',
-      value: 'возможности',
-      description: 'уууууаауау',
-    },
-  ];
+  const sectionRef = useRef<HTMLElement>(null);
+  const quoteRef   = useRef<HTMLDivElement>(null);
+
+  // ── Параллакс фона ────────────────────────────────────────────────────────
+  const { scrollYProgress: sectionProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  });
+  const bgY = useTransform(sectionProgress, [0, 1], ['0%', '30%']);
+
+  // ── Анимация цитаты — собственный ref, как в AdvantagesSection ───────────
+  const { scrollYProgress: quoteProgress } = useScroll({
+    target: quoteRef,
+    offset: ['start 0.95', 'start 0.35'],
+  });
+  const quoteOpacity = useTransform(quoteProgress, [0, 1], [0,   1]);
+  const quoteY       = useTransform(quoteProgress, [0, 1], [60,  0]);
+  const quoteScale   = useTransform(quoteProgress, [0, 1], [0.5, 1]);
 
   return (
-    <section className="relative h-[300vh] bg-cover bg-no-repeat overflow-hidden hero-background bg-[-50%_50%] lg:bg-center">
-      {/* Content Container */}
-      <div className="relative z-10 w-full px-[1cm] pt-28 pb-16 min-h-[200vh] flex flex-col">
-        {/* Top Row: Title */}
-        <div className="flex justify-start items-start">
-          <div className="max-w-md animate-fade-in-up">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light text-white leading-[0.95] tracking-tight mb-6">
-              Сухой
-              <br />
-              <span className="text-white font-medium">Кварцевый</span>
-              <br />
-              Песок
-            </h1>
-          </div>
-        </div>
+    <section ref={sectionRef} className="relative h-[200vh] overflow-hidden">
 
-        {/* Bottom Row: Description, Buttons, and Stats */}
-        <div className="absolute bottom-[105vh] right-0 w-full px-[1cm] flex justify-end items-start lg:items-end gap-6">
-          <div className="w-full max-w-md text-right">
-            <p className="text-gray-400 text-lg md:text-lg max-w-md mb-8 leading-relaxed">
-              Очищенный, фракционированный, <br />
-              cухой песок под любые ваши задачи. <br />
-              Для промышленности и строительства.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-end">
-              <Link
-                to="/catalog"
-                className="bg-[#f80000] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#ff3333] transition-colors flex items-center justify-end gap-3"
-              >
-                <span>В каталог</span>
-                <ArrowUpRight className="w-5 h-5" />
-              </Link>
-              <Link
-                to="/contacts"
-                className="px-6 py-3 border border-gray-700 text-white rounded-lg font-semibold hover:border-[#f80000] hover:text-white transition-all duration-300 flex items-center justify-center gap-3"
-              >
-                <span>Связаться</span>
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute top-[90vh] left-[1cm] z-10 flex flex-col items-center gap-2">
-          <span className="text-gray-500 text-xs tracking-[0.3em] uppercase">Листайте</span>
-          <ChevronDown className="w-5 h-5 text-gray-500 animate-bounce" />
-        </div>
-      </div>
-
-      <div className="absolute bottom-[50vh] relative z-10 h-full flex items-start justify-start px-[1cm] pt-[100px]">
-        <div className="flex justify-start items-start">
-          <p className="text-white text-4xl md:text-5xl lg:text-6xl font-light leading-[1.05] tracking-tight">
-            Каждая песчинка — кирпичик величия: <br />  
-            прочность огромного всегда держится на <br />надёжности самого малого <br />
-            </p>
-        </div>
-      </div>Каждая песчинка — кирпичик величия: прочность огромного всегда держится на надёжности самого малого
-
-      {/* Характеристики — карточки */}
-      <div className="absolute bottom-0 lg:bottom-[15vh] left-0 right-0 px-[1cm] flex flex-col lg:flex-row justify-between items-start gap-6">
-
-        {/* Левая колонка — slide-in-left по одной */}
-        <div className="space-y-2 lg:space-y-8 w-full lg:w-auto lg:text-right">
-          {characteristics.slice(0, 3).map((char, idx) => (
-            <ScrollReveal
-              key={idx}
-              type="slide-left"
-              delay={idx * 0.12}
-              className="card-dark card-hover p-6 hover:border-[#f80000]/30 flex items-center gap-4 lg:flex-row-reverse backdrop-blur-sm bg-[#111111]/60"
-            >
-              <char.icon className="w-7 h-7 text-white shrink-0" />
-              <div>
-                <div className="text-sm text-gray-400 uppercase tracking-wider mb-1 lg:text-right">
-                  {char.label}
-                </div>
-                <div className="text-2xl lg:text-3xl font-light text-white mb-2 lg:text-right">
-                  {char.value}
-                </div>
-                <div className="text-gray-300 text-base leading-relaxed lg:text-right">
-                  {char.description}
-                </div>
-              </div>
-            </ScrollReveal>
-          ))}
-        </div>
-
-        {/* Правая колонка — slide-in-right по одной */}
-        <div className="space-y-2 lg:space-y-8 w-full lg:w-auto lg:text-left">
-          {characteristics.slice(3, 6).map((char, idx) => (
-            <ScrollReveal
-              key={idx}
-              type="slide-right"
-              delay={idx * 0.12}
-              className="card-dark card-hover p-6 hover:border-[#f80000]/30 flex items-center gap-4 backdrop-blur-sm bg-[#111111]/60"
-            >
-              <char.icon className="w-7 h-7 text-white shrink-0" />
-              <div>
-                <div className="text-sm text-gray-400 uppercase tracking-wider mb-1">
-                  {char.label}
-                </div>
-                <div className="text-2xl lg:text-3xl font-light text-white mb-2">
-                  {char.value}
-                </div>
-                <div className="text-gray-300 text-base leading-relaxed">
-                  {char.description}
-                </div>
-              </div>
-            </ScrollReveal>
-          ))}
-        </div>
-      </div>
+      {/* Parallax background */}
+      <motion.div
+        className="absolute inset-0 hero-background"
+        style={{ y: bgY, backgroundPosition: 'center top' }}
+      />
 
       {/* Background Effects Overlay */}
       <div className="absolute inset-0 z-0">
@@ -167,6 +43,70 @@ const HeroSection = () => {
           }}
         />
       </div>
+
+      {/* Content Container — первый экран */}
+      <div className="relative z-10 w-full px-[1cm] pt-28 pb-16 min-h-[200vh] flex flex-col">
+
+        {/* Заголовок */}
+        <div className="flex justify-start items-start">
+          <div className="max-w-md animate-fade-in-up">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light text-white leading-[0.95] tracking-tight mb-6">
+              Сухой
+              <br />
+              <span className="text-white font-medium">Кварцевый</span>
+              <br />
+              Песок
+            </h1>
+          </div>
+        </div>
+
+        {/* Описание + кнопки */}
+        <div className="absolute bottom-[105vh] right-0 w-full px-[1cm] flex justify-end items-start lg:items-end gap-6">
+          <div className="w-full max-w-md text-right">
+            <p className="text-gray-400 text-lg max-w-md mb-8 leading-relaxed">
+              Очищенный, фракционированный, <br />
+              cухой песок под любые ваши задачи. <br />
+              Для промышленности и строительства.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-end">
+              <Link
+                to="/catalog"
+                className="bg-brand-red text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-red-light transition-colors flex items-center justify-end gap-3"
+              >
+                <span>В каталог</span>
+                <ArrowUpRight className="w-5 h-5" />
+              </Link>
+              <Link
+                to="/contacts"
+                className="px-6 py-3 border border-gray-700 text-white rounded-lg font-semibold hover:border-brand-red hover:text-white transition-all duration-300 flex items-center justify-center gap-3"
+              >
+                <span>Связаться</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Индикатор скрола */}
+        <div className="absolute top-[90vh] left-[1cm] z-10 flex flex-col items-center gap-2">
+          <span className="text-gray-500 text-xs tracking-[0.3em] uppercase">Листайте</span>
+          <ChevronDown className="w-5 h-5 text-gray-500 animate-bounce" />
+        </div>
+      </div>
+
+      {/* Цитата — второй экран, анимация как в AdvantagesSection ──────────── */}
+      <div className="absolute top-[150vh] left-0 right-0 z-10 px-[1cm]">
+        <motion.div
+          ref={quoteRef}
+          style={{ opacity: quoteOpacity, y: quoteY, scale: quoteScale }}
+          className="will-change-transform"
+        >
+          <p className="text-white text-4xl md:text-5xl lg:text-6xl font-light leading-[1.05] tracking-tight">
+            Каждая песчинка — кирпичик величия: <br />
+            прочность огромного всегда держится на <br />надёжности самого малого
+          </p>
+        </motion.div>
+      </div>
+
     </section>
   );
 };

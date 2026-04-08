@@ -19,7 +19,7 @@ const PositioningSection = () => {
               <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light text-white leading-[1.1] mt-8">
                 Мы имеем огромный опыт
                 <br />
-                в <span className="text-[#f80000] font-medium">бетонах</span>, смесях
+                в <span className="text-brand-red font-medium">бетонах</span>, смесях
                 <br />
                 и строительной химии
               </h2>
@@ -34,7 +34,7 @@ const PositioningSection = () => {
                 href="https://np-cmid.ru/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-[#f80000] text-white px-8 py-4 rounded-lg font-semibold tracking-wide hover:bg-[#ff3333] transition-colors inline-flex items-center gap-3"
+                className="bg-brand-red text-white px-8 py-4 rounded-lg font-semibold tracking-wide hover:bg-brand-red-light transition-colors inline-flex items-center gap-3"
               >
                 Перейти на наш сайт
                 <ArrowUpRight className="w-5 h-5" />
@@ -47,7 +47,7 @@ const PositioningSection = () => {
             <ScrollReveal type="slide-right" delay={0.15}>
               <div className="space-y-8">
                 {[
-                  { value: '180+', unit: 'тыс. т/год', label: 'Мощность производства' },
+                  { value: '30+', unit: 'тыс. т/год', label: 'Мощность производства' },
                   { value: '100+', unit: 'наименований', label: 'Продукция в портфеле' },
                   { value: '25', unit: 'лет', label: 'На рынке строительной химии' },
                   { value: 'ISO', unit: '9001', label: 'Сертификация СМК' },
