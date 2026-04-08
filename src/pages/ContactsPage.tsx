@@ -8,7 +8,7 @@ const ContactsPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const subjects = ['Партнёрство', 'Заказ', 'Поверхности', 'Отрасли', 'Сотрудничество', 'Другое'];
+  const subjects = ['Консультация', 'Доставка', 'Оплата', 'Иное'];
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -117,13 +117,13 @@ const ContactsPage = () => {
             {/* Выбор темы — точь-в-точь как в макете */}
             <div>
               <label className="block text-sm text-gray-400 mb-3">Выберите тему</label>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 {subjects.map((subj) => (
                   <button
                     key={subj}
                     type="button"
                     onClick={() => setSelectedSubject(subj)}
-                    className={`py-2 rounded-2xl border text-sm font-light transition-all ${
+                    className={`py-2 rounded-2xl border text-xs font-light transition-all ${
                       selectedSubject === subj 
                         ? 'bg-brand-red border-brand-red text-white' 
                         : 'border-[#333333] hover:border-[#555] text-gray-300'

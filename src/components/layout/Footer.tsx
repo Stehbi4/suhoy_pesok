@@ -7,21 +7,31 @@ const Footer = () => {
   // Only CatalogPage gets light footer; everything else gets dark footer
   const isLightPage = location.pathname === '/catalog';
 
-  const bgClass     = isLightPage ? 'bg-brand-page border-brand-alt'  : 'bg-brand-bg border-[#222]';
-  const textClass   = isLightPage ? 'text-brand-dark'                  : 'text-white';
+  const bgClass     = isLightPage ? 'bg-brand-page border-brand-alt' : 'bg-brand-bg border-[#222]';
+  const textClass   = isLightPage ? 'text-brand-dark'                : 'text-white';
   const mutedClass  = 'text-gray-500';
-  const borderClass = isLightPage ? 'border-brand-alt'                 : 'border-[#222]';
-  const logoSrc     = isLightPage ? '/Logo/logo-light.png'             : '/Logo/logo-dark.png';
+  const borderClass = isLightPage ? 'border-brand-alt'               : 'border-[#222]';
+  const logoSrc     = isLightPage ? '/Logo/logo-light.png'           : '/Logo/logo-dark.png';
 
-  // Nav buttons — same style as Header right group
+  // inactive button
   const btnClass = isLightPage
-    ? 'border border-brand-alt hover:border-brand-dark/40 text-brand-dark hover:text-brand-dark/60'
-    : 'border border-gray-700 hover:border-gray-500 text-white hover:text-gray-300';
-  const activeBtnClass = isLightPage
-    ? 'border border-brand-dark/40 text-brand-dark font-semibold'
-    : 'border border-gray-500 text-white font-semibold';
+    ? 'border border-brand-alt text-brand-dark hover:border-brand-dark/40 hover:text-brand-dark/60'
+    : 'border border-gray-700 text-white hover:border-gray-500 hover:text-gray-300';
 
-  const isActive = (path: string) => location.pathname.startsWith(path);
+  // active button — current page accent
+  // light (catalog): graphite bg + white text + red border
+  // dark: white bg + dark text + red border
+  const activeBtnClass = isLightPage
+    ? 'bg-brand-graphite text-white font-semibold border border-brand-red'
+    : 'bg-white text-brand-dark font-semibold border border-brand-red';
+
+  const isActive = (path: string) => {
+    // /product/:slug → подсвечиваем «Продукция» (catalog)
+    if (path === '/catalog') return location.pathname === '/catalog' || location.pathname.startsWith('/product/');
+    // /articles/:slug → подсвечиваем «Статьи» (footer не содержит эту кнопку, но на всякий случай)
+    if (path === '/articles') return location.pathname === '/articles' || location.pathname.startsWith('/articles/');
+    return location.pathname.startsWith(path);
+  };
 
   const navLinks = [
     { path: '/about',    label: 'О Нас'    },
@@ -46,20 +56,20 @@ const Footer = () => {
             </div>
           </Link>
 
-          {/* Nav buttons + Contact — прижаты к правому краю */}
+          {/* Nav buttons + Contact */}
           <div className="flex items-center gap-10">
             <nav className="flex items-center gap-5">
-              {navLinks.map((link) => (
+              {navLinks.map(({ path, label }) => (
                 <Link
-                  key={link.path}
-                  to={link.path}
+                  key={path}
+                  to={path}
                   className={`
                     text-sm tracking-wider uppercase transition-all duration-200
                     px-4 py-2 rounded
-                    ${isActive(link.path) ? activeBtnClass : btnClass}
+                    ${isActive(path) ? activeBtnClass : btnClass}
                   `}
                 >
-                  {link.label}
+                  {label}
                 </Link>
               ))}
             </nav>
