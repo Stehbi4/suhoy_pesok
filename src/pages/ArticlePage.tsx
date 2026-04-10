@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import { ChevronRight, ArrowUpRight, ArrowLeft } from 'lucide-react';
+import { ArrowUpRight, ArrowLeft } from 'lucide-react';
 import { getArticleBySlug, products } from '@/data/articles';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import { RED, BG_PAGE, BG_ALT, TEXT_DARK } from '@/styles/theme';
@@ -85,19 +85,11 @@ const ArticlePage = () => {
 
         {/* Top row: breadcrumb + метка */}
         <div className="relative z-10 flex items-center justify-between">
-          <ScrollReveal type="fade-up">
-            <nav className="flex items-center gap-2 text-xs text-white/60 font-mono tracking-wide">
-              <Link to="/" className="hover:text-white transition-colors">Главная</Link>
-              <ChevronRight className="w-3 h-3" />
-              <Link to="/articles" className="hover:text-white transition-colors">Статьи</Link>
-              <ChevronRight className="w-3 h-3" />
-              <span className="text-white/80">{article.tags[0]}</span>
-            </nav>
-          </ScrollReveal>
+          
 
           <ScrollReveal type="fade-up" delay={0.05}>
             <span className="font-mono text-[10px] tracking-[0.4em] uppercase text-white/40 hidden sm:block">
-              Материал
+               
             </span>
           </ScrollReveal>
         </div>

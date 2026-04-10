@@ -1,7 +1,36 @@
+import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Truck, Package, MapPin, Clock, Phone, CheckCircle2 } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 const DeliveryPage = () => {
+  const heroRef     = useRef<HTMLElement>(null);
+  const section4Ref = useRef<HTMLElement>(null);
+  const s4TextRef   = useRef<HTMLHeadingElement>(null);
+
+  // ── Параллакс секции 1 ────────────────────────────────────────────────────
+  const { scrollYProgress: heroProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  });
+  const heroBgY = useTransform(heroProgress, [0, 1], ['0%', '30%']);
+
+  // ── Параллакс фона секции 4 ───────────────────────────────────────────────
+  const { scrollYProgress: s4Progress } = useScroll({
+    target: section4Ref,
+    offset: ['start end', 'end start'],
+  });
+  const s4BgY = useTransform(s4Progress, [0, 1], ['-15%', '15%']);
+
+  // ── Анимация текста секции 4 — как "Каждая песчинка" в HeroSection ────────
+  const { scrollYProgress: s4TextProgress } = useScroll({
+    target: s4TextRef,
+    offset: ['start 0.95', 'start 0.35'],
+  });
+  const s4TextOpacity = useTransform(s4TextProgress, [0, 1], [0,   1]);
+  const s4TextY       = useTransform(s4TextProgress, [0, 1], [60,  0]);
+  const s4TextScale   = useTransform(s4TextProgress, [0, 1], [0.5, 1]);
+
   const deliveryOptions = [
     {
       icon: Truck,
@@ -40,11 +69,18 @@ const DeliveryPage = () => {
 
   return (
     <main className="min-h-screen pt-24 md:pt-0 bg-brand-bg">
-      {/* Page Header */}
-      <section className="relative min-h-screen py-16 md:py-24 overflow-hidden bg-cover bg-center" style={{ backgroundImage: "url('/Car_Cem_Dilivery.jpg')" }}>
+
+      {/* ── 01 — Page Header (parallax) ───────────────────────────────────── */}
+      <section ref={heroRef} className="relative min-h-screen overflow-hidden">
+        {/* Parallax background */}
+        <motion.div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('/Car_Cem_Dilivery.jpg')", y: heroBgY }}
+        />
         <div className="absolute inset-0 bg-gradient-radial from-blue-900/10 to-transparent opacity-30" />
-        
-        <div className="max-w-[1920px] mx-auto lg:px-[1cm] relative z-10 pt-12">
+
+        <div className="max-w-[1920px] mx-auto lg:px-[1cm] relative z-10 pt-40 py-16 md:py-24">
+          {/* Заголовок — статичный, как на Hero */}
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-light text-white leading-tight mb-6">
             Доставка
             <br />
@@ -53,7 +89,7 @@ const DeliveryPage = () => {
         </div>
       </section>
 
-      {/* Delivery Options */}
+      {/* ── 02 — Delivery Options ─────────────────────────────────────────── */}
       <section className="py-16 md:py-12">
         <div className="container-custom">
           <div className="flex items-center gap-4 mb-12">
@@ -67,8 +103,12 @@ const DeliveryPage = () => {
             {deliveryOptions.map((option, index) => {
               const Icon = option.icon;
               return (
-                <div
+                <motion.div
                   key={index}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-60px' }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="card-dark card-hover p-8 hover:border-brand-red/30"
                 >
                   <Icon className="w-7 h-7 text-white mb-6" />
@@ -78,17 +118,17 @@ const DeliveryPage = () => {
                   <p className="text-gray-400">
                     {option.description}
                   </p>
-                </div>
+                </motion.div>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* Pricing */}
+      {/* ── 03 — Pricing ──────────────────────────────────────────────────── */}
       <section className="py-16 md:py-24 bg-brand-bg relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-radial from-blue-900/10 to-transparent opacity-20" />
-        
+
         <div className="container-custom relative z-10">
           <div className="flex items-center gap-4 mb-12">
             <div className="w-12 h-px bg-white" />
@@ -99,8 +139,12 @@ const DeliveryPage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {pricing.map((item, index) => (
-              <div
+              <motion.div
                 key={index}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.5, delay: index * 0.12 }}
                 className="card-dark card-hover p-8 hover:border-brand-red/30 rounded-lg text-center transition-all duration-300"
               >
                 <div className="text-2xl font-light text-white mb-2">
@@ -112,7 +156,7 @@ const DeliveryPage = () => {
                 <div className="text-gray-500 text-sm">
                   {item.note}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
 
@@ -121,17 +165,29 @@ const DeliveryPage = () => {
           </p>
         </div>
       </section>
-      <section className="relative min-h-screen py-16 md:py-24 overflow-hidden bg-cover bg-center" style={{ backgroundImage: "url('/Soft_Sand_Containers_x.png')" }}>
+
+      {/* ── 04 — Containers hero (parallax + text animation) ──────────────── */}
+      <section ref={section4Ref} className="relative min-h-screen overflow-hidden">
+        {/* Parallax background */}
+        <motion.div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('/Soft_Sand_Containers_x.png')", y: s4BgY }}
+        />
         <div className="absolute inset-0 bg-gradient-radial from-blue-900/10 to-transparent opacity-30" />
-        
-        <div className="max-w-[1920px] mx-auto lg:px-[1cm] relative z-10 pt-12">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-light text-white leading-tight mb-6">
-            Наавалом, или в мягких контейнерах (биг-бэгах)<br/>
-            Своим трансмортом!
-            </h1>
+
+        <div className="max-w-[1920px] mx-auto lg:px-[1cm] relative z-10 pt-40 py-16 md:py-24">
+          <motion.h1
+            ref={s4TextRef}
+            style={{ opacity: s4TextOpacity, y: s4TextY, scale: s4TextScale }}
+            className="text-5xl md:text-6xl lg:text-7xl font-light text-white leading-tight mb-6 will-change-transform"
+          >
+            Навалом, или в мягких контейнерах (биг-бэгах)<br />
+            Своим транспортом!
+          </motion.h1>
         </div>
       </section>
-      {/* Work Process */}
+
+      {/* ── 05 — Work Process ─────────────────────────────────────────────── */}
       <section className="py-16 md:py-24">
         <div className="container-custom">
           <div className="flex items-center gap-4 mb-12">
@@ -147,9 +203,13 @@ const DeliveryPage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {workProcess.map((step, index) => (
-              <div
+              <motion.div
                 key={index}
-                className="card-dark card-hover p-8 hover:border-brand-red/30 rounded-lg  transition-all duration-300"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="card-dark card-hover p-8 hover:border-brand-red/30 rounded-lg transition-all duration-300"
               >
                 <div className="text-5xl font-bold text-[#1a1a1a] mb-4">
                   {step.step}
@@ -160,13 +220,14 @@ const DeliveryPage = () => {
                 <p className="text-gray-400">
                   {step.description}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
-{/* Full Width Map */}
-        <div className="w-full">
+
+      {/* ── 06 — Map ──────────────────────────────────────────────────────── */}
+      <div className="w-full">
         <iframe
           src="https://yandex.ru/map-widget/v1/?ll=30.489667%2C60.039733&z=14&pt=30.489667%2C60.039733&dark=true"
           width="100%"
@@ -177,10 +238,11 @@ const DeliveryPage = () => {
           title="Карта доставки — ЗАО НП ЦМИД"
         />
       </div>
-      {/* Payment */}
+
+      {/* ── 07 — Payment ──────────────────────────────────────────────────── */}
       <section className="py-16 md:py-24 bg-brand-bg relative overflow-hidden">
         <div className="absolute inset-0 orange-glow opacity-20" />
-        
+
         <div className="container-custom relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
             {/* Payment Methods */}
@@ -193,40 +255,45 @@ const DeliveryPage = () => {
               </div>
 
               <h2 className="text-3xl md:text-4xl font-light text-white mb-8">
-                Удобная оплата 
+                Удобная оплата
               </h2>
               <div className="space-y-4">
-                <div className="flex items-start card-dark card-hover p-6 hover:border-brand-red/30 rounded-lg hover:border-brand-red/50 transition-all duration-300">
-                  <CheckCircle2 className="w-6 h-6 text-white flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h3 className="text-lg text-white mb-1">Безналичный расчёт</h3>
-                    <p className="text-gray-400">Для юридических лиц по договору</p>
-                  </div>
-                </div>
-                <div className="flex items-start card-dark card-hover p-6 hover:border-brand-red/30 rounded-lg hover:border-brand-red/50 transition-all duration-300">
-                  <CheckCircle2 className="w-6 h-6 text-white flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h3 className="text-lg text-white mb-1">!Наличный расчёт!?</h3>
-                    <p className="text-gray-400">Для физических лиц</p>
-                  </div>
-                </div>
-                <div className="flex items-start card-dark card-hover p-6 hover:border-brand-red/30 rounded-lg hover:border-brand-red/50 transition-all duration-300">
-                  <CheckCircle2 className="w-6 h-6 text-white flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h3 className="text-lg text-white mb-1">Отсрочка платежа??</h3>
-                    <p className="text-gray-400">Для постоянных клиентов</p>
-                  </div>
-                </div>
+                {[
+                  { title: 'Безналичный расчёт', desc: 'Для юридических лиц по договору' },
+                  { title: '!Наличный расчёт!?', desc: 'Для физических лиц' },
+                  { title: 'Отсрочка платежа??', desc: 'Для постоянных клиентов' },
+                ].map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-40px' }}
+                    transition={{ duration: 0.45, delay: index * 0.1 }}
+                    className="flex items-start card-dark card-hover p-6 hover:border-brand-red/30 rounded-lg hover:border-brand-red/50 transition-all duration-300"
+                  >
+                    <CheckCircle2 className="w-6 h-6 text-white flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="text-lg text-white mb-1">{item.title}</h3>
+                      <p className="text-gray-400">{item.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
             </div>
 
             {/* Contact CTA */}
-            <div className="bg-brand-bg-alt border border-[#222] rounded-lg p-8 md:p-12">
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.55 }}
+              className="bg-brand-bg-alt border border-[#222] rounded-lg p-8 md:p-12"
+            >
               <h3 className="text-2xl md:text-3xl font-light text-white mb-4">
                 Узнать стоимость доставки
               </h3>
               <p className="text-white/80 mb-8">
-                Свяжитесь с нами для получения точного расчёта стоимости доставки 
+                Свяжитесь с нами для получения точного расчёта стоимости доставки
                 в ваш регион.
               </p>
               <div className="space-y-4">
@@ -244,7 +311,7 @@ const DeliveryPage = () => {
                   Оставить заявку
                 </Link>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>

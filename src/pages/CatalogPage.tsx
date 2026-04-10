@@ -223,7 +223,7 @@ const CatalogPage = () => {
                         {/* Product Image */}
                         <div className="relative h-48 md:h-full overflow-hidden">
                           <img
-                            src={product.images.thumb}
+                            src={product.images.hero}
                             alt={product.name}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           />

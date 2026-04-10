@@ -3,17 +3,26 @@ import { Link } from 'react-router-dom';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const fractions = [
-  { name: '0,0–0,315 мм', img: '/img_fo_products/0,0-0,315/BG_Send_Well_4.jpg',  slug: 'pesok-0-0-315' },
-  { name: '0,315–0,63 мм', img: '/img_fo_products/0,315-0,63/BG_Send_Well_4.jpg', slug: 'pesok-0-315-0-63' },
-  { name: '0,0–0,63 мм',  img: '/img_fo_products/0,0–0,63/BG_Send_Well_4.jpg',   slug: 'pesok-0-0-63' },
-  { name: '0,63–2,5 мм',  img: '/img_fo_products/0,63-2,5/BG_Send_Well_4.jpg',   slug: 'pesok-0-63-2-5' },
+  { name: '0,0–0,315 мм',  slug: 'pesok-0-0-315',   img: '/img_fo_products/0,0-0,315/Home_P_Sand_1.png' },
+  { name: '0,315–0,63 мм', slug: 'pesok-0-315-0-63', img: '/img_fo_products/0,315-0,63/Home_P_Sand_1.png' },
+  { name: '0,0–0,63 мм',   slug: 'pesok-0-0-63',     img: '/img_fo_products/0,0–0,63/Home_P_Sand_1.png' },
+  { name: '0,63–2,5 мм',   slug: 'pesok-0-63-2-5',   img: '/img_fo_products/0,63-2,5/Home_P_Sand_1.png' },
 ];
+
+const N = fractions.length;
+
+// Background div extended left by 21vh to fill the diagonal clip area.
+// background-position-x compensates: x = 21vh − i × (gallery_width / N)
+const panoBgPos = (i: number) =>
+  `calc(21vh - ${i} * (100vw - 2cm) / ${N}) center`;
 
 const FractionsGallerySection = () => {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
     <section className="bg-brand-bg">
+
+      {/* Section header */}
       <div className="px-[1cm] pt-20 pb-10">
         <ScrollReveal type="fade-up">
           <p className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-4">Наш ассортимент</p>
@@ -21,89 +30,105 @@ const FractionsGallerySection = () => {
         </ScrollReveal>
       </div>
 
-      <div className="overflow-hidden" style={{ height: '78vh', display: 'flex' }}>
+      <div
+        className="mx-[1cm] overflow-hidden"
+        style={{ height: '78vh', display: 'flex', gap: '4px' }}
+      >
         {fractions.map((frac, i) => {
-          const isHov   = hovered === i;
-          const flexVal = isHov ? 1.5 : 1;
+          const isHov  = hovered === i;
+          const anyHov = hovered !== null;
+          const flexVal = isHov ? 3 : 1;
 
-          const inner = (
-            <div
-              className="relative overflow-hidden w-full h-full"
-              style={{
-                transform: 'skewX(-9deg)',
-                marginLeft: i === 0 ? 0 : -50,
-                zIndex: isHov ? fractions.length + 1 : fractions.length - i,
-                flex: `${flexVal} 0 0`,
-                transition: 'flex 0.55s cubic-bezier(0.25,0.46,0.45,0.94)',
-              }}
+          const clipPath =
+            i === 0       ? 'polygon(0% 0%, 100% 0%, calc(100% - 21vh) 100%, 0% 100%)'
+            : i === N - 1 ? 'polygon(0% 0%, 100% 0%, 100% 100%, calc(0% - 21vh) 100%)'
+            :                'polygon(0% 0%, 100% 0%, calc(100% - 21vh) 100%, calc(0% - 21vh) 100%)';
+
+          return (
+            <Link
+              key={i}
+              to={`/product/${frac.slug}`}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
+              style={{
+                flex: `${flexVal} 1 0`,
+                transition: 'flex 0.55s cubic-bezier(0.25,0.46,0.45,0.94)',
+                position: 'relative',
+                display: 'block',
+                clipPath,
+              }}
             >
-              {/* Фото: анимация масштаба при наведении */}
+              {/* Background — extended left by 21vh, same image on all panels */}
               <div
-                className="absolute inset-0"
                 style={{
-                  transform: `skewX(9deg) scale(${isHov ? 1.25 : 1.15})`,
-                  backgroundImage: `url(${frac.img})`,
-                  backgroundSize: '100vw auto',
-                  backgroundPosition: 'center bottom',
-                  backgroundRepeat: 'no-repeat',
-                  transition: 'transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94)',
-                }}
-              />
-
-              {/* Gradient overlay */}
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: `linear-gradient(to top, rgba(0,0,0,${isHov ? 0.65 : 0.82}) 0%, rgba(0,0,0,0.15) 60%, transparent 100%)`,
-                  transition: 'background 0.4s',
+                  position: 'absolute',
+                  top: 0,
+                  bottom: 0,
+                  right: 0,
+                  left: 'calc(-21vh)',
+                  backgroundImage:    `url(${frac.img})`,
+                  backgroundSize:     'calc(100vw - 2cm) auto',
+                  backgroundPosition: panoBgPos(i),
+                  backgroundRepeat:   'no-repeat',
+                  transform:          `scale(${isHov ? 1.05 : 1.0})`,
+                  transformOrigin:    'calc(50% + 10.5vh) 50%',
+                  transition:         'transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94)',
                 }}
               />
 
 
               {/* Label */}
               <div
-                className="absolute bottom-8 left-5 right-5"
                 style={{
-                  transform: 'skewX(9deg)',
-                  opacity: isHov || hovered === null ? 1 : 0.5,
+                  position: 'absolute',
+                  bottom: '2rem',
+                  left: '1.25rem',
+                  right: '1.25rem',
+                  opacity: isHov || !anyHov ? 1 : 0.35,
                   transition: 'opacity 0.35s',
                 }}
               >
-                <span className="font-mono text-[10px] text-white/30 block mb-1">{String(i + 1).padStart(2, '0')}</span>
-                <p
-                  className="text-white font-light leading-tight"
+                <span
                   style={{
-                    fontSize: isHov ? '1.5rem' : '0.85rem',
-                    transition: 'font-size 0.4s cubic-bezier(0.25,0.46,0.45,0.94)',
+                    fontFamily: 'monospace',
+                    fontSize: '10px',
+                    color: 'rgba(255,255,255,0.3)',
+                    display: 'block',
+                    marginBottom: '0.25rem',
+                  }}
+                >
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+
+                <p
+                  style={{
+                    color: 'white',
+                    fontWeight: 300,
+                    lineHeight: 1.2,
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
+                    fontSize: isHov ? '3rem' : '1.7rem',
+                    transition: 'font-size 0.4s cubic-bezier(0.25,0.46,0.45,0.94)',
                   }}
                 >
                   {frac.name}
                 </p>
+
                 {isHov && (
-                  <p className="text-white/50 text-xs mt-2 uppercase tracking-widest font-mono">
+                  <p
+                    style={{
+                      color: 'rgba(255,255,255,0.5)',
+                      fontSize: '0.7rem',
+                      marginTop: '0.5rem',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.12em',
+                      fontFamily: 'monospace',
+                    }}
+                  >
                     Подробнее →
                   </p>
                 )}
               </div>
-            </div>
-          );
-
-          return (
-            <Link
-              key={i}
-              to={`/product/${frac.slug}`}
-              className="contents"
-              style={{
-                display: 'contents',
-                flex: `${flexVal} 0 0`,
-                transition: 'flex 0.55s cubic-bezier(0.25,0.46,0.45,0.94)',
-              }}
-            >
-              {inner}
             </Link>
           );
         })}

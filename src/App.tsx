@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -12,6 +13,7 @@ import ContactsPage from '@/pages/ContactsPage';
 import ScrollToTop from '@/components/Scroll/ScrollToTop';
 import BackToTop from '@/components/Scroll/BackToTop';
 import SmoothScroll from '@/components/ui/SmoothScroll';
+import Preloader from '@/components/ui/Preloader';
 import './App.css';
 
 const FULLSCREEN_ROUTES = ['/articles'];
@@ -44,10 +46,15 @@ function AppLayout() {
 }
 
 function App() {
+  const [preloading, setPreloading] = useState(true);
+
   return (
-    <Router>
-      <AppLayout />
-    </Router>
+    <>
+      {preloading && <Preloader onDone={() => setPreloading(false)} />}
+      <Router>
+        <AppLayout />
+      </Router>
+    </>
   );
 }
 

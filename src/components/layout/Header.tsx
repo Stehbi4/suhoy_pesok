@@ -55,7 +55,7 @@ const Header = () => {
     logoSrc        = '/Logo/logo-light.png';
     btnClass       = 'border border-brand-alt text-brand-dark';
     // active: graphite bg + white text + red border
-    activeBtnClass = 'bg-brand-graphite text-white font-semibold border border-brand-red';
+    activeBtnClass = 'bg-gray-200 text-brand-dark font-semibold border border-brand-red';
     mobileMenuClass = 'bg-brand-page border-brand-alt';
 
   } else if (isTransparentPage) {
@@ -68,7 +68,7 @@ const Header = () => {
     // inactive: тёмная полупрозрачная пилюля
     btnClass       = 'bg-black/30 backdrop-blur-[5px] border border-white/20 text-white';
     // active: белое затемнение + красный текст + красная рамка
-    activeBtnClass = 'bg-white/20 backdrop-blur-[5px] border border-brand-red text-brand-red font-semibold';
+    activeBtnClass = 'bg-white/20 backdrop-blur-[5px] border border-brand-red text-whight font-semibold';
     mobileMenuClass = 'bg-black/80 backdrop-blur-md border-white/10';
 
   } else {
@@ -79,9 +79,9 @@ const Header = () => {
     textClass      = 'text-white';
     hoverClass     = 'hover:text-gray-300 hover:border-gray-500';
     logoSrc        = '/Logo/logo-dark.png';
-    btnClass       = 'border border-gray-700 text-white';
+    btnClass       = 'border border-gray-900 text-white';
     // active: белый фон + чёрный текст + красная рамка
-    activeBtnClass = 'bg-white text-brand-dark font-semibold border border-brand-red';
+    activeBtnClass = 'bg-black/80 text-whight font-semibold border border-brand-red';
     mobileMenuClass = 'bg-brand-bg border-[#222]';
   }
 
