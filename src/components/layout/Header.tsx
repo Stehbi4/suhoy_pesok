@@ -11,9 +11,14 @@ const Header = () => {
   const location = useLocation();
 
   // ── page type ──────────────────────────────────────────────────────────────
-  const isLightPage       = location.pathname === '/catalog';
+  const knownRoutes = ['/', '/catalog', '/about', '/delivery', '/contacts', '/articles', '/404'];
+  const isKnown     = knownRoutes.includes(location.pathname) ||
+                      location.pathname.startsWith('/articles/') ||
+                      location.pathname.startsWith('/product/');
+  const isLightPage = location.pathname === '/catalog' || location.pathname === '/404' || !isKnown;
   const isTransparentPage = location.pathname === '/delivery' ||
-                            location.pathname.startsWith('/articles/');
+                            location.pathname.startsWith('/articles/') ||
+                            location.pathname.startsWith('/product/');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -72,17 +77,14 @@ const Header = () => {
     mobileMenuClass = 'bg-black/80 backdrop-blur-md border-white/10';
 
   } else {
-    // 1. Dark background (default)
-    headerBg = isScrolled
-      ? 'bg-brand-bg/95 backdrop-blur-md border-b border-[#222] shadow-lg shadow-black/10'
-      : 'bg-transparent';
+    // 1. Transparent (default — home, product pages)
+    headerBg       = '';
     textClass      = 'text-white';
-    hoverClass     = 'hover:text-gray-300 hover:border-gray-500';
+    hoverClass     = 'hover:text-white/60';
     logoSrc        = '/Logo/logo-dark.png';
-    btnClass       = 'border border-gray-900 text-white';
-    // active: белый фон + чёрный текст + красная рамка
-    activeBtnClass = 'bg-black/80 text-whight font-semibold border border-brand-red';
-    mobileMenuClass = 'bg-brand-bg border-[#222]';
+    btnClass       = 'text-white';
+    activeBtnClass = 'text-brand-red font-semibold';
+    mobileMenuClass = 'bg-black/70 backdrop-blur-md border-white/10';
   }
 
   const isActive = (path: string) => {

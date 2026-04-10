@@ -1,6 +1,5 @@
 import HeroSection from '@/components/sections/Home/HeroSection';
 import StatsStripSection from '@/components/sections/Home/StatsStripSection';
-import ApplicationsHomeSection from '@/components/sections/Home/ApplicationsHomeSection';
 import ImageSection from '@/components/sections/Home/ImageSection';
 import FractionsGallerySection from '@/components/sections/Home/FractionsGallerySection';
 import ProductInfoSection from '@/components/sections/Home/ProductInfoSection';
@@ -29,12 +28,6 @@ const HomePage = () => {
           Файл: src/components/sections/Home/ProductInfoSection.tsx
          ═══════════════════════════════════════════════════════════════════════ */}
       <ProductInfoSection />
-
-      {/* ═══════════════════════════════════════════════════════════════════════
-          4. СФЕРЫ ПРИМЕНЕНИЯ  —  12 областей · accordion-hover
-          Файл: src/components/sections/Home/ApplicationsHomeSection.tsx
-         ═══════════════════════════════════════════════════════════════════════ */}
-      <ApplicationsHomeSection />
 
       {/* ═══════════════════════════════════════════════════════════════════════
           5. IMAGE BANNER  —  fullscreen · фото карьера · цитата · параллакс

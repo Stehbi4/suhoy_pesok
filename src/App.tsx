@@ -10,6 +10,7 @@ import DeliveryPage from '@/pages/DeliveryPage';
 import ArticlesPage from '@/pages/ArticlesPage';
 import ArticlePage from '@/pages/ArticlePage';
 import ContactsPage from '@/pages/ContactsPage';
+import NotFoundPage from '@/pages/NotFoundPage';
 import ScrollToTop from '@/components/Scroll/ScrollToTop';
 import BackToTop from '@/components/Scroll/BackToTop';
 import SmoothScroll from '@/components/ui/SmoothScroll';
@@ -37,6 +38,8 @@ function AppLayout() {
           <Route path="/articles" element={<ArticlesPage />} />
           <Route path="/articles/:slug" element={<ArticlePage />} />
           <Route path="/contacts" element={<ContactsPage />} />
+          <Route path="/404" element={<NotFoundPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
         {!isFullscreen && <BackToTop />}
       </div>

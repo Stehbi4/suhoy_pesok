@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import { ArrowUpRight, ArrowLeft } from 'lucide-react';
 import { getArticleBySlug, products } from '@/data/articles';
 import ScrollReveal from '@/components/ui/ScrollReveal';
@@ -36,20 +36,7 @@ const ArticlePage = () => {
   const { slug } = useParams<{ slug: string }>();
   const article = slug ? getArticleBySlug(slug) : null;
 
-  if (!article) {
-    return (
-      <main className="min-h-screen pt-24 bg-brand-page flex items-center justify-center">
-        <div className="text-center px-6">
-          <p className="font-mono text-xs tracking-[0.4em] uppercase text-gray-400 mb-4">404</p>
-          <h1 className="text-4xl font-light mb-8" style={{ color: TEXT_DARK }}>Статья не найдена</h1>
-          <Link to="/articles" className="btn-primary rounded-lg inline-flex items-center gap-2">
-            <span>К статьям</span>
-            <ArrowUpRight className="w-5 h-5" />
-          </Link>
-        </div>
-      </main>
-    );
-  }
+  if (!article) return <Navigate to="/404" replace />;
 
   const relatedProducts = products.filter(p =>
     article.relatedProducts?.some(rp => p.id.includes(rp) || p.fraction.includes(rp))
@@ -66,7 +53,7 @@ const ArticlePage = () => {
       {/* ═══════════════════════════════════════════════════════════════════════
           1. HERO — фото фон + текст поверх с градиентом
          ═══════════════════════════════════════════════════════════════════════ */}
-      <section className="relative min-h-[90vh] flex flex-col justify-between pt-24 md:pt-28 pb-10 px-6 sm:px-10 lg:px-[1cm] overflow-hidden">
+      <section className="relative h-screen flex flex-col justify-between pt-24 md:pt-28 pb-10 px-6 sm:px-10 lg:px-[1cm] overflow-hidden">
 
         {/* Фоновое изображение */}
         <img

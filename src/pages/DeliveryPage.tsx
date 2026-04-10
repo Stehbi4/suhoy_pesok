@@ -107,9 +107,10 @@ const DeliveryPage = () => {
                   key={index}
                   initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
+                  whileHover={{ y: -8 }}
                   viewport={{ once: true, margin: '-60px' }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="card-dark card-hover p-8 hover:border-brand-red/30"
+                  className="card-dark card-hover p-8 hover:border-brand-red/30 rounded-lg"
                 >
                   <Icon className="w-7 h-7 text-white mb-6" />
                   <h3 className="text-xl font-light text-white mb-3">
@@ -145,7 +146,7 @@ const DeliveryPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.5, delay: index * 0.12 }}
-                className="card-dark card-hover p-8 hover:border-brand-red/30 rounded-lg text-center transition-all duration-300"
+                className="card-dark card-hover p-8 rounded-lg text-center"
               >
                 <div className="text-2xl font-light text-white mb-2">
                   {item.volume}
@@ -209,7 +210,7 @@ const DeliveryPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="card-dark card-hover p-8 hover:border-brand-red/30 rounded-lg transition-all duration-300"
+                className="card-dark card-hover p-8 rounded-lg"
               >
                 <div className="text-5xl font-bold text-[#1a1a1a] mb-4">
                   {step.step}
@@ -269,7 +270,9 @@ const DeliveryPage = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-40px' }}
                     transition={{ duration: 0.45, delay: index * 0.1 }}
-                    className="flex items-start card-dark card-hover p-6 hover:border-brand-red/30 rounded-lg hover:border-brand-red/50 transition-all duration-300"
+                    className="flex items-start card-dark card-hover p-6 rounded-lg hover:border-brand-red/50"
+                      whileHover={{ y: -8 }}
+                      style={{ border: '1px solid #222', transition: 'border-color 0.3s ease, box-shadow 0.4s ease' }}
                   >
                     <CheckCircle2 className="w-6 h-6 text-white flex-shrink-0 mt-0.5" />
                     <div>

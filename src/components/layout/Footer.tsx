@@ -5,7 +5,11 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   // Only CatalogPage gets light footer; everything else gets dark footer
-  const isLightPage = location.pathname === '/catalog';
+  const knownRoutes = ['/', '/catalog', '/about', '/delivery', '/contacts', '/articles', '/404'];
+  const isKnown     = knownRoutes.includes(location.pathname) ||
+                      location.pathname.startsWith('/articles/') ||
+                      location.pathname.startsWith('/product/');
+  const isLightPage = location.pathname === '/catalog' || location.pathname === '/404' || !isKnown;
 
   const bgClass     = isLightPage ? 'bg-brand-page border-brand-alt' : 'bg-brand-bg border-[#222]';
   const textClass   = isLightPage ? 'text-brand-dark'                : 'text-white';

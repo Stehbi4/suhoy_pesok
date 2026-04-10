@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Navigate } from 'react-router-dom';
 import { products } from '@/data/articles';
 import { BG_PAGE } from '@/styles/theme';
 
@@ -50,13 +50,7 @@ const ProductPage = () => {
     return () => { document.body.style.overflow = ''; };
   }, [lightboxIdx]);
 
-  if (!product) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-brand-bg text-white text-3xl">
-        Товар не найден
-      </div>
-    );
-  }
+  if (!product) return <Navigate to="/404" replace />;
 
   return (
     <main className="overflow-x-hidden" style={{ background: BG_PAGE }}>

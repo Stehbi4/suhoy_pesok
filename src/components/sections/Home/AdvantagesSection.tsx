@@ -1,87 +1,96 @@
 import { useRef } from 'react';
-import { Factory, Shield, Handshake, MapPin } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const advantages = [
   {
-    icon: Factory,
     title: 'Собственное производство',
-    description:
-      'Передовое оборудование для фракционирования, сушки и очистки кварцевого песка. Гарантирует высокое качество и стабильные поставки без дефектов.',
+    description: 'Контролируем качество от карьера до отгрузки. Передовое оборудование для фракционирования, сушки и очистки.',
   },
   {
-    icon: Shield,
     title: 'Гарантированное качество',
-    description:
-      'Каждая партия проходит лабораторный контроль по ГОСТ 8736-2014. Обеспечивает чистоту, надежность и однородность для всех клиентов.',
+    description: 'Каждая партия проходит лабораторный контроль по ГОСТ 8736-2014. Протоколы испытаний на каждую отгрузку.',
   },
   {
-    icon: Handshake,
     title: 'Гибкие условия',
-    description:
-      'Индивидуальный подход: минимальные объемы, кастомизация, формы оплаты и онлайн-поддержка. Адаптируемся к вашим нуждам быстро.',
+    description: 'Индивидуальный подход: минимальные объёмы, кастомизация, формы оплаты и онлайн-поддержка.',
   },
   {
-    icon: MapPin,
     title: 'Доставка СПб и ЛО',
-    description:
-      'Собственный транспорт для оперативной доставки навалом или в МКР. Минимизируем затраты и сроки по СПб и области.',
+    description: 'Собственный транспорт. Навал или биг-бэги. Доставка за 24 часа по Санкт-Петербургу и Ленинградской области.',
   },
 ];
 
-const AdvantageItem = ({ advantage, index }: { advantage: typeof advantages[0]; index: number }) => {
+// Отдельная строка — анимация привязана к скролу (reversible)
+const AdvantageRow = ({ title, description, index }: { title: string; description: string; index: number }) => {
   const ref = useRef<HTMLDivElement>(null);
-
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ['start 0.95', 'start 0.35'],
+    offset: ['start 0.92', 'start 0.45'],
   });
 
-  const scale = useTransform(scrollYProgress, [0, 1], [0.88, 1]);
-  const opacity = useTransform(scrollYProgress, [0, 1], [0.1, 1]);
-  const y = useTransform(scrollYProgress, [0, 1], [30, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const scale   = useTransform(scrollYProgress, [0, 1], [0.88, 1]);
+  const y       = useTransform(scrollYProgress, [0, 1], [24, 0]);
 
   return (
     <motion.div
       ref={ref}
-      style={{ scale, opacity, y }}
-      className="flex items-center will-change-transform"
+      style={{ opacity, scale, y }}
+      className="flex items-start gap-7 py-7"
     >
-      <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-gray-400 flex items-center justify-center mr-8 md:mr-10 flex-shrink-0">
-        <span className="text-xl md:text-2xl font-light text-gray-800">{index + 1}</span>
+      <div className="w-12 h-12 rounded-full border-2 border-gray-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+        <span className="text-base font-light text-gray-600">{index + 1}</span>
       </div>
       <div>
-        <h3 className="text-xl md:text-2xl font-medium text-gray-800 mb-2">
-          {advantage.title}
-        </h3>
-        <p className="text-gray-500 text-sm leading-relaxed max-w-md">
-          {advantage.description}
-        </p>
+        <h3 className="text-xl font-medium text-gray-800 mb-1">{title}</h3>
+        <p className="text-sm leading-relaxed font-light text-gray-500">{description}</p>
       </div>
     </motion.div>
   );
 };
 
 const AdvantagesSection = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  // Заголовок — два слова, привязаны к скролу секции
+  const { scrollYProgress: titleProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start 0.9', 'start 0.5'],
+  });
+
+  const leftX   = useTransform(titleProgress, [0, 1], [-100, 0]);
+  const rightX  = useTransform(titleProgress, [0, 1], [100, 0]);
+  const titleOp = useTransform(titleProgress, [0, 1], [0, 1]);
+
   return (
-    <section className="py-20 md:py-32 bg-[#e8e8e8] relative overflow-hidden">
-      <div className="px-6 sm:px-10 lg:px-[1cm] relative z-10">
+    <section className="py-24 lg:py-32 bg-[#e8e8e8] relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 h-px bg-black/10" />
+
+      <div ref={sectionRef} className="px-6 sm:px-10 lg:px-[1cm]">
 
         {/* Заголовок */}
-        <div className="mb-28 overflow-hidden">
-          <h2 className="text-6xl md:text-7xl lg:text-8xl font-light text-gray-800 leading-tight text-center flex items-baseline justify-center gap-[0.3em]">
-            <ScrollReveal type="slide-left" inline>Наши</ScrollReveal>
-            <ScrollReveal type="slide-right" delay={0.15} inline>преимущества</ScrollReveal>
+        <div className="mb-20">
+          <motion.div style={{ opacity: titleOp }} className="mb-4">
+            <p className="text-[10px] uppercase tracking-[0.35em] text-gray-500 text-center">Преимущества</p>
+          </motion.div>
+
+          <h2 className="text-[clamp(2.5rem,6vw,5rem)] leading-[1.05] font-light text-gray-800 flex flex-wrap gap-x-[0.3em] justify-center">
+            <motion.span style={{ x: leftX, opacity: titleOp }} className="inline-block">
+              Наши
+            </motion.span>
+            <motion.span style={{ x: rightX, opacity: titleOp }} className="inline-block font-medium">
+              преимущества
+            </motion.span>
           </h2>
         </div>
 
         {/* Список */}
-        <div className="grid grid-cols-1 gap-16 max-w-2xl mx-auto">
-          {advantages.map((advantage, index) => (
-            <AdvantageItem key={index} advantage={advantage} index={index} />
+        <div className="max-w-3xl mx-auto">
+          {advantages.map((adv, i) => (
+            <AdvantageRow key={i} index={i} title={adv.title} description={adv.description} />
           ))}
         </div>
+
       </div>
     </section>
   );

@@ -1,54 +1,45 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, ChevronDown } from 'lucide-react';
-import { motion, useMotionValue, animate, AnimatePresence } from 'framer-motion';
-import type { AnimationPlaybackControls } from 'framer-motion';
+import { motion, useMotionValue, AnimatePresence } from 'framer-motion';
 
 /**
- * Phase state machine:
- *   idle        – screen 1: image bg, title + CTA visible, "Листайте" shown
- *   to-screen2  – transitioning forward: video1 plays, content animates up, scroll locked
- *   screen2     – screen 2: video2 loops, quote visible, normal scroll + back-threshold
- *   to-screen1  – transitioning back: black flash, image restores, content slides down
+ * Phase machine:
+ *   idle         — scrollY=0, photo bg, screen1 content visible
+ *   transitioning — locked 1.5s scripted scroll, video1 plays
+ *   video         — video2 loops, scroll free, content fades by scroll
+ *   returning     — video2 fades 1.5s → black 0.8s → photo, text stays
+ *
+ * Section = 250vh:
+ *   0–100vh   screen 1  (photo zone)
+ *   100–250vh screen 2  (video zone, quote)
  */
-type Phase = 'idle' | 'to-screen2' | 'screen2' | 'to-screen1';
-
-/** Accumulated upward wheel delta required to trigger the back transition */
-const BACK_THRESHOLD = 300;
+type Phase = 'idle' | 'transitioning' | 'video' | 'returning';
 
 const HeroSection = () => {
-  const sectionRef   = useRef<HTMLElement>(null);
-  const video1Ref    = useRef<HTMLVideoElement>(null);
-  const video2Ref    = useRef<HTMLVideoElement>(null);
-  const rafRef       = useRef<number>(0);
-  const isLocked     = useRef(false);
-  const phaseRef     = useRef<Phase>('idle');
-  const showQuoteRef = useRef(false);
-  const backDeltaRef = useRef(0);        // accumulated upward delta at screen2
-  const animStopRef  = useRef<AnimationPlaybackControls[]>([]);
-  const fallbackRef  = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const video1Ref   = useRef<HTMLVideoElement>(null);
+  const video2Ref   = useRef<HTMLVideoElement>(null);
+  const rafRef      = useRef<number>(0);
+  const phaseRef    = useRef<Phase>('idle');
+  const lockedRef   = useRef(false);
 
-  const [phase,     setPhase]     = useState<Phase>('idle');
-  const [showQuote, setShowQuote] = useState(false);
-  const [darkening, setDarkening] = useState(false);
+  const [phase,      setPhase]      = useState<Phase>('idle');
+  const [darkening,  setDarkening]  = useState(false);
+  const [video2Fade, setVideo2Fade] = useState(false);
+  const [showHint,   setShowHint]   = useState(true);
 
-  // Content MotionValues — driven directly by code, not useScroll
-  const contentY  = useMotionValue(0);
-  const contentOp = useMotionValue(1);
+  // Motion values for content layers — set directly from scroll listener
+  const s1Op = useMotionValue(1);   // screen 1 opacity
+  const s2Op = useMotionValue(0);   // screen 2 opacity
 
-  const syncPhase = useCallback((p: Phase) => { phaseRef.current = p; setPhase(p); }, []);
+  const syncPhase = (p: Phase) => { phaseRef.current = p; setPhase(p); };
 
-  const stopAnims = () => {
-    animStopRef.current.forEach(a => a.stop?.());
-    animStopRef.current = [];
-  };
-
-  // ── RAF smooth scroll ──────────────────────────────────────────────────────
+  // ── RAF smooth scroll ─────────────────────────────────────────────────────
   const animateScrollTo = useCallback((target: number, ms: number, onDone?: () => void) => {
     cancelAnimationFrame(rafRef.current);
     const from  = window.scrollY;
     const start = performance.now();
-    const ease  = (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    const ease  = (t: number) => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
     const tick  = (now: number) => {
       const t = Math.min((now - start) / ms, 1);
       window.scrollTo(0, from + (target - from) * ease(t));
@@ -58,150 +49,108 @@ const HeroSection = () => {
     rafRef.current = requestAnimationFrame(tick);
   }, []);
 
-  // ── idle → to-screen2 ──────────────────────────────────────────────────────
-  const startForward = useCallback(() => {
-    if (isLocked.current) return;
-    isLocked.current = true;
-    backDeltaRef.current = 0;
-    syncPhase('to-screen2');
-    showQuoteRef.current = false;
-    setShowQuote(false);
+  // ── idle → transitioning: lock, play video1, scripted scroll 1.5s ─────────
+  const startTransition = useCallback(() => {
+    if (phaseRef.current !== 'idle' || lockedRef.current) return;
+    lockedRef.current = true;
+    syncPhase('transitioning');
+    setShowHint(false);
 
-    // Instant cut: start video1 from beginning
     const v1 = video1Ref.current;
     if (v1) { v1.currentTime = 0; void v1.play(); }
 
-    // Animate content out (matches scroll duration)
-    stopAnims();
-    animStopRef.current = [
-      animate(contentY,  -260, { duration: 2,   ease: [0.37, 0, 0.63, 1] }),
-      animate(contentOp, 0,    { duration: 1.5, ease: [0.42, 0, 0.58, 1] }),
-    ];
+    const duration = (v1?.duration && isFinite(v1.duration) ? v1.duration : 5) * 1000;
+    animateScrollTo(window.innerHeight, duration, () => {
+      // Scripted scroll done → start video2, unlock
+      const v2 = video2Ref.current;
+      if (v2) { v2.currentTime = 0; void v2.play(); }
+      syncPhase('video');
+      lockedRef.current = false;
+    });
+  }, [animateScrollTo]);
 
-    // Scroll to screen 2 over 2s
-    animateScrollTo(window.innerHeight, 2000);
+  // ── video → returning: text stays, video2 fades 1.5s → black 0.8s → photo ─
+  const startReturn = useCallback(() => {
+    if (lockedRef.current || phaseRef.current !== 'video') return;
+    lockedRef.current = true;
+    syncPhase('returning');
 
-    // Safety fallback: if video1 never fires onEnded
-    clearTimeout(fallbackRef.current);
-    fallbackRef.current = setTimeout(() => {
-      if (phaseRef.current === 'to-screen2') {
-        void video2Ref.current?.play();
-        syncPhase('screen2');
-        isLocked.current = false;
-      }
-    }, 12000);
-  }, [syncPhase, contentY, contentOp, animateScrollTo]);
+    // Keep screen1 content visible
+    s1Op.set(1);
 
-  // ── video1: quote 1 s before end ──────────────────────────────────────────
-  const onVideo1TimeUpdate = useCallback(() => {
-    const v = video1Ref.current;
-    if (!v || !v.duration) return;
-    if (!showQuoteRef.current && v.currentTime >= v.duration - 1) {
-      showQuoteRef.current = true;
-      setShowQuote(true);
-    }
-  }, []);
-
-  // ── video1 ended: crossfade to video2, unlock ─────────────────────────────
-  const onVideo1Ended = useCallback(() => {
-    clearTimeout(fallbackRef.current);
-    void video2Ref.current?.play();
-    syncPhase('screen2');
-    isLocked.current = false;
-  }, [syncPhase]);
-
-  // ── screen2 → to-screen1 ──────────────────────────────────────────────────
-  const startBack = useCallback(() => {
-    if (isLocked.current) return;
-    isLocked.current = true;
-    backDeltaRef.current = 0;
-    syncPhase('to-screen1');
-    showQuoteRef.current = false;
-    setShowQuote(false);
-    setDarkening(true);               // black fades in (0.2s)
+    // Fade video2 out over 1.5s (CSS transition)
+    setVideo2Fade(true);
 
     setTimeout(() => {
-      // Black is fully on — stop videos, switch bg to image, snap content instantly
-      video2Ref.current?.pause();
+      // video2 fully faded — black appears, immediately swap to photo underneath
+      setDarkening(true);
       video1Ref.current?.pause();
+      video2Ref.current?.pause();
       if (video1Ref.current) video1Ref.current.currentTime = 0;
+      if (video2Ref.current) video2Ref.current.currentTime = 0;
+      setVideo2Fade(false);
+      s2Op.set(0);
+      syncPhase('idle');
+      setShowHint(true);
+      // Short delay just for black to render, then fade out
+      setTimeout(() => {
+        setDarkening(false);
+        lockedRef.current = false;
+      }, 50);
+    }, 1500);
+  }, [s1Op, s2Op]);
 
-      syncPhase('idle');              // image appears under black
-      stopAnims();
-      contentY.set(0);               // snap — no entry animation
-      contentOp.set(1);
-
-      // Scroll back to 0 over 1.4s
-      animateScrollTo(0, 1400, () => {
-        isLocked.current = false;
-        if (video2Ref.current) video2Ref.current.currentTime = 0;
-      });
-
-      // Fade black out immediately (0.2s) — total dark effect ≈ 0.4–0.5s
-      setDarkening(false);
-    }, 250);
-  }, [syncPhase, contentY, contentOp, animateScrollTo]);
-
-  // ── Event listeners ───────────────────────────────────────────────────────
+  // ── Wheel: first scroll down triggers scripted transition ─────────────────
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
-      // Block everything during locked transitions
-      if (isLocked.current) { e.preventDefault(); return; }
-
-      // idle at top, scroll down → forward
-      if (phaseRef.current === 'idle' && window.scrollY < 10 && e.deltaY > 0) {
+      if (lockedRef.current) { e.preventDefault(); return; }
+      if (phaseRef.current === 'idle' && e.deltaY > 0) {
         e.preventDefault();
-        startForward();
-        return;
+        startTransition();
       }
+    };
+    window.addEventListener('wheel', onWheel, { passive: false });
+    return () => window.removeEventListener('wheel', onWheel);
+  }, [startTransition]);
 
-      // screen2 at screen2-top, scroll up → accumulate threshold, then back
-      if (phaseRef.current === 'screen2' && window.scrollY <= window.innerHeight + 5) {
-        if (e.deltaY < 0) {
-          e.preventDefault();
-          backDeltaRef.current += Math.abs(e.deltaY);
-          if (backDeltaRef.current >= BACK_THRESHOLD) startBack();
-        } else {
-          backDeltaRef.current = 0;   // scrolling down: reset back counter
-        }
+  // ── Scroll: content opacity tied to scroll position ───────────────────────
+  useEffect(() => {
+    const onScroll = () => {
+      const sy  = window.scrollY;
+      const ih  = window.innerHeight;
+      const cur = phaseRef.current;
+
+      if (cur === 'returning' || cur === 'idle') return;
+
+      // Screen 1: fades out as scroll goes 0→ih
+      s1Op.set(Math.max(0, 1 - (sy / ih) * 1.4));
+      setShowHint(sy < ih * 0.08);
+
+      // Screen 2: fades in 70–100vh, holds, fades out 180–250vh
+      const fadeIn  = (sy - ih * 0.7) / (ih * 0.3);   // 0→1 over 70–100vh
+      const fadeOut = (sy - ih * 1.8) / (ih * 0.7);   // 0→1 over 180–250vh
+      const op = Math.max(0, Math.min(1, fadeIn)) * Math.max(0, 1 - Math.max(0, fadeOut));
+      s2Op.set(op);
+
+      // Return trigger: user scrolled all the way back to top
+      if (cur === 'video' && sy < 10) {
+        startReturn();
       }
     };
 
-    const onKeyDown = (e: KeyboardEvent) => {
-      const all = ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', ' '];
-      if (isLocked.current && all.includes(e.key)) { e.preventDefault(); return; }
-
-      if (phaseRef.current === 'idle' && window.scrollY < 10 &&
-          ['ArrowDown', 'PageDown', ' '].includes(e.key)) {
-        e.preventDefault();
-        startForward();
-      }
-      if (phaseRef.current === 'screen2' && window.scrollY <= window.innerHeight + 5 &&
-          ['ArrowUp', 'PageUp'].includes(e.key)) {
-        e.preventDefault();
-        backDeltaRef.current += 100;
-        if (backDeltaRef.current >= BACK_THRESHOLD) startBack();
-      }
-    };
-
-    window.addEventListener('wheel',   onWheel,  { passive: false });
-    window.addEventListener('keydown', onKeyDown);
-    return () => {
-      window.removeEventListener('wheel',   onWheel);
-      window.removeEventListener('keydown', onKeyDown);
-      cancelAnimationFrame(rafRef.current);
-      clearTimeout(fallbackRef.current);
-    };
-  }, [startForward, startBack]);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [s1Op, s2Op, startReturn]);
 
   return (
-    // 200 vh so the sticky inner stays on screen during back-scroll
-    <section ref={sectionRef} className="relative h-[200vh]">
-      <div className="sticky top-0 h-screen overflow-hidden">
+    <section className="relative h-[250vh]">
 
-        {/* ── BG: image — only in idle, instant cut ─────────────────────── */}
+      {/* ── Sticky background — photo or video, never moves ──────────────── */}
+      <div className="sticky top-0 h-screen overflow-hidden pointer-events-none z-0">
+
+        {/* Photo — visible only in idle */}
         <div
-          className="absolute inset-0 top-20 md:top-24 bg-cover bg-center z-0"
+          className="absolute inset-0 bg-cover bg-center"
           style={{
             backgroundImage: "url('/HeroSent/sand-pile_1.png')",
             opacity: phase === 'idle' ? 1 : 0,
@@ -209,124 +158,125 @@ const HeroSection = () => {
           }}
         />
 
-        {/* ── BG: video 1 — instant cut in, instant cut out ─────────────── */}
+        {/* Video 1 — transition animation, plays once */}
         <video
           ref={video1Ref}
           src="/HeroSent/part%201.mp4"
           muted
           playsInline
-          onTimeUpdate={onVideo1TimeUpdate}
-          onEnded={onVideo1Ended}
-          className="absolute inset-0  object-cover pointer-events-none z-[1]"
-          style={{ opacity: phase === 'to-screen2' ? 1 : 0, transition: 'none' }}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{
+            opacity: phase === 'transitioning' ? 1 : 0,
+            transition: 'none',
+          }}
         />
 
-        {/* ── BG: video 2 — instant cut in, loops ──────────────────────── */}
+        {/* Video 2 — looping bg for video phase */}
         <video
           ref={video2Ref}
           src="/HeroSent/part%202.mp4"
           muted
           playsInline
           loop
-          className="absolute inset-0 object-cover pointer-events-none z-[2]"
-          style={{ opacity: phase === 'screen2' ? 1 : 0, transition: 'none' }}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{
+            opacity: (phase === 'video' || phase === 'returning') && !video2Fade ? 1 : 0,
+            transition: video2Fade ? 'opacity 1.5s ease' : 'none',
+          }}
         />
 
         {/* Permanent dark overlay */}
-        <div className="absolute inset-0 bg-black/20 z-[3]" />
+        <div className="absolute inset-0 bg-black/25" />
 
-        {/* Black flash for back transition */}
+        {/* Black flash for return */}
         <div
-          className="absolute inset-0 bg-black z-[9] pointer-events-none"
-          style={{ opacity: darkening ? 1 : 0, transition: 'opacity 0.2s ease' }}
+          className="absolute inset-0 bg-black pointer-events-none"
+          style={{
+            opacity: darkening ? 1 : 0,
+            transition: 'opacity 0.8s ease',
+          }}
         />
-
-        {/* ── Screen 1 content: title + CTA ──────────────────────────────── */}
-        <motion.div
-          className="absolute inset-0 z-10 pointer-events-none"
-          style={{ y: contentY, opacity: contentOp }}
-        >
-          {/* Heading — top left */}
-          <div
-            className="absolute pointer-events-auto"
-            style={{ top: 'calc(5rem + 1cm)', left: '1cm' }}
-          >
-            <h1
-              className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white leading-[0.95]"
-              style={{ fontWeight: 200, letterSpacing: '0.04em' }}
-            >
-              Сухой кварцевый
-              <br />
-              <span style={{ fontWeight: 300, fontStyle: 'italic', letterSpacing: '0.01em' }}>
-                песок
-              </span>
-            </h1>
-          </div>
-
-          {/* Description + buttons — bottom right */}
-          <div
-            className="absolute pointer-events-auto text-right"
-            style={{ bottom: '0.5cm', right: '1cm' }}
-          >
-            <p className="text-gray-400 text-lg max-w-md mb-6 leading-relaxed ml-auto">
-              Очищенный, фракционированный, <br />
-              cухой песок под любые ваши задачи. <br />
-              Для промышленности и строительства.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-end">
-              <Link
-                to="/catalog"
-                className="bg-brand-red text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-red-light transition-colors flex items-center justify-center gap-3"
-              >
-                <span>В каталог</span>
-                <ArrowUpRight className="w-5 h-5" />
-              </Link>
-              <Link
-                to="/contacts"
-                className="px-6 py-3 border border-gray-700 text-white rounded-lg font-semibold hover:border-brand-red transition-all duration-300 flex items-center justify-center gap-3"
-              >
-                <span>Связаться</span>
-              </Link>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* ── Screen 2 quote — appears 1 s before video1 ends ─────────────── */}
-        <AnimatePresence>
-          {showQuote && (
-            <motion.div
-              key="quote"
-              initial={{ opacity: 0, y: 60, scale: 0.85 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.9, ease: 'easeOut' }}
-              className="absolute inset-x-0 z-10 px-[1cm]"
-              style={{ top: '50%', transform: 'translateY(-50%)' }}
-            >
-              <p className="text-white text-4xl md:text-5xl lg:text-6xl font-light leading-[1.05] tracking-tight">
-                Каждая песчинка — кирпичик величия: <br />
-                прочность огромного всегда держится на <br />надёжности самого малого
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* ── "Листайте" — idle only, centre of left half ──────────────────── */}
-        <AnimatePresence>
-          {phase === 'idle' && (
-            <motion.div
-              key="scroll-hint"
-              initial={{ opacity: 1 }}
-              exit={{ opacity: 0, transition: { duration: 0.2 } }}
-              className="absolute z-10 flex flex-col items-center gap-2"
-              style={{ bottom: '0.5cm', left: '25%', transform: 'translateX(-50%)' }}
-            >
-              <span className="text-gray-500 text-xs tracking-[0.3em] uppercase">Листайте</span>
-              <ChevronDown className="w-5 h-5 text-gray-500 animate-bounce" />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
       </div>
+
+      {/* ── Screen 1: title + CTA — normal document flow at top ─────────── */}
+      <motion.div
+        className="absolute top-0 left-0 right-0 pointer-events-none z-10"
+        style={{ height: '100vh', opacity: s1Op }}
+      >
+        {/* Heading — top left */}
+        <div
+          className="absolute pointer-events-auto"
+          style={{ top: 'calc(5rem + 1cm)', left: '1cm' }}
+        >
+          <h1
+            className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white leading-[0.95]"
+            style={{ fontWeight: 200, letterSpacing: '0.04em' }}
+          >
+            Сухой кварцевый
+            <br />
+            <span style={{ fontWeight: 300, fontStyle: 'italic', letterSpacing: '0.01em' }}>
+              песок
+            </span>
+          </h1>
+        </div>
+
+        {/* Description + buttons — bottom right */}
+        <div
+          className="absolute pointer-events-auto text-right"
+          style={{ bottom: '0.5cm', right: '1cm' }}
+        >
+          <p className="text-gray-400 text-lg max-w-md mb-6 leading-relaxed ml-auto">
+            Очищенный, фракционированный, <br />
+            cухой песок под любые ваши задачи. <br />
+            Для промышленности и строительства.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-end">
+            <Link
+              to="/catalog"
+              className="bg-brand-red text-white px-8 py-3 rounded-lg font-semibold hover:bg-brand-red-light transition-colors flex items-center justify-center gap-3"
+            >
+              <span>В каталог</span>
+              <ArrowUpRight className="w-5 h-5" />
+            </Link>
+            <Link
+              to="/contacts"
+              className="px-8 py-3 border border-gray-700 text-white rounded-lg font-semibold hover:border-brand-red transition-all duration-300 flex items-center justify-center gap-3"
+            >
+              <span>Связаться</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* "Листайте" */}
+        <AnimatePresence>
+          {showHint && phase === 'idle' && (
+            <motion.button
+              key="hint"
+              onClick={startTransition}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { duration: 0.8 } }}
+              exit={{ opacity: 0, transition: { duration: 0.3 } }}
+              className="absolute z-10 flex flex-col items-center gap-2 cursor-pointer bg-transparent border-0 p-0 pointer-events-auto"
+              style={{ bottom: '0.5cm', left: '50%', transform: 'translateX(-50%)' }}
+            >
+              <span className="text-white/70 text-sm tracking-[0.3em] uppercase">Листайте</span>
+              <ChevronDown className="w-6 h-6 text-white/70 animate-bounce" />
+            </motion.button>
+          )}
+        </AnimatePresence>
+      </motion.div>
+
+      {/* ── Screen 2: quote — normal document flow at 150vh ─────────────── */}
+      <motion.div
+        className="absolute left-0 right-0 z-10 flex items-center px-[1cm] pointer-events-none"
+        style={{ top: '100vh', height: '100vh', opacity: s2Op }}
+      >
+        <p className="text-white text-4xl md:text-5xl lg:text-6xl font-light leading-[1.05] tracking-tight">
+          Каждая песчинка — кирпичик величия: <br />
+          прочность огромного всегда держится на <br />надёжности самого малого
+        </p>
+      </motion.div>
+
     </section>
   );
 };
