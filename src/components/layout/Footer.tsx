@@ -27,7 +27,7 @@ const Footer = () => {
   // dark: white bg + dark text + red border
   const activeBtnClass = isLightPage
     ? 'bg-brand-graphite text-white font-semibold border border-brand-red'
-    : 'bg-white text-brand-dark font-semibold border border-brand-red';
+    : 'bg-brand-graphite text-white font-semibold border border-brand-red';
 
   const isActive = (path: string) => {
     // /product/:slug → подсвечиваем «Продукция» (catalog)

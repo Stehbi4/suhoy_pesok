@@ -5,7 +5,8 @@ import Footer from '@/components/layout/Footer';
 import HomePage from '@/pages/HomePage';
 import CatalogPage from '@/pages/CatalogPage';
 import ProductPage from '@/pages/ProductPage';
-import AboutPage from '@/pages/AboutPage';
+import AboutPage  from '@/pages/AboutPage';
+import AboutPage2 from '@/pages/AboutPage2';
 import DeliveryPage from '@/pages/DeliveryPage';
 import ArticlesPage from '@/pages/ArticlesPage';
 import ArticlePage from '@/pages/ArticlePage';
@@ -33,7 +34,8 @@ function AppLayout() {
           <Route path="/" element={<HomePage />} />
           <Route path="/catalog" element={<CatalogPage />} />
           <Route path="/product/:slug" element={<ProductPage />} />
-          <Route path="/about" element={<AboutPage />} />
+          <Route path="/about"   element={<AboutPage />}  />
+          <Route path="/about-2" element={<AboutPage2 />} />
           <Route path="/delivery" element={<DeliveryPage />} />
           <Route path="/articles" element={<ArticlesPage />} />
           <Route path="/articles/:slug" element={<ArticlePage />} />

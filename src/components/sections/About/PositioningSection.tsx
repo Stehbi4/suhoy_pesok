@@ -7,7 +7,7 @@ const PositioningSection = () => {
       {/* Background image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/Production_Site/BG.png')" }}
+        style={{ backgroundImage: "url('/Production_Site/render-3d.png')" }}
       />
       <div className="absolute inset-0 bg-black/80" />
 

@@ -73,7 +73,7 @@ const Header = () => {
     // inactive: тёмная полупрозрачная пилюля
     btnClass       = 'bg-black/30 backdrop-blur-[5px] border border-white/20 text-white';
     // active: белое затемнение + красный текст + красная рамка
-    activeBtnClass = 'bg-white/20 backdrop-blur-[5px] border border-brand-red text-whight font-semibold';
+    activeBtnClass = 'bg-black/20 backdrop-blur-[5px] border border-brand-red text-whight font-semibold';
     mobileMenuClass = 'bg-black/80 backdrop-blur-md border-white/10';
 
   } else {

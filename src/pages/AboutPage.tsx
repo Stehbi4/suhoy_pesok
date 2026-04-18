@@ -1,16 +1,19 @@
-import HeritageSection from '@/components/sections/About/HeritageSection';
-import ActivitiesSection from '@/components/sections/About/ActivitiesSection';
-import QuoteSection from '@/components/sections/About/QuoteSection';
-import PositioningSection from '@/components/sections/About/PositioningSection';
-import PhotoAlbumSection from '@/components/sections/About/PhotoAlbumSection';
-import PartnersSection from '@/components/sections/About/PartnersSection';
-import ProductionSection from '@/components/sections/About/ProductionSection';
-import QualitySection from '@/components/sections/About/QualitySection';
-import LogisticsSection from '@/components/sections/About/LogisticsSection';
+import HeritageSection          from '@/components/sections/About/HeritageSection';
+import ActivitiesSection        from '@/components/sections/About/ActivitiesSection';
+import QuoteSection             from '@/components/sections/About/QuoteSection';
+import PositioningSection       from '@/components/sections/About/PositioningSection';
+import ProductionGallerySection from '@/components/sections/About/ProductionGallerySection';
+import PartnersSection        from '@/components/sections/About/PartnersSection';
+import ProductionSection        from '@/components/sections/About/ProductionSection';
+import QualitySection           from '@/components/sections/About/QualitySection';
+import LogisticsSection         from '@/components/sections/About/LogisticsSection';
+import AboutVariantSwitcher     from '@/components/ui/AboutVariantSwitcher';
 
 const AboutPage = () => {
   return (
     <main className="bg-brand-graphite text-white">
+      <AboutVariantSwitcher />
+
       {/* 01 — Наследие (горизонтальный скролл-таймлайн) */}
       <HeritageSection />
 
@@ -32,11 +35,11 @@ const AboutPage = () => {
       {/* 07 — Логистика */}
       <LogisticsSection />
 
-      {/* 08 — Фотоальбом (Фибоначчи) */}
-      <PhotoAlbumSection />
+      {/* 08 — Галерея производственного комплекса (3 фото) */}
+      <ProductionGallerySection theme="dark" />
 
       {/* 09 — Партнёры */}
-      <PartnersSection />
+      <PartnersSection theme="dark" />
     </main>
   );
 };
