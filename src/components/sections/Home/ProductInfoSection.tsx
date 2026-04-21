@@ -41,11 +41,40 @@ const ProductInfoSection = () => {
         </ScrollReveal>
       </div>
 
-      {/* Gallery — extends EXT beyond each edge so corners are covered.
+      {/* Mobile: 3×4 grid of flat rectangular tiles */}
+      <div className="lg:hidden px-[1cm] grid grid-cols-3 gap-2">
+        {areas.map((area, i) => (
+          <Link
+            key={i}
+            to={`/articles/${area.slug}`}
+            className="relative block aspect-[3/4] overflow-hidden rounded-sm"
+          >
+            <img
+              src={area.img}
+              alt={area.label}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+            <div className="absolute inset-x-1.5 bottom-1.5">
+              <span
+                className="block text-white/40 text-[9px] mb-0.5"
+                style={{ fontFamily: 'monospace' }}
+              >
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <p className="text-white text-[11px] font-light leading-[1.15]">
+                {area.label}
+              </p>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      {/* Desktop: skewed gallery
+          Gallery — extends EXT beyond each edge so corners are covered.
           Section overflow:hidden clips it flush with the viewport. */}
-      <div style={{
+      <div className="hidden lg:flex" style={{
         height: '78vh',
-        display: 'flex',
         gap: '3px',
         marginLeft: `-${EXT}`,
         width: `calc(100% + 2 * ${EXT})`,

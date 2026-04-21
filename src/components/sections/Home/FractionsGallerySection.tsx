@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const fractions = [
@@ -19,6 +20,28 @@ const panoBgPos = (i: number) =>
 const FractionsGallerySection = () => {
   const [hovered, setHovered] = useState<number | null>(null);
 
+  // Mobile carousel state
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const [activeIdx, setActiveIdx] = useState(0);
+
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const i = Math.round(el.scrollLeft / el.clientWidth);
+      setActiveIdx(i);
+    };
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const goTo = (i: number) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const clamped = Math.max(0, Math.min(N - 1, i));
+    el.scrollTo({ left: clamped * el.clientWidth, behavior: 'smooth' });
+  };
+
   return (
     <section className="bg-brand-bg">
 
@@ -30,9 +53,79 @@ const FractionsGallerySection = () => {
         </ScrollReveal>
       </div>
 
+      {/* Mobile: horizontal snap carousel, one full-width card per screen */}
+      <div className="lg:hidden relative">
+        <div
+          ref={scrollerRef}
+          className="frac-scroll flex overflow-x-auto snap-x snap-mandatory pb-4"
+          style={{ scrollbarWidth: 'none' }}
+        >
+        {fractions.map((frac, i) => (
+          <Link
+            key={i}
+            to={`/product/${frac.slug}`}
+            className="snap-start shrink-0 w-screen block px-[1cm]"
+          >
+            <div className="w-full aspect-square overflow-hidden rounded-sm bg-[#0a0a0a]">
+              <img
+                src={frac.img}
+                alt={frac.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="mt-4 flex items-baseline gap-3">
+              <span
+                className="text-white/40 text-xs"
+                style={{ fontFamily: 'monospace' }}
+              >
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <p className="text-white text-2xl font-light">{frac.name}</p>
+            </div>
+          </Link>
+        ))}
+        </div>
+
+        {/* Arrow buttons — overlay on image row (square area sits at top, so
+            buttons vertically centered within image = ~half of w-screen). */}
+        <button
+          aria-label="Предыдущая фракция"
+          onClick={() => goTo(activeIdx - 1)}
+          disabled={activeIdx === 0}
+          className="absolute top-1/2 -translate-y-1/2 left-2 w-10 h-10 rounded-full bg-black/55 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white disabled:opacity-30 disabled:pointer-events-none transition-opacity"
+          style={{ top: 'calc((100vw - 2cm) / 2 + 1rem)' }}
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <button
+          aria-label="Следующая фракция"
+          onClick={() => goTo(activeIdx + 1)}
+          disabled={activeIdx === N - 1}
+          className="absolute top-1/2 -translate-y-1/2 right-2 w-10 h-10 rounded-full bg-black/55 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white disabled:opacity-30 disabled:pointer-events-none transition-opacity"
+          style={{ top: 'calc((100vw - 2cm) / 2 + 1rem)' }}
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
+
+        {/* Dot indicators */}
+        <div className="flex justify-center gap-2 pb-2">
+          {fractions.map((_, i) => (
+            <button
+              key={i}
+              aria-label={`Перейти к фракции ${i + 1}`}
+              onClick={() => goTo(i)}
+              className={`h-1.5 rounded-full transition-all ${
+                i === activeIdx ? 'w-6 bg-white' : 'w-1.5 bg-white/30'
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: clip-path panel gallery */}
       <div
-        className="mx-[1cm] overflow-hidden"
-        style={{ height: '78vh', display: 'flex', gap: '4px' }}
+        className="hidden lg:flex mx-[1cm] overflow-hidden"
+        style={{ height: '78vh', gap: '4px' }}
       >
         {fractions.map((frac, i) => {
           const isHov  = hovered === i;

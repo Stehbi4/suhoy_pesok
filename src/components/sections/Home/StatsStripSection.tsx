@@ -69,9 +69,23 @@ const StatsStripSection = () => {
 
   return (
     <section ref={sectionRef} className="relative bg-brand-bg border-t border-b border-[#1f1f1f]">
-      <div className="px-[1cm] grid grid-cols-2 lg:grid-cols-4 divide-x divide-[#1f1f1f]">
-        {stats.map((s, i) => (
-          <div key={i} className="py-12 px-6 lg:px-10 flex flex-col justify-center items-center text-center">
+      <div className="px-[1cm] grid grid-cols-2 lg:grid-cols-4">
+        {stats.map((s, i) => {
+          // Mobile (2 cols, 2 rows): divider is a crosshair — only between cols
+          // (odd index) and between rows (index ≥ 2). Desktop (1 row × 4 cols):
+          // vertical divider before every item except the first.
+          const mobileBorders = [
+            '',
+            'border-l border-[#1f1f1f]',
+            'border-t border-[#1f1f1f]',
+            'border-t border-l border-[#1f1f1f]',
+          ][i];
+          const desktopBorders = i === 0 ? '' : 'lg:border-l lg:border-[#1f1f1f] lg:border-t-0';
+          return (
+          <div
+            key={i}
+            className={`py-12 px-6 lg:px-10 flex flex-col justify-center items-center text-center ${mobileBorders} ${desktopBorders}`}
+          >
             <span
               className="block text-6xl lg:text-7xl font-light tracking-tight leading-none mb-3"
               style={{
@@ -94,7 +108,8 @@ const StatsStripSection = () => {
             </span>
             <p className="text-gray-500 text-sm uppercase tracking-[0.25em]">{s.label}</p>
           </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

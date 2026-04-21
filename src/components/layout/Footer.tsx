@@ -61,8 +61,8 @@ const Footer = () => {
           </Link>
 
           {/* Nav buttons + Contact */}
-          <div className="flex items-center gap-10">
-            <nav className="flex items-center gap-5">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-10 w-full lg:w-auto">
+            <nav className="flex flex-wrap items-center gap-3 sm:gap-5">
               {navLinks.map(({ path, label }) => (
                 <Link
                   key={path}

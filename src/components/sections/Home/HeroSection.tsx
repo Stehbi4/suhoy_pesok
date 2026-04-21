@@ -26,6 +26,20 @@ const ANIM2_FRAMES = 122;  // part 2 — 5.08s × 24fps
 type Phase = 'idle' | 'transitioning' | 'video' | 'returning';
 
 const HeroSection = () => {
+  // Mobile / small tablet: render simplified static hero (no frame animation,
+  // no scripted scroll). Desktop (≥1024px) keeps the full 250vh phase machine.
+  const [isDesktop, setIsDesktop] = useState(
+    typeof window !== 'undefined'
+      ? window.matchMedia('(min-width: 1024px)').matches
+      : true,
+  );
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const onChange = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
   const anim1Ref = useRef<HeroFrameAnimationHandle>(null);
   const anim2Ref = useRef<HeroFrameAnimationHandle>(null);
   const rafRef   = useRef<number>(0);
@@ -140,6 +154,60 @@ const HeroSection = () => {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, [s1Op, s2Op, startReturn]);
+
+  // ── Mobile hero: single-screen static layout ─────────────────────────────
+  if (!isDesktop) {
+    return (
+      <section className="relative h-[100svh] overflow-hidden bg-brand-bg">
+        <div
+          className="absolute inset-0 bg-no-repeat bg-center"
+          style={{
+            backgroundImage: "url('/HeroSent/frames1/frame_0001.webp')",
+            backgroundSize: 'contain',
+          }}
+        />
+        {/* Soft vertical gradient: blends image band into black zones
+            above (for title) and below (for subtitle + CTAs). */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
+        <div className="absolute inset-0 bg-black/25" />
+
+        <div className="relative z-10 h-full flex flex-col justify-between px-[1cm] pt-[calc(5rem+1cm)] pb-[1.2cm]">
+          <h1
+            className="text-[2.6rem] sm:text-6xl text-white leading-[0.95]"
+            style={{ fontWeight: 200, letterSpacing: '0.04em' }}
+          >
+            Сухой кварцевый
+            <br />
+            <span style={{ fontWeight: 300, fontStyle: 'italic', letterSpacing: '0.01em' }}>
+              песок
+            </span>
+          </h1>
+
+          <div>
+            <p className="text-gray-200 text-base sm:text-lg mb-6 leading-relaxed max-w-sm">
+              Очищенный, фракционированный, сухой песок под&nbsp;любые задачи —
+              для&nbsp;промышленности и&nbsp;строительства.
+            </p>
+            <div className="flex flex-col gap-3">
+              <Link
+                to="/catalog"
+                className="bg-brand-red text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center gap-3"
+              >
+                <span>В каталог</span>
+                <ArrowUpRight className="w-5 h-5" />
+              </Link>
+              <Link
+                to="/contacts"
+                className="px-6 py-3 border border-white/40 text-white rounded-lg font-semibold flex items-center justify-center gap-3"
+              >
+                <span>Связаться</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="relative h-[250vh]">
