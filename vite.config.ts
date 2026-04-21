@@ -7,7 +7,7 @@ export default defineConfig({
   base: './',
   server: {
     host: '127.0.0.1',
-    allowedHosts: ['.ngrok-free.dev', '.ngrok-free.app'],
+    allowedHosts: ['.ngrok-free.dev', '.ngrok-free.app', '.trycloudflare.com'],
   },
   plugins: [inspectAttr(), react()],
   resolve: {
