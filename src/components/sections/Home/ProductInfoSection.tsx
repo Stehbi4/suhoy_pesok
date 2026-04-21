@@ -17,19 +17,23 @@ const areas = [
   { label: 'Гидропескоструйные работы',   slug: 'pesok-dlya-gidropeskostruya',      img: '/img_fo_articles/12.jpg' },
 ];
 
-const N = areas.length;
-
-// skewX(-15deg): horizontal extension at panel height =  H × tan15° ≈ H × 0.268
-// Image is extended left/right by that amount and counter-skewed so it appears straight.
-// gap: 4px on the flex container → visible BG-coloured diagonal divider line
+// skewX(+9deg) → \ direction (top shifts LEFT, bottom shifts RIGHT)
+//   section 1  bottom-left  = left screen edge   ✓
+//   section 12 top-right    = right screen edge  ✓
+//   dark corners: top-left and bottom-right
+//
+// EXT = (H/2)·tan(9°) ≈ 6.5vh — container overhang on each side.
+// Counter-skew skewX(-9deg) on images/text + extend image by EXT to fill corners.
+const EXT    = '6.5vh';
+const SKEW   = 'skewX(-9deg)';  // / direction — top shifts right, bottom shifts left
+const UNSKEW = 'skewX(9deg)';   // cancel skew for content inside
 
 const ProductInfoSection = () => {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
-    <section className="bg-brand-bg">
+    <section className="bg-brand-bg" style={{ overflow: 'hidden' }}>
 
-      {/* Section header */}
       <div className="px-[1cm] pt-20 pb-10">
         <ScrollReveal type="fade-up">
           <p className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-4">Сферы применения</p>
@@ -37,11 +41,23 @@ const ProductInfoSection = () => {
         </ScrollReveal>
       </div>
 
-      {/* Gallery — bg-brand-bg fills the gap (= divider colour) */}
-      <div
-        className="mx-[1cm] overflow-hidden bg-brand-bg"
-        style={{ height: '78vh', display: 'flex', gap: '4px' }}
-      >
+      {/* Gallery — extends EXT beyond each edge so corners are covered.
+          Section overflow:hidden clips it flush with the viewport. */}
+      <div style={{
+        height: '78vh',
+        display: 'flex',
+        gap: '3px',
+        marginLeft: `-${EXT}`,
+        width: `calc(100% + 2 * ${EXT})`,
+      }}>
+        {/* Left transparent spacer — shrinks on hover to give text more room */}
+        <div
+          aria-hidden
+          style={{
+            flex: `0 0 calc(${EXT} * 2)`,
+            pointerEvents: 'none',
+          }}
+        />
         {areas.map((area, i) => {
           const isHov  = hovered === i;
           const anyHov = hovered !== null;
@@ -58,91 +74,75 @@ const ProductInfoSection = () => {
                 position: 'relative',
                 display: 'block',
                 overflow: 'hidden',
-                // Diagonal walls via skewX — same visual angle as 15° clip-path
-                transform: 'skewX(-15deg)',
+                transform: SKEW,          // \ lean, default center origin → parallel strips
               }}
             >
-              {/* Image — counter-skew + extend to fill skewed container */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  bottom: 0,
-                  // extend horizontally to fill diagonal corners: H × tan15° ≈ 21vh
-                  left:  'calc(-21vh)',
-                  right: 'calc(-21vh)',
-                  transform: `skewX(15deg) scale(${isHov ? 1.1 : 1.0})`,
-                  transformOrigin: '50% 50%',
-                  transition: 'transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94)',
-                  backgroundImage:    `url(${area.img})`,
-                  backgroundSize:     'cover',
-                  backgroundPosition: 'center',
-                  backgroundRepeat:   'no-repeat',
-                }}
-              />
-
-              {/* Gradient overlay */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: `linear-gradient(to top,
-                    rgba(0,0,0,${isHov ? 0.55 : 0.72}) 0%,
-                    rgba(0,0,0,0.08) 55%,
-                    transparent 100%)`,
-                  transition: 'background 0.4s',
-                }}
-              />
-
-              {/* Label — counter-skew text */}
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: '2rem',
-                  left:  '1.25rem',
-                  right: '1.25rem',
-                  transform: 'skewX(15deg)',
-                  opacity: isHov || !anyHov ? 1 : 0.35,
-                  transition: 'opacity 0.35s',
-                }}
-              >
-                <span
+              {/* Image — counter-skew + extend to fill diagonal corners */}
+              <div style={{
+                position: 'absolute',
+                top: 0, bottom: 0,
+                left:  `-${EXT}`,
+                right: `-${EXT}`,
+                transform: UNSKEW,
+              }}>
+                <img
+                  src={area.img}
+                  alt={area.label}
                   style={{
-                    fontFamily: 'monospace',
-                    fontSize: '10px',
-                    color: 'rgba(255,255,255,0.3)',
-                    display: 'block',
-                    marginBottom: '0.25rem',
+                    width: '100%', height: '100%',
+                    objectFit: 'cover',
+                    transform: `scale(${isHov ? 1.05 : 1.12})`,
+                    transition: 'transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94)',
                   }}
-                >
+                />
+              </div>
+
+              {/* Gradient */}
+              <div style={{
+                position: 'absolute', inset: 0,
+                background: `linear-gradient(to top,
+                  rgba(0,0,0,${isHov ? 0.55 : 0.78}) 0%,
+                  rgba(0,0,0,0.08) 55%,
+                  transparent 100%)`,
+                transition: 'background 0.4s',
+              }} />
+
+              {/* Label — counter-skew so text is upright */}
+              <div style={{
+                position: 'absolute',
+                bottom: '2rem',
+                left: '1.25rem',
+                right: '1.25rem',
+                transform: UNSKEW,
+                opacity: isHov || !anyHov ? 1 : 0.35,
+                transition: 'opacity 0.35s',
+              }}>
+                <span style={{
+                  fontFamily: 'monospace', fontSize: '10px',
+                  color: 'rgba(255,255,255,0.3)',
+                  display: 'block', marginBottom: '0.25rem',
+                }}>
                   {String(i + 1).padStart(2, '0')}
                 </span>
 
-                <p
-                  style={{
-                    color: 'white',
-                    fontWeight: 300,
-                    lineHeight: 1.2,
-                    overflow: 'hidden',
-                    fontSize: isHov ? '1.6rem' : '0.75rem',
-                    transition: 'font-size 0.4s cubic-bezier(0.25,0.46,0.45,0.94)',
-                    whiteSpace: isHov ? 'normal' : 'nowrap',
-                  }}
-                >
+                <p style={{
+                  color: 'white', fontWeight: 300, lineHeight: 1.2,
+                  overflow: 'hidden',
+                  fontSize: isHov ? '1.5rem' : '0.72rem',
+                  transition: 'font-size 0.4s cubic-bezier(0.25,0.46,0.45,0.94)',
+                  whiteSpace: isHov ? 'normal' : 'nowrap',
+                  textOverflow: 'ellipsis',
+                }}>
                   {area.label}
                 </p>
 
                 {isHov && (
-                  <p
-                    style={{
-                      color: 'rgba(255,255,255,0.5)',
-                      fontSize: '0.7rem',
-                      marginTop: '0.5rem',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.12em',
-                      fontFamily: 'monospace',
-                    }}
-                  >
+                  <p style={{
+                    color: 'rgba(255,255,255,0.5)',
+                    fontSize: '0.7rem', marginTop: '0.5rem',
+                    textTransform: 'uppercase', letterSpacing: '0.12em',
+                    fontFamily: 'monospace',
+                  }}>
                     Подробнее →
                   </p>
                 )}
@@ -150,6 +150,14 @@ const ProductInfoSection = () => {
             </Link>
           );
         })}
+        {/* Right transparent spacer — mirrors the left one */}
+        <div
+          aria-hidden
+          style={{
+            flex: `0 0 calc(${EXT} * 2)`,
+            pointerEvents: 'none',
+          }}
+        />
       </div>
 
       <div className="pb-20" />

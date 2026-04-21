@@ -1,7 +1,9 @@
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
 import { historySlides } from '@/data/companyHistory';
 import { RED } from '@/styles/theme';
+import HeroFrameAnimation from '@/components/HeroFrameAnimation';
+import { LOGO_FPS, LOGO_FRAMES, LOGO_FRAMES_PATH } from '@/config/logoFrames';
 
 const SLIDE_COUNT = historySlides.length;
 
@@ -48,12 +50,6 @@ const DotIndicator = ({
 // ─────────────────────────────────────────────
 const HeritageSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const videoRef     = useRef<HTMLVideoElement>(null);
-
-  // Принудительный autoplay — Safari/Chrome иногда игнорируют атрибут
-  useEffect(() => {
-    videoRef.current?.play().catch(() => {});
-  }, []);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -76,33 +72,26 @@ const HeritageSection = () => {
       style={{ height: `${SLIDE_COUNT * 100}vh` }}
       className="relative"
     >
-      {/* ── Sticky-обёртка: занимает 100vh и прилипает при скролле ── */}
-      <div className="sticky top-0 h-screen overflow-hidden bg-brand-graphite">
+      {/* ── Sticky-обёртка: занимает 100vh и прилипает при скролле ──
+          bg-black — чёрный фон кадров логотипа (#000000, измерен скриптом
+          logo_to_webp.py) сливается с секцией без видимого прямоугольника. */}
+      <div className="sticky top-0 h-screen overflow-hidden bg-black">
 
-        {/* ── СЛОЙ 0: видео логотипа ──────────────────────────────────
-            • absolute inset-0 — покрывает весь sticky-блок
-            • z-0            — ниже слайдов
-            • pointer-events-none — не перехватывает клики
-            • mix-blend-mode: screen — чёрный фон видео становится
-              прозрачным, цветные пиксели логотипа проявляются поверх
-              тёмного фона сайта                                       */}
+        {/* ── СЛОЙ 0: покадровая анимация логотипа ───────────────────
+            Кадры RGB без альфы (scripts/logo_to_webp.py) — края чёрного
+            фона видео совпадают с фоном секции, blend-mode не нужен.   */}
         <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
-          {/* webm (VP9) поддерживает альфа-канал → прозрачный фон нативно.
-              mp4 fallback — для браузеров без webm, mix-blend-mode: screen
-              симулирует прозрачность если лого светлое на чёрном фоне.
-              Конвертация: ffmpeg -i Logo_Animation.mp4 -c:v libvpx-vp9 -pix_fmt yuva420p Logo_Animation.webm */}
-          <video
-            ref={videoRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            style={{ mixBlendMode: 'screen' }}
-            className="w-[400px] h-[400px] md:w-[520px] md:h-[520px] lg:w-[600px] lg:h-[600px] object-contain opacity-60"
-          >
-            <source src="/Logo/Logo_Animation.webm" type="video/webm" />
-            <source src="/Logo/Logo_Animation.mp4"  type="video/mp4"  />
-          </video>
+          <div className="w-[400px] h-[400px] md:w-[520px] md:h-[520px] lg:w-[600px] lg:h-[600px] opacity-60">
+            <HeroFrameAnimation
+              framesPath={LOGO_FRAMES_PATH}
+              frameCount={LOGO_FRAMES}
+              fps={LOGO_FPS}
+              loop
+              frameExt="webp"
+              className="w-full h-full"
+              style={{ display: 'block' }}
+            />
+          </div>
         </div>
 
         {/* ── СЛОЙ 10: горизонтальный трек со слайдами ──────────────── */}

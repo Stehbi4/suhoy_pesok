@@ -1,87 +1,129 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowDown } from 'lucide-react';
-import { BG_PAGE, BG_DARK, TEXT_DARK } from '@/styles/theme';
 import type { Product } from './types';
 
+/**
+ * Editorial hero — тонкая типографика на фото, без карточки/градиента/линейки.
+ * Слои: (1) фото, (2) мягкое локальное затемнение под текстом, (3) эдиториальная сетка.
+ */
 export const ProductHeroSection = ({ product }: { product: Product }) => {
-  const [rulerX, setRulerX] = useState(50);
   const img = product.images;
+  const [value, unitRaw] = (product.fraction || product.shortName || '').split(' ');
+  const unit = unitRaw || 'мм';
+  // ASCII hyphen → typographic en-dash
+  const valueTypo = value.replace(/-/g, '\u2013');
 
   return (
-    <section
-      className="relative h-screen flex items-center justify-center overflow-hidden"
-      onMouseMove={(e) => {
-        const r = e.currentTarget.getBoundingClientRect();
-        setRulerX(((e.clientX - r.left) / r.width) * 100);
-      }}
-    >
-      <img src={img.hero} alt={product.name} className="absolute inset-0 w-full h-full object-cover" />
+    <section className="relative h-screen overflow-hidden bg-black">
+      {/* 1. Фото */}
+      <img
+        src={img.hero}
+        alt={product.name}
+        className="absolute inset-0 w-full h-full object-cover"
+      />
 
-      {/* Gradient → off-white at bottom */}
-      <div className="absolute bottom-0 left-0 right-0" style={{
-        height: '42%',
-        background: `linear-gradient(to bottom, transparent 0%, rgba(245,244,242,0.6) 55%, ${BG_PAGE} 100%)`,
-      }} />
-
-      {/* Badge */}
-      <motion.div
-        className="relative z-10 text-center"
-        initial={{ y: 28, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.95, ease: 'easeOut' }}
-      >
-        <div
-          className="inline-block px-10 sm:px-14 py-8 sm:py-10 rounded-3xl"
-          style={{
-            background: 'rgba(255,255,255,0.11)',
-            backdropFilter: 'blur(24px)',
-            WebkitBackdropFilter: 'blur(24px)',
-            border: '1px solid rgba(255,255,255,0.22)',
-            boxShadow: '0 28px 72px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.24)',
-          }}
-        >
-          <p className="text-white/55 text-[10px] uppercase tracking-[0.5em] mb-4">Кварцевый песок</p>
-          <h1 className="text-[clamp(2.2rem,6.5vw,5rem)] font-bold tracking-tighter text-white leading-none drop-shadow-lg">
-            {product.shortName}
-          </h1>
-          <p className="text-white/30 text-xs mt-4 font-mono tracking-widest">{product.gost}</p>
-        </div>
-        <div className="mx-16 h-3 rounded-full blur-xl opacity-50 -mt-1" style={{ background: 'rgba(0,0,0,0.8)' }} />
-      </motion.div>
-
-      {/* Floating CTA arrow */}
-      <motion.div
-        className="absolute z-20 bottom-14 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.1, duration: 0.7 }}
-      >
-        <span className="text-[10px] uppercase tracking-[0.4em] font-semibold" style={{ color: TEXT_DARK }}>Подробнее</span>
-        <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.9, ease: 'easeInOut' }}>
-          <ArrowDown className="w-10 h-10" style={{ color: TEXT_DARK }} strokeWidth={1.5} />
-        </motion.div>
-      </motion.div>
-
-      {/* Interactive ruler */}
+      {/* 2. Мягкое локальное затемнение — только слева/снизу под текстом.
+             Без резкой линии перехода и без градиента в off-white. */}
       <div
-        className="absolute bottom-0 left-0 right-0 z-30 cursor-crosshair overflow-hidden"
-        style={{ height: 44, background: BG_DARK }}
-      >
-        <div aria-hidden className="absolute inset-0 pointer-events-none" style={{
-          background: `radial-gradient(ellipse 24% 100% at ${rulerX}% 110%, rgba(255,255,255,0.30) 0%, transparent 100%)`,
-        }} />
-        <div className="absolute bottom-0 left-0 right-0 flex h-full items-end pb-1.5 px-1">
-          {Array.from({ length: 100 }, (_, i) => (
-            <div key={i} className="flex-1 flex justify-center items-end">
-              <div style={{
-                width: 1,
-                height: i % 10 === 0 ? 18 : i % 5 === 0 ? 11 : 5,
-                background: `rgba(255,255,255,${i % 10 === 0 ? 0.46 : i % 5 === 0 ? 0.23 : 0.11})`,
-              }} />
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 70% 80% at 20% 85%, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 45%, transparent 75%)',
+        }}
+      />
+      {/* тонкая виньетка сверху — чтобы хедер сайта читался */}
+      <div
+        aria-hidden
+        className="absolute top-0 left-0 right-0 h-40 pointer-events-none"
+        style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.35), transparent)' }}
+      />
+
+      {/* 3. Эдиториальная сетка */}
+      <div className="relative z-10 h-full px-[1cm] py-[1cm] flex flex-col">
+        {/* Top rubric — малая метка в левом верхнем углу */}
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          className="flex items-center gap-4"
+        >
+          <span className="h-px w-10 bg-white/50" />
+          <span className="text-[10px] uppercase tracking-[0.45em] text-white/75 font-light">
+            Кварцевый песок
+          </span>
+        </motion.div>
+
+        {/* Основной блок — у нижнего левого края */}
+        <div className="mt-auto max-w-[min(92vw,1200px)]">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.0, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="flex flex-col gap-6"
+          >
+            {/* small overline — artikul/fraction label */}
+            <p className="text-[10px] uppercase tracking-[0.5em] text-white/55 font-light">
+              Фракция
+            </p>
+
+            {/* Huge thin numeric heading */}
+            <h1
+              className="text-white leading-[0.9] flex items-baseline flex-wrap gap-x-4"
+              style={{ fontWeight: 200, letterSpacing: '-0.01em' }}
+            >
+              <span
+                style={{
+                  fontSize: 'clamp(3.5rem, 11vw, 10.5rem)',
+                  textShadow: '0 2px 40px rgba(0,0,0,0.35)',
+                }}
+              >
+                {valueTypo}
+              </span>
+              <span
+                className="text-white/65 font-light"
+                style={{ fontSize: 'clamp(1.25rem, 2.2vw, 2rem)', letterSpacing: '0.04em' }}
+              >
+                {unit}
+              </span>
+            </h1>
+
+            {/* hairline — никаких «плашек», просто тонкая линия */}
+            <div className="h-px w-32 bg-white/35" />
+
+            {/* Meta-row: ГОСТ + полное название */}
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
+              <span
+                className="text-white/85 text-xs tracking-[0.2em] font-mono"
+                style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace" }}
+              >
+                {product.gost}
+              </span>
+              <span className="hidden md:inline-block h-3 w-px bg-white/25" />
+              <span className="text-white/70 text-sm md:text-base font-light max-w-xl leading-snug">
+                {product.name}
+              </span>
             </div>
-          ))}
+          </motion.div>
         </div>
+
+        {/* Нижний правый угол — минималистичный scroll-hint (без линейки) */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.1, duration: 0.7 }}
+          className="absolute bottom-[1cm] right-[1cm] flex items-center gap-3 text-white/70"
+        >
+          <span className="text-[10px] uppercase tracking-[0.4em] font-light">
+            Подробнее
+          </span>
+          <motion.div
+            animate={{ y: [0, 6, 0] }}
+            transition={{ repeat: Infinity, duration: 2.0, ease: 'easeInOut' }}
+          >
+            <ArrowDown className="w-5 h-5" strokeWidth={1.25} />
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

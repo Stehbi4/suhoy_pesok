@@ -2,35 +2,45 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, ChevronDown } from 'lucide-react';
 import { motion, useMotionValue, AnimatePresence } from 'framer-motion';
+import HeroFrameAnimation, {
+  type HeroFrameAnimationHandle,
+} from '../../HeroFrameAnimation';
 
 /**
  * Phase machine:
  *   idle         — scrollY=0, photo bg, screen1 content visible
- *   transitioning — locked 1.5s scripted scroll, video1 plays
- *   video         — video2 loops, scroll free, content fades by scroll
- *   returning     — video2 fades 1.5s → black 0.8s → photo, text stays
+ *   transitioning — locked 1.5s scripted scroll, anim1 plays once
+ *   video         — anim2 loops, scroll free, content fades by scroll
+ *   returning     — anim2 fades 1.5s → black 0.8s → photo, text stays
  *
  * Section = 250vh:
  *   0–100vh   screen 1  (photo zone)
  *   100–250vh screen 2  (video zone, quote)
+ *
+ * ── After running scripts/prepare-hero.sh, update these two constants ──
  */
+const ANIM_FPS     = 24;   // source videos are 24fps
+const ANIM1_FRAMES = 122;  // part 1 — 5.08s × 24fps
+const ANIM2_FRAMES = 122;  // part 2 — 5.08s × 24fps
+
 type Phase = 'idle' | 'transitioning' | 'video' | 'returning';
 
 const HeroSection = () => {
-  const video1Ref   = useRef<HTMLVideoElement>(null);
-  const video2Ref   = useRef<HTMLVideoElement>(null);
-  const rafRef      = useRef<number>(0);
-  const phaseRef    = useRef<Phase>('idle');
-  const lockedRef   = useRef(false);
+  const anim1Ref = useRef<HeroFrameAnimationHandle>(null);
+  const anim2Ref = useRef<HeroFrameAnimationHandle>(null);
+  const rafRef   = useRef<number>(0);
+  const phaseRef = useRef<Phase>('idle');
+  const lockedRef = useRef(false);
 
-  const [phase,      setPhase]      = useState<Phase>('idle');
-  const [darkening,  setDarkening]  = useState(false);
-  const [video2Fade, setVideo2Fade] = useState(false);
-  const [showHint,   setShowHint]   = useState(true);
+  const [phase,       setPhase]       = useState<Phase>('idle');
+  const [anim1Playing, setAnim1Playing] = useState(false);
+  const [anim2Playing, setAnim2Playing] = useState(false);
+  const [darkening,   setDarkening]   = useState(false);
+  const [video2Fade,  setVideo2Fade]  = useState(false);
+  const [showHint,    setShowHint]    = useState(true);
 
-  // Motion values for content layers — set directly from scroll listener
-  const s1Op = useMotionValue(1);   // screen 1 opacity
-  const s2Op = useMotionValue(0);   // screen 2 opacity
+  const s1Op = useMotionValue(1);
+  const s2Op = useMotionValue(0);
 
   const syncPhase = (p: Phase) => { phaseRef.current = p; setPhase(p); };
 
@@ -49,50 +59,44 @@ const HeroSection = () => {
     rafRef.current = requestAnimationFrame(tick);
   }, []);
 
-  // ── idle → transitioning: lock, play video1, scripted scroll 1.5s ─────────
+  // ── idle → transitioning ──────────────────────────────────────────────────
   const startTransition = useCallback(() => {
     if (phaseRef.current !== 'idle' || lockedRef.current) return;
     lockedRef.current = true;
     syncPhase('transitioning');
     setShowHint(false);
 
-    const v1 = video1Ref.current;
-    if (v1) { v1.currentTime = 0; void v1.play(); }
+    anim1Ref.current?.reset();
+    setAnim1Playing(true);
 
-    const duration = (v1?.duration && isFinite(v1.duration) ? v1.duration : 5) * 1000;
+    const duration = (ANIM1_FRAMES / ANIM_FPS) * 1000;
     animateScrollTo(window.innerHeight, duration, () => {
-      // Scripted scroll done → start video2, unlock
-      const v2 = video2Ref.current;
-      if (v2) { v2.currentTime = 0; void v2.play(); }
+      setAnim1Playing(false);
+      anim2Ref.current?.reset();
+      setAnim2Playing(true);
       syncPhase('video');
       lockedRef.current = false;
     });
   }, [animateScrollTo]);
 
-  // ── video → returning: text stays, video2 fades 1.5s → black 0.8s → photo ─
+  // ── video → returning ─────────────────────────────────────────────────────
   const startReturn = useCallback(() => {
     if (lockedRef.current || phaseRef.current !== 'video') return;
     lockedRef.current = true;
     syncPhase('returning');
-
-    // Keep screen1 content visible
     s1Op.set(1);
-
-    // Fade video2 out over 1.5s (CSS transition)
     setVideo2Fade(true);
 
     setTimeout(() => {
-      // video2 fully faded — black appears, immediately swap to photo underneath
       setDarkening(true);
-      video1Ref.current?.pause();
-      video2Ref.current?.pause();
-      if (video1Ref.current) video1Ref.current.currentTime = 0;
-      if (video2Ref.current) video2Ref.current.currentTime = 0;
+      setAnim1Playing(false);
+      setAnim2Playing(false);
+      anim1Ref.current?.reset();
+      anim2Ref.current?.reset();
       setVideo2Fade(false);
       s2Op.set(0);
       syncPhase('idle');
       setShowHint(true);
-      // Short delay just for black to render, then fade out
       setTimeout(() => {
         setDarkening(false);
         lockedRef.current = false;
@@ -122,20 +126,15 @@ const HeroSection = () => {
 
       if (cur === 'returning' || cur === 'idle') return;
 
-      // Screen 1: fades out as scroll goes 0→ih
       s1Op.set(Math.max(0, 1 - (sy / ih) * 1.4));
       setShowHint(sy < ih * 0.08);
 
-      // Screen 2: fades in 70–100vh, holds, fades out 180–250vh
-      const fadeIn  = (sy - ih * 0.7) / (ih * 0.3);   // 0→1 over 70–100vh
-      const fadeOut = (sy - ih * 1.8) / (ih * 0.7);   // 0→1 over 180–250vh
+      const fadeIn  = (sy - ih * 0.7) / (ih * 0.3);
+      const fadeOut = (sy - ih * 1.8) / (ih * 0.7);
       const op = Math.max(0, Math.min(1, fadeIn)) * Math.max(0, 1 - Math.max(0, fadeOut));
       s2Op.set(op);
 
-      // Return trigger: user scrolled all the way back to top
-      if (cur === 'video' && sy < 10) {
-        startReturn();
-      }
+      if (cur === 'video' && sy < 10) startReturn();
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -145,40 +144,45 @@ const HeroSection = () => {
   return (
     <section className="relative h-[250vh]">
 
-      {/* ── Sticky background — photo or video, never moves ──────────────── */}
+      {/* ── Sticky background ────────────────────────────────────────────── */}
       <div className="sticky top-0 h-screen overflow-hidden pointer-events-none z-0">
 
         {/* Photo — visible only in idle */}
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: "url('/HeroSent/sand-pile_1.png')",
+            backgroundImage: "url('/HeroSent/frames1/frame_0001.webp')",
             opacity: phase === 'idle' ? 1 : 0,
             transition: 'none',
           }}
         />
 
-        {/* Video 1 — transition animation, plays once */}
-        <video
-          ref={video1Ref}
-          src="/HeroSent/part%201.mp4"
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
+        {/* Anim 1 — transition, plays once */}
+        <HeroFrameAnimation
+          ref={anim1Ref}
+          framesPath="/HeroSent/frames1/frame_"
+          frameCount={ANIM1_FRAMES}
+          fps={ANIM_FPS}
+          loop={false}
+          playing={anim1Playing}
+          frameExt="webp"
+          className="absolute inset-0 w-full h-full"
           style={{
             opacity: phase === 'transitioning' ? 1 : 0,
             transition: 'none',
           }}
         />
 
-        {/* Video 2 — looping bg for video phase */}
-        <video
-          ref={video2Ref}
-          src="/HeroSent/part%202.mp4"
-          muted
-          playsInline
-          loop
-          className="absolute inset-0 w-full h-full object-cover"
+        {/* Anim 2 — looping bg for video phase */}
+        <HeroFrameAnimation
+          ref={anim2Ref}
+          framesPath="/HeroSent/frames2/frame_"
+          frameCount={ANIM2_FRAMES}
+          fps={ANIM_FPS}
+          loop={true}
+          playing={anim2Playing}
+          frameExt="webp"
+          className="absolute inset-0 w-full h-full"
           style={{
             opacity: (phase === 'video' || phase === 'returning') && !video2Fade ? 1 : 0,
             transition: video2Fade ? 'opacity 1.5s ease' : 'none',
@@ -198,12 +202,11 @@ const HeroSection = () => {
         />
       </div>
 
-      {/* ── Screen 1: title + CTA — normal document flow at top ─────────── */}
+      {/* ── Screen 1: title + CTA ────────────────────────────────────────── */}
       <motion.div
         className="absolute top-0 left-0 right-0 pointer-events-none z-10"
         style={{ height: '100vh', opacity: s1Op }}
       >
-        {/* Heading — top left */}
         <div
           className="absolute pointer-events-auto"
           style={{ top: 'calc(5rem + 1cm)', left: '1cm' }}
@@ -220,7 +223,6 @@ const HeroSection = () => {
           </h1>
         </div>
 
-        {/* Description + buttons — bottom right */}
         <div
           className="absolute pointer-events-auto text-right"
           style={{ bottom: '0.5cm', right: '1cm' }}
@@ -247,7 +249,6 @@ const HeroSection = () => {
           </div>
         </div>
 
-        {/* "Листайте" */}
         <AnimatePresence>
           {showHint && phase === 'idle' && (
             <motion.button
@@ -266,7 +267,7 @@ const HeroSection = () => {
         </AnimatePresence>
       </motion.div>
 
-      {/* ── Screen 2: quote — normal document flow at 150vh ─────────────── */}
+      {/* ── Screen 2: quote ──────────────────────────────────────────────── */}
       <motion.div
         className="absolute left-0 right-0 z-10 flex items-center px-[1cm] pointer-events-none"
         style={{ top: '100vh', height: '100vh', opacity: s2Op }}

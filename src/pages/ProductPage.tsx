@@ -62,12 +62,12 @@ const ProductPage = () => {
 
       {/* 03 — Куб данных (характеристики / гранулометрия / химсостав) */}
       <ProductDataCubeSection product={product} />
-
-      {/* 04 — Дюна */}
-      <ProductDuneSection product={product} />
-
-      {/* 05 — Области применения */}
+     
+      {/* 04 — Области применения */}
       <ProductApplicationsSection product={product} galleryImages={galleryImages} />
+
+       {/* 05 — Дюна */}
+      <ProductDuneSection product={product} />
 
       {/* 06 — Калькулятор */}
       <ProductCalculatorSection />

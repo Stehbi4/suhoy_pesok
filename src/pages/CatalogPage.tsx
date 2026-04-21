@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, Package, Filter } from 'lucide-react';
+import { Check, Package, Filter, ArrowLeftRight } from 'lucide-react';
 import { products, filterOptions } from '@/data/articles';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
@@ -71,9 +71,23 @@ const CatalogPage = () => {
       {/* Page Header */}
       <section className="relative py-8 md:py-12 bg-white">
         <div className="w-full px-[1cm]">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-light text-gray-900 font-medium mb-6">
-            Наша продукция
-          </h1>
+          <div className="flex flex-wrap items-end justify-between gap-6 mb-6">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-light text-gray-900 font-medium">
+              Наша продукция
+            </h1>
+
+            <Link
+              to="/compare"
+              className="group inline-flex items-center gap-3 bg-gray-900 text-white pl-5 pr-4 py-3 hover:bg-brand-red transition-all duration-300"
+            >
+              <ArrowLeftRight className="w-4 h-4 transition-transform group-hover:scale-110" />
+              <div className="text-left leading-tight">
+                <div className="text-[10px] uppercase tracking-[0.2em] text-white/60">Матрица · 02</div>
+                <div className="text-sm uppercase tracking-widest font-medium">Сравнить фракции</div>
+              </div>
+              <span className="w-6 h-6 flex items-center justify-center border border-white/20 rounded-full text-xs group-hover:border-white group-hover:translate-x-1 transition-all">→</span>
+            </Link>
+          </div>
         </div>
       </section>
 

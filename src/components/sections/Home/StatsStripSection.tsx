@@ -71,30 +71,28 @@ const StatsStripSection = () => {
     <section ref={sectionRef} className="relative bg-brand-bg border-t border-b border-[#1f1f1f]">
       <div className="px-[1cm] grid grid-cols-2 lg:grid-cols-4 divide-x divide-[#1f1f1f]">
         {stats.map((s, i) => (
-          <div key={i} className="py-10 px-6 lg:px-10 flex flex-col justify-center">
-            <div className="flex items-baseline gap-2 mb-1">
-              <span
-                className="text-3xl lg:text-4xl font-light tracking-tight"
-                style={{
-                  color: 'white',
-                  filter: `brightness(${brightnesses[i]})`,
-                  transition: 'filter 0.05s linear',
-                }}
-              >
-                {s.value}
-              </span>
-              <span
-                className="text-sm font-medium uppercase tracking-wider"
-                style={{
-                  color: 'var(--brand-red, #e63329)',
-                  filter: `brightness(${brightnesses[i]})`,
-                  transition: 'filter 0.05s linear',
-                }}
-              >
-                {s.unit}
-              </span>
-            </div>
-            <p className="text-gray-500 text-xs uppercase tracking-[0.25em]">{s.label}</p>
+          <div key={i} className="py-12 px-6 lg:px-10 flex flex-col justify-center items-center text-center">
+            <span
+              className="block text-6xl lg:text-7xl font-light tracking-tight leading-none mb-3"
+              style={{
+                color: 'white',
+                filter: `brightness(${brightnesses[i]})`,
+                transition: 'filter 0.05s linear',
+              }}
+            >
+              {s.value}
+            </span>
+            <span
+              className="block text-base lg:text-lg font-medium uppercase tracking-wider mb-2"
+              style={{
+                color: 'var(--brand-red, #e63329)',
+                filter: `brightness(${brightnesses[i]})`,
+                transition: 'filter 0.05s linear',
+              }}
+            >
+              {s.unit}
+            </span>
+            <p className="text-gray-500 text-sm uppercase tracking-[0.25em]">{s.label}</p>
           </div>
         ))}
       </div>

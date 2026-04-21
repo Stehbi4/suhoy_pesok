@@ -29,61 +29,61 @@ const ApplicationsHomeSection = () => {
         </ScrollReveal>
       </div>
 
-      <div className="overflow-hidden" style={{ height: '82vh', display: 'flex' }}>
+      <div style={{ height: '82vh', display: 'flex', gap: '1px' }}>
         {areas.map((area, i) => {
           const isHov = hovered === i;
-
-          const inner = (
-            <div
-              className="relative overflow-hidden w-full h-full"
+          return (
+            <Link
+              key={i}
+              to={`/articles/${area.slug}`}
               style={{
-                transform: 'skewX(-9deg)',
-                marginLeft: i === 0 ? 0 : -50,
-                zIndex: isHov ? areas.length + 1 : areas.length - i,
-                flex: isHov ? '2.5 0 0' : '1 0 0',
+                display: 'block',
+                position: 'relative',
+                flex: isHov ? '3 0 0' : '1 0 0',
                 transition: 'flex 0.48s cubic-bezier(0.25,0.46,0.45,0.94)',
+                overflow: 'hidden',
               }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
             >
+              {/* Image */}
               <img
                 src={area.img}
                 alt={area.label}
                 className="absolute inset-0 w-full h-full object-cover"
                 style={{
-                  transform: `skewX(9deg) scale(${isHov ? 1.06 : 1.12})`,
-                  transformOrigin: '50% 50%',
+                  transform: `scale(${isHov ? 1.05 : 1.12})`,
                   transition: 'transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94)',
                 }}
               />
+
+              {/* Gradient */}
               <div
                 className="absolute inset-0"
                 style={{
-                  background: `linear-gradient(to top, rgba(0,0,0,${isHov ? 0.7 : 0.88}) 0%, rgba(0,0,0,0.1) 55%, transparent 100%)`,
+                  background: `linear-gradient(to top, rgba(0,0,0,${isHov ? 0.65 : 0.85}) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)`,
                   transition: 'background 0.4s',
                 }}
               />
 
-
-              <div className="absolute bottom-7 left-5 right-5" style={{ transform: 'skewX(9deg)' }}>
-                <span className="font-mono text-[10px] text-white/30 block">{String(i + 1).padStart(2, '0')}</span>
-                <p className="text-white text-sm font-light leading-snug mt-1.5">{area.label}</p>
+              {/* Label */}
+              <div className="absolute bottom-6 left-3 right-3 z-10 pointer-events-none">
+                <span className="font-mono text-[9px] text-white/30 block mb-1">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <p
+                  className="text-white font-light leading-snug"
+                  style={{
+                    fontSize: isHov ? '0.9rem' : '0.7rem',
+                    transition: 'font-size 0.4s',
+                    whiteSpace: isHov ? 'normal' : 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {area.label}
+                </p>
               </div>
-            </div>
-          );
-
-          return (
-            <Link
-              key={i}
-              to={`/articles/${area.slug}`}
-              className="contents"
-              style={{
-                display: 'contents',
-                flex: isHov ? '2.5 0 0' : '1 0 0',
-                transition: 'flex 0.48s cubic-bezier(0.25,0.46,0.45,0.94)',
-              }}
-            >
-              {inner}
             </Link>
           );
         })}

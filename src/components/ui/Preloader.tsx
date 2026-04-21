@@ -1,5 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import HeroFrameAnimation from '../HeroFrameAnimation';
+import { LOGO_FPS_PRELOADER, LOGO_FRAMES, LOGO_FRAMES_PATH } from '@/config/logoFrames';
 
 // ── Assets to preload across Home / About / Contacts ────────────────────────
 const PRELOAD_IMAGES = [
@@ -84,19 +86,17 @@ const Preloader = ({ onDone }: Props) => {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.75, ease: 'easeInOut' }}
-          className="fixed inset-0 z-[200] flex items-center justify-center"
-          style={{ backgroundColor: '#0a0a0a' }}
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-black"
         >
           <div style={{ width: 150, height: 150 }}>
-            <video
-              src="/Logo/Logo_Animation.mp4"
-              autoPlay
+            <HeroFrameAnimation
+              framesPath={LOGO_FRAMES_PATH}
+              frameCount={LOGO_FRAMES}
+              fps={LOGO_FPS_PRELOADER}
               loop
-              muted
-              playsInline
-              style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'none' }}
-              // playbackRate is set via ref below
-              ref={(el) => { if (el) el.playbackRate = 2; }}
+              frameExt="webp"
+              className="w-full h-full"
+              style={{ display: 'block' }}
             />
           </div>
         </motion.div>

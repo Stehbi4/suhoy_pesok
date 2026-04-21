@@ -1,1 +1,8 @@
 node_modules
+
+# Local working sources (Blender, xlsx, etc.)
+OUTPOOT/
+
+# Local Claude settings
+.claude/settings.local.json
+.claude/launch.json

@@ -1,3 +1,34 @@
+# Site QurzSent
+
+## Как обновить Hero-анимацию
+
+Hero-секция использует покадровую canvas-анимацию с прозрачным фоном вместо MP4-видео.
+
+### Требования
+
+```bash
+pip install rembg[gpu]   # или rembg (CPU, медленнее)
+# + ffmpeg и pngquant (brew / apt / winget)
+```
+
+### Шаги
+
+```bash
+# Часть 1 (переход, играет один раз)
+bash scripts/prepare-hero.sh "public/HeroSent/part 1.mp4" public/HeroSent/frames1 30
+
+# Часть 2 (зацикленный фон)
+bash scripts/prepare-hero.sh "public/HeroSent/part 2.mp4" public/HeroSent/frames2 30
+```
+
+Скрипт выведет количество кадров — скопируйте в константы `ANIM1_FRAMES` / `ANIM2_FRAMES`
+в [`src/components/sections/Home/HeroSection.tsx`](src/components/sections/Home/HeroSection.tsx).
+
+> Если суммарный вес > 5 MB — скрипт предупредит.  
+> Для снижения: добавьте `scale=960:-2` в ffmpeg-фильтр внутри скрипта, или уменьшите fps до 24.
+
+---
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
