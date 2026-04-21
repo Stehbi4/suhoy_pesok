@@ -50,17 +50,17 @@ const LogisticsSection = () => {
           </h2>
 
           {/* Города */}
-          <div className="grid grid-cols-2 gap-x-10 mb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-10 mb-16">
             {cities.map((city, i) => (
               <div
                 key={city.name}
-                className="flex items-baseline gap-4 py-3.5 border-b border-white/6"
+                className="flex items-baseline gap-3 lg:gap-4 py-3 lg:py-3.5 border-b border-white/6"
               >
-                <span className="text-white/18 font-mono text-sm flex-shrink-0 tabular-nums">
+                <span className="text-white/18 font-mono text-xs lg:text-sm flex-shrink-0 tabular-nums">
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <span className="text-white text-lg font-medium block leading-tight">
+                  <span className="text-white text-base lg:text-lg font-medium block leading-tight">
                     {city.name}
                   </span>
                   <span className="text-white/30 text-xs mt-0.5 block">{city.note}</span>
@@ -87,7 +87,7 @@ const LogisticsSection = () => {
                 className="border-t border-white/8 pt-4 pb-3"
               >
                 <span className="text-white font-light tracking-tight leading-none"
-                  style={{ fontSize: 'clamp(3rem, 6vw, 6rem)' }}>
+                  style={{ fontSize: 'clamp(2rem, 6vw, 6rem)' }}>
                   мешки 20 кг
                 </span>
               </motion.div>
@@ -97,7 +97,7 @@ const LogisticsSection = () => {
                 className="border-t border-white/8 pt-4 pb-3"
               >
                 <span className="text-white font-light tracking-tight leading-none"
-                  style={{ fontSize: 'clamp(3rem, 6vw, 6rem)' }}>
+                  style={{ fontSize: 'clamp(2rem, 6vw, 6rem)' }}>
                   МКР (биг-бэг)
                 </span>
               </motion.div>

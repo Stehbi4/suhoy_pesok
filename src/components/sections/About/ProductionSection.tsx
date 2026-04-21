@@ -32,48 +32,47 @@ const ProductionSection = () => (
       {/* Главное число */}
       <div className="mb-3 leading-none">
         <span className="font-light text-white tracking-tighter"
-          style={{ fontSize: 'clamp(7rem, 16vw, 14rem)' }}>
+          style={{ fontSize: 'clamp(4rem, 16vw, 14rem)' }}>
           30 000
         </span>
       </div>
-      <p className="text-white/40 text-2xl font-light tracking-[0.25em] uppercase mb-10">
+      <p className="text-white/40 text-lg lg:text-2xl font-light tracking-[0.25em] uppercase mb-10">
         тонн / год
       </p>
 
       <div className="w-10 h-px bg-brand-red mb-10" />
 
       {/* Вторичные цифры */}
-      <div className="flex gap-12 mb-10">
+      <div className="flex flex-wrap gap-x-8 gap-y-5 lg:gap-12 mb-10">
         {stats.map(({ val, label }) => (
           <div key={label}>
             <div className="text-white font-light leading-none"
-              style={{ fontSize: 'clamp(2rem, 3.5vw, 3rem)' }}>
+              style={{ fontSize: 'clamp(1.75rem, 3.5vw, 3rem)' }}>
               {val}
             </div>
-            <div className="text-white/30 text-xs uppercase tracking-[0.35em] mt-2">
+            <div className="text-white/30 text-[10px] lg:text-xs uppercase tracking-[0.3em] lg:tracking-[0.35em] mt-2">
               {label}
             </div>
           </div>
         ))}
       </div>
 
-      {/* Таблица категорий — 2 колонки */}
-      <div className="grid grid-cols-2 gap-x-10 mb-10">
+      {/* Таблица категорий — 1 колонка на мобильном, 2 на десктопе */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-10 mb-10">
         {categories.map((cat, i) => (
           <div key={cat}
-            className="flex items-baseline gap-4 py-3.5 border-b border-white/6">
-            <span className="text-white/18 font-mono text-sm flex-shrink-0 tabular-nums">
+            className="flex items-baseline gap-3 lg:gap-4 py-3 lg:py-3.5 border-b border-white/6">
+            <span className="text-white/18 font-mono text-xs lg:text-sm flex-shrink-0 tabular-nums">
               {String(i + 1).padStart(2, '0')}
             </span>
-            <span className="text-white text-lg font-medium leading-tight">{cat}</span>
+            <span className="text-white text-base lg:text-lg font-medium leading-tight">{cat}</span>
           </div>
         ))}
       </div>
 
       {/* Сноска — выезжает снизу */}
       <motion.p
-        className="text-white/50 text-xl font-light leading-snug col-span-2"
-        style={{ maxWidth: '66%' }}
+        className="text-white/50 text-base lg:text-xl font-light leading-snug col-span-2 max-w-full lg:max-w-[66%]"
         initial={{ opacity: 0, y: 32 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-40px' }}

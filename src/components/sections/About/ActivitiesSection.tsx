@@ -9,7 +9,7 @@ const ActivitiesSection = () => {
       <div className="flex justify-between min-h-screen">
 
         {/* ── ЛЕВАЯ ЧАСТЬ ──────────────────────────────────────────── */}
-        <div className="w-[43.75%] flex-shrink-0 pl-[1cm] pr-8 sm:pr-12 py-24 lg:py-32 flex flex-col">
+        <div className="w-full lg:w-[43.75%] flex-shrink-0 px-[1cm] lg:pl-[1cm] lg:pr-8 xl:pr-12 py-24 lg:py-32 flex flex-col">
 
           {/* Список направлений — привязан к верху */}
           <div className="flex flex-col">

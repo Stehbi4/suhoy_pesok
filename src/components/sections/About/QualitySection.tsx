@@ -51,8 +51,8 @@ const QualitySection = () => (
         Лаборатория — НИЦ
       </p>
 
-      <h2 className="font-light text-white leading-tight mb-8"
-        style={{ fontSize: 'clamp(2.8rem, 5.5vw, 5rem)' }}>
+      <h2 className="font-light text-white leading-tight mb-8 break-words"
+        style={{ fontSize: 'clamp(1.8rem, 5.5vw, 5rem)' }}>
         Аккредитованный
         <br />
         <span className="font-medium">исследовательский</span>
@@ -60,20 +60,20 @@ const QualitySection = () => (
         центр
       </h2>
 
-      <p className="text-white/45 text-lg leading-relaxed mb-10 max-w-sm">
+      <p className="text-white/45 text-base lg:text-lg leading-relaxed mb-10 max-w-sm">
         Испытания и разработка составов для критических объектов:
         АЭС, ГТС, мосты, арктика. Работаем с 1998 года.
       </p>
 
-      {/* Таблица направлений — 2 колонки */}
-      <div className="grid grid-cols-2 gap-x-10 mb-10">
+      {/* Таблица направлений — 1 колонка на мобильном, 2 на десктопе */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-10 mb-10">
         {activities.map((act, i) => (
           <div key={act}
-            className="flex items-baseline gap-4 py-3.5 border-b border-white/6">
-            <span className="text-white/18 font-mono text-sm flex-shrink-0 tabular-nums">
+            className="flex items-baseline gap-3 lg:gap-4 py-3 lg:py-3.5 border-b border-white/6">
+            <span className="text-white/18 font-mono text-xs lg:text-sm flex-shrink-0 tabular-nums">
               {String(i + 1).padStart(2, '0')}
             </span>
-            <span className="text-white text-lg font-medium leading-tight">{act}</span>
+            <span className="text-white text-base lg:text-lg font-medium leading-tight">{act}</span>
           </div>
         ))}
       </div>

@@ -52,10 +52,10 @@ const PositioningSection = () => {
                   { value: '25', unit: 'лет', label: 'На рынке строительной химии' },
                   { value: 'ISO', unit: '9001', label: 'Сертификация СМК' },
                 ].map((stat, i) => (
-                  <div key={i} className="flex items-baseline gap-6 border-b border-[#222] pb-6">
-                    <span className="text-4xl md:text-5xl font-light text-white whitespace-nowrap">
+                  <div key={i} className="flex flex-wrap items-baseline gap-x-4 gap-y-2 lg:gap-6 border-b border-[#222] pb-6">
+                    <span className="text-3xl md:text-5xl font-light text-white whitespace-nowrap">
                       {stat.value}
-                      <span className="text-lg text-gray-500 ml-2">{stat.unit}</span>
+                      <span className="text-base lg:text-lg text-gray-500 ml-2">{stat.unit}</span>
                     </span>
                     <span className="text-gray-500 text-sm">{stat.label}</span>
                   </div>
