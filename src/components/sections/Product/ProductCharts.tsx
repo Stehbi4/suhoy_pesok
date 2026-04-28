@@ -99,20 +99,7 @@ export const ColorPieChart = ({
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
           </defs>
-          {slices.map(({ key, start, end, color }) => {
-            const depth = 26;
-            const s1 = polar(cx, cy, R, start);
-            const e1 = polar(cx, cy, R, end);
-            const s2 = { x: s1.x, y: s1.y + depth };
-            const e2 = { x: e1.x, y: e1.y + depth };
-            return (
-              <path key={`side-${key}`}
-                d={`M${s1.x},${s1.y} L${s2.x},${s2.y} L${e2.x},${e2.y} L${e1.x},${e1.y} Z`}
-                fill={color}
-                style={{ opacity: 0.6, pointerEvents: 'none' }}
-              />
-            );
-          })}
+          {/* Side faces removed — caused color spikes protruding beyond the donut */}
           {slices.map(({ key, start, end, color }) => {
             const isOn = active === key;
             const midA = ((start + end) / 2 - 90) * (Math.PI / 180);
@@ -249,21 +236,7 @@ export const SandPieChart = ({
             </filter>
           </defs>
 
-          {/* Extrusion side faces */}
-          {slices.map(({ key, start, end, color }) => {
-            const depth = 26;
-            const s1 = polar(cx, cy, R, start);
-            const e1 = polar(cx, cy, R, end);
-            const s2 = { x: s1.x, y: s1.y + depth };
-            const e2 = { x: e1.x, y: e1.y + depth };
-            return (
-              <path key={`side-${key}`}
-                d={`M${s1.x},${s1.y} L${s2.x},${s2.y} L${e2.x},${e2.y} L${e1.x},${e1.y} Z`}
-                fill={color}
-                style={{ opacity: 0.55, pointerEvents: 'none' }}
-              />
-            );
-          })}
+          {/* Side faces removed — caused color spikes protruding beyond the donut */}
 
           {/* Top face sectors */}
           {slices.map(({ key, start, end, color }) => {

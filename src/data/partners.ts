@@ -41,6 +41,14 @@ export const partners: Partner[] = [
     logoSize: 'lg',
   },
   {
+    name: 'ПАО «РусГидро»',
+    shortName: 'РусГидро',
+    category: 'Гидроэнергетика',
+    description: 'Ремонт и защита гидротехнических сооружений ГЭС. Особо важные объекты.',
+    logo: '/partners/rusgidro.png',
+    logoSize: 'lg',
+  },
+  {
     name: 'ПАО «Транснефть»',
     shortName: 'Транснефть',
     category: 'Нефтегаз',

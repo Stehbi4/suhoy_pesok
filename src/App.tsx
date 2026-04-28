@@ -8,7 +8,6 @@ import CatalogPage from '@/pages/CatalogPage';
 import ComparePage from '@/pages/ComparePage';
 import ProductPage from '@/pages/ProductPage';
 import AboutPage  from '@/pages/AboutPage';
-import AboutPage2 from '@/pages/AboutPage2';
 import DeliveryPage from '@/pages/DeliveryPage';
 import ArticlesPage from '@/pages/ArticlesPage';
 import ArticlePage from '@/pages/ArticlePage';
@@ -41,7 +40,6 @@ function AppLayout() {
           <Route path="/compare" element={<ComparePage />} />
           <Route path="/product/:slug" element={<ProductPage />} />
           <Route path="/about"   element={<AboutPage />}  />
-          <Route path="/about-2" element={<AboutPage2 />} />
           <Route path="/delivery" element={<DeliveryPage />} />
           <Route path="/articles" element={<ArticlesPage />} />
           <Route path="/articles/:slug" element={<ArticlePage />} />

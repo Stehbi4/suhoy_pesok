@@ -1,12 +1,48 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { divisions } from '@/data/activities';
 
 const ActivitiesSection = () => {
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
 
+  // Desktop = hover-driven; mobile = tap-driven (toggle).
+  const [isDesktop, setIsDesktop] = useState(
+    typeof window !== 'undefined'
+      ? window.matchMedia('(min-width: 1024px)').matches
+      : true,
+  );
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const onChange = (e: MediaQueryListEvent) => {
+      setIsDesktop(e.matches);
+      setActiveIdx(null); // reset on breakpoint flip
+    };
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
   return (
-    <section className="bg-brand-graphite overflow-hidden">
-      <div className="flex justify-between min-h-screen">
+    <section className="relative bg-brand-graphite overflow-hidden">
+
+      {/* ── Mobile-only фон: картинка активного направления ──────────── */}
+      <div className="lg:hidden absolute inset-0 z-0 pointer-events-none">
+        {divisions.map((div, i) => (
+          <img
+            key={div.id}
+            src={div.image}
+            alt=""
+            aria-hidden
+            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+            style={{ opacity: activeIdx === i ? 0.35 : 0 }}
+          />
+        ))}
+        {/* Затемнение поверх для читаемости текста */}
+        <div
+          className="absolute inset-0 bg-gradient-to-b from-brand-graphite/85 via-brand-graphite/65 to-brand-graphite/90 transition-opacity duration-500"
+          style={{ opacity: activeIdx !== null ? 1 : 0 }}
+        />
+      </div>
+
+      <div className="relative z-10 flex justify-between min-h-screen">
 
         {/* ── ЛЕВАЯ ЧАСТЬ ──────────────────────────────────────────── */}
         <div className="w-full lg:w-[43.75%] flex-shrink-0 px-[1cm] lg:pl-[1cm] lg:pr-8 xl:pr-12 py-24 lg:py-32 flex flex-col">
@@ -20,9 +56,10 @@ const ActivitiesSection = () => {
               return (
                 <div
                   key={div.id}
-                  className="cursor-pointer py-4"
-                  onMouseEnter={() => setActiveIdx(i)}
-                  onMouseLeave={() => setActiveIdx(null)}
+                  className="cursor-pointer py-4 select-none"
+                  onMouseEnter={isDesktop ? () => setActiveIdx(i)    : undefined}
+                  onMouseLeave={isDesktop ? () => setActiveIdx(null) : undefined}
+                  onClick={isDesktop ? undefined : () => setActiveIdx(prev => prev === i ? null : i)}
                 >
                   <div className="flex items-baseline gap-5">
                     {/* Номер */}

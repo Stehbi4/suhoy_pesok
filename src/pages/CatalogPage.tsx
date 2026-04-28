@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, Package, Filter, ArrowLeftRight } from 'lucide-react';
+import { Check, Package, Filter, ArrowLeftRight, Mail } from 'lucide-react';
 import { products, filterOptions } from '@/data/articles';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
@@ -220,6 +220,22 @@ const CatalogPage = () => {
                     ))}
                   </div>
                 </div>
+              </div>
+
+              {/* Custom-fraction CTA */}
+              <div className="mt-6 bg-gray-900 text-white rounded-lg p-6 card-hover hover:bg-brand-red transition-colors duration-300">
+                <p className="text-[10px] uppercase tracking-[0.25em] text-white/50 mb-3">Индивидуальные заявки</p>
+                <p className="text-sm leading-snug mb-5">
+                  Возможен выпуск иных фракций по предварительному согласованию.
+                </p>
+                <Link
+                  to="/contacts"
+                  className="group inline-flex items-center gap-3 bg-white text-gray-900 px-4 py-2.5 hover:bg-white/90 transition-all"
+                >
+                  <Mail className="w-4 h-4" />
+                  <span className="text-sm uppercase tracking-widest font-medium">Связаться</span>
+                  <span className="w-5 h-5 flex items-center justify-center border border-gray-900/20 rounded-full text-xs group-hover:translate-x-1 transition-transform">→</span>
+                </Link>
               </div>
             </div>
 

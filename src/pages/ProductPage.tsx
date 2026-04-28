@@ -21,7 +21,12 @@ const ProductPage = () => {
 
   const galleryImages = useMemo(() => {
     if (!product) return [];
-    return [...product.images.gallery.slice(0, 4), product.images.main];
+    const base = product.images.gallery[0]?.replace(/gallery_\d+\.jpg$/, '') ?? '';
+    const isOtsev = product.fraction.includes('2,5-20');
+    const extras = isOtsev
+      ? [`${base}page_1.jpg`, `${base}page_2.jpg`, `${base}page_3.jpg`]
+      : [`${base}page_1.jpg`, `${base}page_2.jpg`];
+    return [product.images.hero, ...extras];
   }, [product]);
 
   const closeLightbox = useCallback(() => setLightboxIdx(null), []);

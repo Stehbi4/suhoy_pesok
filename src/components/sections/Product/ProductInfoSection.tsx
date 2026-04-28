@@ -22,11 +22,7 @@ export const ProductInfoSection = ({ product, galleryImages, setLightboxIdx }: P
   const sio2Value = product.technicalData?.['Содержание оксида кремния (SiO₂), %, не менее'] || 85;
   const docPath = `/doc_sand/Фракция ${product.fraction}.pdf`;
 
-  const photos = [
-    { src: img.main,         idx: galleryImages.length - 1, caption: 'Общий вид' },
-    { src: img.gallery[0],   idx: 0,                         caption: 'Фактура' },
-    { src: img.gallery[1] || img.gallery[0], idx: 1,         caption: 'Зерно' },
-  ];
+  const photos = galleryImages.map((src, i) => ({ src, idx: i }));
 
   const specs = [
     { num: `≥${sio2Value}`, unit: '%', label: 'SiO₂',             desc: 'Содержание диоксида кремния' },
@@ -84,7 +80,9 @@ export const ProductInfoSection = ({ product, galleryImages, setLightboxIdx }: P
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+            <div
+              className={`grid gap-4 lg:gap-6 grid-cols-1 ${photos.length === 4 ? 'md:grid-cols-2 lg:grid-cols-4' : 'md:grid-cols-3'}`}
+            >
               {photos.map((p, i) => (
                 <figure
                   key={i}
@@ -97,7 +95,7 @@ export const ProductInfoSection = ({ product, galleryImages, setLightboxIdx }: P
                   >
                     <img
                       src={p.src}
-                      alt={`${product.shortName} — ${p.caption}`}
+                      alt={`${product.shortName} — ${String(i + 1).padStart(2, '0')}`}
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-[1.04]"
                     />
                     <ZoomIn
@@ -105,19 +103,13 @@ export const ProductInfoSection = ({ product, galleryImages, setLightboxIdx }: P
                       strokeWidth={1.5}
                     />
                   </div>
-                  {/* подпись ПОД фото — museum plate стиль */}
-                  <figcaption className="mt-3 flex items-baseline gap-3">
+                  {/* подпись ПОД фото — только номер */}
+                  <figcaption className="mt-3 flex items-baseline gap-4">
                     <span
-                      className="text-[10px] font-mono tracking-[0.15em]"
-                      style={{ color: TEXT_DARK, opacity: 0.35 }}
+                      className="font-mono tracking-[0.15em]"
+                      style={{ color: TEXT_DARK, opacity: 0.55, fontSize: '1rem', fontWeight: 400 }}
                     >
                       {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <span
-                      className="text-sm tracking-wide"
-                      style={{ color: TEXT_DARK, fontWeight: 400 }}
-                    >
-                      {p.caption}
                     </span>
                     <span className="flex-1 h-px" style={{ background: TEXT_DARK, opacity: 0.15 }} />
                   </figcaption>

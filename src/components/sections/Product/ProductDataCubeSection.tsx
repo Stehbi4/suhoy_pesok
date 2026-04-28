@@ -21,6 +21,8 @@ export const ProductDataCubeSection = ({ product }: { product: Product }) => {
   };
   const cubeTrans = { duration: 0.65, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] };
   const slideLabels = ['Характеристики', 'Гранулометрия', 'Химический состав'];
+  const NOTE = '* приведены усреднённые показатели при работе на карьере Орлинный. За более точными данными следует обратиться к специалистам компании ЗАО «НП ЦМИД»';
+  const slideNotes: (string | null)[] = [NOTE, NOTE, NOTE];
 
   const handleCopyRow = (key: string, value: string | number) => {
     navigator.clipboard.writeText(`${key}: ${value}`);
@@ -87,58 +89,41 @@ export const ProductDataCubeSection = ({ product }: { product: Product }) => {
         <ChevronRight className="w-9 h-9" style={{ color: TEXT_DARK }} strokeWidth={1.8} />
       </motion.button>
 
-      {/* ── Title row ── */}
-      <div style={{
-        paddingTop: '0.375rem', paddingBottom: '0.125rem',
-        paddingLeft: '1cm', paddingRight: '7rem',
-        display: 'flex', alignItems: 'center', overflow: 'hidden',
-        position: 'relative', zIndex: 20,
-      }}>
-        {/* Current title — click → previous slide */}
-        <button
-          onClick={() => changeCube((cubeSlide - 1 + 3) % 3)}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', flexShrink: 0, padding: 0 }}
-        >
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.h2
-              key={`title-${cubeSlide}`}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.32, ease: 'easeOut' }}
-              className="text-4xl lg:text-5xl font-light tracking-tighter select-none"
-              style={{ color: TEXT_DARK, whiteSpace: 'nowrap' }}
+      {/* ── Title row: 3 равные трети, активный — жирнее ── */}
+      <div
+        style={{
+          paddingTop: '0.5rem', paddingBottom: '0.25rem',
+          paddingLeft: '6rem', paddingRight: '6rem',
+          display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
+          alignItems: 'center', position: 'relative', zIndex: 20,
+        }}
+      >
+        {slideLabels.map((label, i) => {
+          const isActive = i === cubeSlide;
+          return (
+            <button
+              key={label}
+              onClick={() => changeCube(i)}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer', padding: '0.5rem 0.75rem',
+                textAlign: 'center', overflow: 'hidden',
+              }}
             >
-              {slideLabels[cubeSlide]}
-            </motion.h2>
-          </AnimatePresence>
-        </button>
-
-        <div style={{ flexShrink: 0, width: 100 }} />
-
-        {/* Ghost right — next slide */}
-        <button
-          onClick={() => changeCube((cubeSlide + 1) % 3)}
-          style={{
-            flexShrink: 0, width: 200, overflow: 'hidden',
-            textAlign: 'left',
-            background: 'none', border: 'none', cursor: 'pointer',
-            WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 100%)',
-            maskImage: 'linear-gradient(to right, black 0%, transparent 100%)',
-          }}
-        >
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.span
-              key={`gr-${cubeSlide}`}
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              className="text-4xl lg:text-5xl font-light tracking-tighter whitespace-nowrap"
-              style={{ color: TEXT_DARK, opacity: 0.4 }}
-            >
-              {slideLabels[(cubeSlide + 1) % 3]}
-            </motion.span>
-          </AnimatePresence>
-        </button>
+              <h2
+                className="text-3xl lg:text-5xl tracking-tighter select-none"
+                style={{
+                  color: TEXT_DARK,
+                  whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden',
+                  opacity: isActive ? 1 : 0.32,
+                  fontWeight: isActive ? 600 : 300,
+                  transition: 'opacity 0.28s ease',
+                }}
+              >
+                {label}
+              </h2>
+            </button>
+          );
+        })}
       </div>
 
       {/* ── Cube viewport ── */}
@@ -147,14 +132,12 @@ export const ProductDataCubeSection = ({ product }: { product: Product }) => {
         style={{ perspective: '2400px', perspectiveOrigin: '50% 38%', paddingBottom: '0.25rem' }}
       >
         <div style={{ width: '90vw', maxWidth: 1440, position: 'relative' }}>
-          <AnimatePresence custom={cubeDir} mode="wait" initial={false}>
             <motion.div
               key={cubeSlide}
               custom={cubeDir}
               variants={cubeVariants}
               initial="enter"
               animate="center"
-              exit="exit"
               transition={cubeTrans}
               style={{
                 transformPerspective: 2400,
@@ -390,8 +373,26 @@ export const ProductDataCubeSection = ({ product }: { product: Product }) => {
               )}
 
             </motion.div>
-          </AnimatePresence>
         </div>
+      </div>
+
+      {/* ── Slide note ── */}
+      <div style={{ paddingLeft: '1cm', paddingRight: '1cm', paddingBottom: '2rem' }}>
+        <AnimatePresence mode="wait" initial={false}>
+          {slideNotes[cubeSlide] && (
+            <motion.p
+              key={`note-${cubeSlide}`}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 0.6, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="text-base md:text-lg italic"
+              style={{ color: TEXT_DARK, maxWidth: 1200, lineHeight: 1.55 }}
+            >
+              {slideNotes[cubeSlide]}
+            </motion.p>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );

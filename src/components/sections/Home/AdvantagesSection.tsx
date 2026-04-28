@@ -42,7 +42,7 @@ const AdvantageRow = ({ title, description, index }: { title: string; descriptio
         <span className="text-base font-light text-gray-600">{index + 1}</span>
       </div>
       <div>
-        <h3 className="text-xl font-medium text-gray-800 mb-1">{title}</h3>
+        <h3 className="text-2xl md:text-3xl font-medium text-gray-800 mb-2">{title}</h3>
         <p className="text-sm leading-relaxed font-light text-gray-500">{description}</p>
       </div>
     </motion.div>

@@ -12,10 +12,21 @@ const fractions = [
 
 const N = fractions.length;
 
+// Each panel's left-edge position in the gallery, expressed as a fraction of W.
+// Hovered panel has flex:3, others flex:1, so total flex = N + 2 when hovered, N otherwise.
+const leftFraction = (i: number, hovered: number | null) => {
+  const flexOf = (j: number) => (j === hovered ? 3 : 1);
+  const total  = hovered === null ? N : N + 2;
+  let sum = 0;
+  for (let j = 0; j < i; j++) sum += flexOf(j);
+  return sum / total;
+};
+
 // Background div extended left by 21vh to fill the diagonal clip area.
-// background-position-x compensates: x = 21vh − i × (gallery_width / N)
-const panoBgPos = (i: number) =>
-  `calc(21vh - ${i} * (100vw - 2cm) / ${N}) center`;
+// bg-position-x = 21vh − L_i, so image's gallery-left aligns to panel.gallery-left
+// regardless of how flex redistributes panel widths on hover.
+const panoBgPos = (i: number, hovered: number | null) =>
+  `calc(21vh - ${leftFraction(i, hovered)} * (100vw - 2cm)) center`;
 
 const FractionsGallerySection = () => {
   const [hovered, setHovered] = useState<number | null>(null);
@@ -161,11 +172,9 @@ const FractionsGallerySection = () => {
                   left: 'calc(-21vh)',
                   backgroundImage:    `url(${frac.img})`,
                   backgroundSize:     'calc(100vw - 2cm) auto',
-                  backgroundPosition: panoBgPos(i),
+                  backgroundPosition: panoBgPos(i, hovered),
                   backgroundRepeat:   'no-repeat',
-                  transform:          `scale(${isHov ? 1.05 : 1.0})`,
-                  transformOrigin:    'calc(50% + 10.5vh) 50%',
-                  transition:         'transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94)',
+                  transition:         'background-position 0.55s cubic-bezier(0.25,0.46,0.45,0.94)',
                 }}
               />
 

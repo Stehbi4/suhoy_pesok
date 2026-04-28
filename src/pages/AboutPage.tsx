@@ -7,13 +7,10 @@ import PartnersSection        from '@/components/sections/About/PartnersSection'
 import ProductionSection        from '@/components/sections/About/ProductionSection';
 import QualitySection           from '@/components/sections/About/QualitySection';
 import LogisticsSection         from '@/components/sections/About/LogisticsSection';
-import AboutVariantSwitcher     from '@/components/ui/AboutVariantSwitcher';
 
 const AboutPage = () => {
   return (
     <main className="bg-brand-graphite text-white">
-      <AboutVariantSwitcher />
-
       {/* 01 — Наследие (горизонтальный скролл-таймлайн) */}
       <HeritageSection />
 

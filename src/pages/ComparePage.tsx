@@ -54,7 +54,6 @@ const COMPARE_ROWS: Array<{ label: string; get: (p: Product) => string | number 
 const USE_FILTERS: Array<{ key: string; label: string; match: (p: Product) => boolean }> = [
   { key: 'all',          label: 'Все',          match: () => true },
   { key: 'glass',        label: 'Стекло',       match: (p) => p.applicationAreas?.some((a) => a.includes('стекла')) ?? false },
-  { key: 'filter',       label: 'Фильтрация',   match: (p) => p.applicationAreas?.some((a) => a.includes('фильтрации')) ?? false },
   { key: 'floors',       label: 'Полы / ССС',   match: (p) => p.applicationAreas?.some((a) => a.includes('смесей')) ?? false },
   { key: 'sandblast',    label: 'Пескоструй',   match: (p) => p.applicationAreas?.some((a) => a.includes('пескоструйных') || a.includes('гидропескоструйных')) ?? false },
   { key: 'sport',        label: 'Спорт',        match: (p) => p.applicationAreas?.some((a) => a.includes('спортивных')) ?? false },

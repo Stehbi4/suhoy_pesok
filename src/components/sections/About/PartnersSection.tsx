@@ -3,6 +3,7 @@
  * theme="light" — на кремовом фоне (brand-page), theme="dark" — на графите.
  * Каждый логотип: своя орбита (sin/cos), скорость, размер.
  * При наведении — всплывает название компании.
+ * Столкновения — только смена направления, без поворота и pop-scale (по правке от 2026-04-27).
  */
 import { useEffect, useRef, useState } from 'react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
@@ -17,20 +18,21 @@ interface Props {
 const SIZE_MAP_DESKTOP = { sm: 220, md: 290, lg: 370 };
 const SIZE_MAP_MOBILE  = { sm: 75, md: 95, lg: 120 };
 
-// Параметры орбиты: 3 ряда × 3 колонки
+// Параметры орбиты: 3-4-3 (10 партнёров)
 const ORBITS_DESKTOP = [
-  // Ряд 1 — верх
+  // Ряд 1 — верх (3)
   { x: 15, y: 22, rx: 3, ry: 3, spd: 0.0018, phase: 0.0 },  // Росатом    (lg)
   { x: 50, y: 18, rx: 4, ry: 3, spd: 0.0022, phase: 1.2 },  // Минобороны (md)
   { x: 85, y: 25, rx: 3, ry: 4, spd: 0.0015, phase: 2.5 },  // НОВАТЭК    (lg)
-  // Ряд 2 — середина
-  { x: 12, y: 55, rx: 4, ry: 3, spd: 0.0025, phase: 0.7 },  // Росморпорт (lg)
-  { x: 42, y: 52, rx: 3, ry: 4, spd: 0.002,  phase: 3.1 },  // Транснефть (md)
-  { x: 72, y: 58, rx: 4, ry: 3, spd: 0.0028, phase: 1.8 },  // Метро      (sm)
-  // Ряд 3 — низ
-  { x: 28, y: 82, rx: 3, ry: 3, spd: 0.0023, phase: 4.2 },  // Канал      (md)
-  { x: 58, y: 85, rx: 4, ry: 3, spd: 0.003,  phase: 2.0 },  // Росавиация (sm)
-  { x: 88, y: 80, rx: 3, ry: 4, spd: 0.0018, phase: 0.4 },  // Росморречфлот (md)
+  // Ряд 2 — середина (4)
+  { x: 12, y: 52, rx: 3, ry: 3, spd: 0.0025, phase: 0.7 },  // Росморпорт (lg)
+  { x: 38, y: 55, rx: 3, ry: 3, spd: 0.0021, phase: 2.1 },  // РусГидро   (lg)
+  { x: 64, y: 52, rx: 3, ry: 4, spd: 0.002,  phase: 3.1 },  // Транснефть (md)
+  { x: 88, y: 55, rx: 3, ry: 3, spd: 0.0028, phase: 1.8 },  // Метро      (sm)
+  // Ряд 3 — низ (3)
+  { x: 22, y: 82, rx: 3, ry: 3, spd: 0.0023, phase: 4.2 },  // Канал      (md)
+  { x: 52, y: 85, rx: 4, ry: 3, spd: 0.003,  phase: 2.0 },  // Росавиация (sm)
+  { x: 82, y: 80, rx: 3, ry: 4, spd: 0.0018, phase: 0.4 },  // Росморречфлот (md)
 ];
 
 // На мобильном сжимаем x-диапазон (20..80) и снижаем амплитуду дрейфа,
@@ -48,9 +50,6 @@ interface LogoState {
   vx: number; // px/frame
   vy: number;
   r: number;  // collision radius px
-  impact: number; // scale multiplier, peaks on hit, relaxes to 1
-  rot: number;    // current rotation (deg) — shakes on collision
-  rotV: number;   // rotation velocity (deg/frame)
 }
 
 const PartnersSection = ({ theme = 'light' }: Props) => {
@@ -102,9 +101,6 @@ const PartnersSection = ({ theme = 'light' }: Props) => {
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
           r,
-          impact: 1,
-          rot: 0,
-          rotV: 0,
         };
       });
       forceTick(t => t + 1);
@@ -135,24 +131,14 @@ const PartnersSection = ({ theme = 'light' }: Props) => {
           s.x += s.vx;
           s.y += s.vy;
         }
-        // Impact decay (scale → 1)
-        s.impact += (1 - s.impact) * 0.12;
-        // Rotation spring — stiff pull to 0, strong damping so it swings
-        // once or twice and snaps back.
-        s.rotV += -s.rot * 0.22;
-        s.rotV *= 0.80;
-        s.rot  += s.rotV;
-        // Hard clamp to keep logos visually upright.
-        if (s.rot >  18) { s.rot =  18; s.rotV = 0; }
-        if (s.rot < -18) { s.rot = -18; s.rotV = 0; }
       }
 
-      // Walls — squash-scale bump + small rotation kick (capped)
+      // Walls — просто отражение направления.
       for (const s of states) {
-        if (s.x - s.r < 0)       { s.x = s.r;     s.vx = Math.abs(s.vx);  s.impact = 1.35; s.rotV += 2.5; }
-        else if (s.x + s.r > W)  { s.x = W - s.r; s.vx = -Math.abs(s.vx); s.impact = 1.35; s.rotV -= 2.5; }
-        if (s.y - s.r < 0)       { s.y = s.r;     s.vy = Math.abs(s.vy);  s.impact = 1.35; s.rotV -= 2.5; }
-        else if (s.y + s.r > H)  { s.y = H - s.r; s.vy = -Math.abs(s.vy); s.impact = 1.35; s.rotV += 2.5; }
+        if (s.x - s.r < 0)       { s.x = s.r;     s.vx = Math.abs(s.vx); }
+        else if (s.x + s.r > W)  { s.x = W - s.r; s.vx = -Math.abs(s.vx); }
+        if (s.y - s.r < 0)       { s.y = s.r;     s.vy = Math.abs(s.vy); }
+        else if (s.y + s.r > H)  { s.y = H - s.r; s.vy = -Math.abs(s.vy); }
       }
 
       // Pair collisions — 4 iterations so overlapping triads untangle in one
@@ -183,14 +169,6 @@ const PartnersSection = ({ theme = 'light' }: Props) => {
                 a.vy += diff * ny;
                 b.vx -= diff * nx;
                 b.vy -= diff * ny;
-                // Visible impact: scale pop + perpendicular rotation kick.
-                const hitStrength = Math.min(1, Math.abs(diff));
-                a.impact = 1 + 0.45 * hitStrength;
-                b.impact = 1 + 0.45 * hitStrength;
-                // Torque — small rotational kick proportional to hit strength
-                const kick = 4 * hitStrength;
-                a.rotV -= ny * kick;
-                b.rotV += ny * kick;
               }
             }
           }
@@ -312,7 +290,7 @@ const PartnersSection = ({ theme = 'light' }: Props) => {
           const isHov = hovered === i;
           const s     = statesRef.current[i];
           if (!s) return null;
-          const scale = (isHov ? 1.15 : 1) * s.impact;
+          const scale = isHov ? 1.15 : 1;
 
           return (
             <div
@@ -321,7 +299,7 @@ const PartnersSection = ({ theme = 'light' }: Props) => {
               style={{
                 left:      `${s.x}px`,
                 top:       `${s.y}px`,
-                transform: `translate(-50%, -50%) scale(${scale}) rotate(${s.rot}deg)`,
+                transform: `translate(-50%, -50%) scale(${scale})`,
                 zIndex:    isHov ? 10 : 1,
                 willChange: 'transform, left, top',
               }}

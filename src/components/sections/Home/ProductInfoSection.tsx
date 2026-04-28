@@ -5,7 +5,6 @@ import ScrollReveal from '@/components/ui/ScrollReveal';
 const areas = [
   { label: 'Пескоструйные работы',        slug: 'pesok-dlya-peskostruynyh-rabot',  img: '/img_fo_articles/01.jpg' },
   { label: 'Строительные смеси',          slug: 'pesok-dlya-stroitelnyh-smesey',   img: '/img_fo_articles/02.jpg' },
-  { label: 'Фильтрация и водоподготовка', slug: 'pesok-dlya-filtracii',             img: '/img_fo_articles/03.jpg' },
   { label: 'Спортивные покрытия',         slug: 'pesok-dlya-sportivnyh-pokrytiy',  img: '/img_fo_articles/04.jpg' },
   { label: 'Ландшафтный дизайн',          slug: 'pesok-dlya-landshafta',            img: '/img_fo_articles/05.jpg' },
   { label: 'Детские песочницы',           slug: 'pesok-dlya-detskih-pesochek',      img: '/img_fo_articles/06.jpg' },
