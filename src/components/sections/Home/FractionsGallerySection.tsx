@@ -28,7 +28,13 @@ const leftFraction = (i: number, hovered: number | null) => {
 const panoBgPos = (i: number, hovered: number | null) =>
   `calc(21vh - ${leftFraction(i, hovered)} * (100vw - 2cm)) center`;
 
-const FractionsGallerySection = () => {
+interface Props {
+  /** На десктопе секция «зависает» на 50vh скрола (150vh контейнер + sticky h-screen).
+   *  Передай pinned={false}, чтобы был обычный скрол. */
+  pinned?: boolean;
+}
+
+const FractionsGallerySection = ({ pinned = true }: Props) => {
   const [hovered, setHovered] = useState<number | null>(null);
 
   // Mobile carousel state
@@ -55,9 +61,17 @@ const FractionsGallerySection = () => {
 
   return (
     <section className="bg-brand-bg">
+      <div className={pinned ? 'lg:relative lg:h-[150vh]' : ''}>
+      <div
+        className={
+          pinned
+            ? 'lg:sticky lg:top-0 lg:h-screen lg:flex lg:flex-col lg:overflow-hidden'
+            : 'lg:h-screen lg:flex lg:flex-col lg:overflow-hidden'
+        }
+      >
 
       {/* Section header */}
-      <div className="px-[1cm] pt-20 pb-10">
+      <div className="px-[1cm] pt-20 pb-10 lg:pt-10">
         <ScrollReveal type="fade-up">
           <p className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-4">Наш ассортимент</p>
           <h2 className="text-4xl lg:text-5xl font-light tracking-tight text-white">4 популярные фракции</h2>
@@ -133,10 +147,11 @@ const FractionsGallerySection = () => {
         </div>
       </div>
 
-      {/* Desktop: clip-path panel gallery */}
+      {/* Desktop: clip-path panel gallery
+          flex-1/min-h-0 — занимает всю высоту, оставшуюся после header. */}
       <div
-        className="hidden lg:flex mx-[1cm] overflow-hidden"
-        style={{ height: '78vh', gap: '4px' }}
+        className="hidden lg:flex lg:flex-1 lg:min-h-0 mx-[1cm] overflow-hidden"
+        style={{ gap: '4px' }}
       >
         {fractions.map((frac, i) => {
           const isHov  = hovered === i;
@@ -234,6 +249,12 @@ const FractionsGallerySection = () => {
             </Link>
           );
         })}
+      </div>
+
+      {/* Нижняя «полоска» — симметрично верхнему отступу */}
+      <div className="hidden lg:block lg:h-10 lg:flex-shrink-0" />
+
+      </div>
       </div>
     </section>
   );

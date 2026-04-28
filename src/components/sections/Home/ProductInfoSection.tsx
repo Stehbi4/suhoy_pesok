@@ -27,13 +27,27 @@ const EXT    = '6.5vh';
 const SKEW   = 'skewX(-9deg)';  // / direction — top shifts right, bottom shifts left
 const UNSKEW = 'skewX(9deg)';   // cancel skew for content inside
 
-const ProductInfoSection = () => {
+interface Props {
+  /** На десктопе секция «зависает» на 50vh скрола (150vh контейнер + sticky h-screen).
+   *  Передай pinned={false}, чтобы был обычный скрол. */
+  pinned?: boolean;
+}
+
+const ProductInfoSection = ({ pinned = true }: Props) => {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
-    <section className="bg-brand-bg" style={{ overflow: 'hidden' }}>
+    <section className="bg-brand-bg overflow-x-clip">
+      <div className={pinned ? 'lg:relative lg:h-[150vh]' : ''}>
+      <div
+        className={
+          pinned
+            ? 'lg:sticky lg:top-0 lg:h-screen lg:flex lg:flex-col lg:overflow-hidden'
+            : 'lg:h-screen lg:flex lg:flex-col lg:overflow-hidden'
+        }
+      >
 
-      <div className="px-[1cm] pt-20 pb-10">
+      <div className="px-[1cm] pt-20 pb-10 lg:pt-10">
         <ScrollReveal type="fade-up">
           <p className="text-[10px] uppercase tracking-[0.35em] text-gray-500 mb-4">Сферы применения</p>
           <h2 className="text-4xl lg:text-5xl font-light tracking-tight text-white">Где применяется наш песок</h2>
@@ -71,9 +85,9 @@ const ProductInfoSection = () => {
 
       {/* Desktop: skewed gallery
           Gallery — extends EXT beyond each edge so corners are covered.
-          Section overflow:hidden clips it flush with the viewport. */}
-      <div className="hidden lg:flex" style={{
-        height: '78vh',
+          Sticky-wrapper overflow:hidden clips it flush with the viewport.
+          flex-1/min-h-0 — занимает всю высоту, оставшуюся после header. */}
+      <div className="hidden lg:flex lg:flex-1 lg:min-h-0" style={{
         gap: '3px',
         marginLeft: `-${EXT}`,
         width: `calc(100% + 2 * ${EXT})`,
@@ -188,7 +202,10 @@ const ProductInfoSection = () => {
         />
       </div>
 
-      <div className="pb-20" />
+      <div className="pb-20 lg:pb-0 lg:h-10 lg:flex-shrink-0" />
+
+      </div>
+      </div>
     </section>
   );
 };

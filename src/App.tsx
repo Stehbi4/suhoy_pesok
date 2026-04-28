@@ -4,11 +4,13 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import HomePage from '@/pages/HomePage';
 import HomeV2 from '@/pages/HomeV2';
+import HeroLabPage from '@/pages/HeroLabPage';
 import CatalogPage from '@/pages/CatalogPage';
 import ComparePage from '@/pages/ComparePage';
 import ProductPage from '@/pages/ProductPage';
 import AboutPage  from '@/pages/AboutPage';
 import DeliveryPage from '@/pages/DeliveryPage';
+import DeliveryV2 from '@/pages/DeliveryV2';
 import ArticlesPage from '@/pages/ArticlesPage';
 import ArticlePage from '@/pages/ArticlePage';
 import ContactsPage from '@/pages/ContactsPage';
@@ -34,13 +36,15 @@ function AppLayout() {
       <div className="flex-grow">
         <ScrollToTop />
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<HeroLabPage />} />
           <Route path="/v2" element={<HomeV2 />} />
+          <Route path="/hero-lab" element={<HomePage />} />
           <Route path="/catalog" element={<CatalogPage />} />
           <Route path="/compare" element={<ComparePage />} />
           <Route path="/product/:slug" element={<ProductPage />} />
           <Route path="/about"   element={<AboutPage />}  />
           <Route path="/delivery" element={<DeliveryPage />} />
+          <Route path="/delivery/v2" element={<DeliveryV2 />} />
           <Route path="/articles" element={<ArticlesPage />} />
           <Route path="/articles/:slug" element={<ArticlePage />} />
           <Route path="/contacts" element={<ContactsPage />} />

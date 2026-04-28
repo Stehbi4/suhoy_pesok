@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Truck, Package, MapPin, Clock, Phone, CheckCircle2 } from 'lucide-react';
+import { Truck, Package, MapPin, Clock, Phone, FileText, ShieldCheck, ScrollText, Stamp } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 const DeliveryPage = () => {
@@ -240,47 +240,51 @@ const DeliveryPage = () => {
         />
       </div>
 
-      {/* ── 07 — Payment ──────────────────────────────────────────────────── */}
+      {/* ── 07 — Документы + CTA ──────────────────────────────────────────── */}
       <section className="py-16 md:py-24 bg-brand-bg relative overflow-hidden">
         <div className="absolute inset-0 orange-glow opacity-20" />
 
         <div className="container-custom relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
-            {/* Payment Methods */}
+            {/* Документы при поставке */}
             <div>
               <div className="flex items-center gap-4 mb-8">
                 <div className="w-12 h-px bg-white" />
                 <span className="text-white text-sm tracking-[0.3em] uppercase font-medium">
-                  Способы оплаты
+                  Документы при поставке
                 </span>
               </div>
 
               <h2 className="text-3xl md:text-4xl font-light text-white mb-8">
-                Удобная оплата
+                Полный пакет на каждую партию
               </h2>
               <div className="space-y-4">
                 {[
-                  { title: 'Безналичный расчёт', desc: 'Для юридических лиц по договору' },
-                  { title: '!Наличный расчёт!?', desc: 'Для физических лиц' },
-                  { title: 'Отсрочка платежа??', desc: 'Для постоянных клиентов' },
-                ].map((item, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-40px' }}
-                    transition={{ duration: 0.45, delay: index * 0.1 }}
-                    className="flex items-start card-dark card-hover p-6 rounded-lg hover:border-brand-red/50"
-                      whileHover={{ y: -8 }}
-                      style={{ border: '1px solid #222', transition: 'border-color 0.3s ease, box-shadow 0.4s ease' }}
-                  >
-                    <CheckCircle2 className="w-6 h-6 text-white flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h3 className="text-lg text-white mb-1">{item.title}</h3>
-                      <p className="text-gray-400">{item.desc}</p>
-                    </div>
-                  </motion.div>
-                ))}
+                  { icon: FileText,    title: 'УПД и ТТН',           desc: 'Универсальный передаточный документ и товарно-транспортная накладная' },
+                  { icon: Stamp,       title: 'Паспорт качества',    desc: 'Результаты входного контроля по каждой партии песка' },
+                  { icon: ScrollText,  title: 'Сертификат соответствия', desc: 'Подтверждение соответствия ГОСТ 8736 и техрегламентам' },
+                  { icon: ShieldCheck, title: 'Гарантия объёма',     desc: 'Контрольное взвешивание на сертифицированных весах' },
+                ].map((item, index) => {
+                  const Icon = item.icon;
+                  return (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: '-40px' }}
+                      transition={{ duration: 0.45, delay: index * 0.1 }}
+                      whileHover={{ y: -6 }}
+                      className="flex items-start gap-4 card-dark p-6 rounded-lg hover:border-brand-red/40"
+                      style={{ border: '1px solid #222', transition: 'border-color 0.3s ease, transform 0.3s ease' }}
+                    >
+                      <Icon className="w-6 h-6 text-brand-red flex-shrink-0 mt-0.5" />
+                      <div>
+                        <h3 className="text-lg text-white mb-1">{item.title}</h3>
+                        <p className="text-gray-400">{item.desc}</p>
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </div>
             </div>
 

@@ -27,7 +27,7 @@ const HomePage = () => {
           3. PRODUCT INFO  —  чёрный фон · большой текст · CTA
           Файл: src/components/sections/Home/ProductInfoSection.tsx
          ═══════════════════════════════════════════════════════════════════════ */}
-      <ProductInfoSection />
+      <ProductInfoSection pinned={false} />
 
       {/* ═══════════════════════════════════════════════════════════════════════
           5. IMAGE BANNER  —  fullscreen · фото карьера · цитата · параллакс
@@ -39,7 +39,7 @@ const HomePage = () => {
           6. ФРАКЦИИ  —  4 панели gallery_4.jpg · hover expand 3/4 · 9deg skew
           Файл: src/components/sections/Home/FractionsGallerySection.tsx
          ═══════════════════════════════════════════════════════════════════════ */}
-      <FractionsGallerySection />
+      <FractionsGallerySection pinned={false} />
 
       {/* ═══════════════════════════════════════════════════════════════════════
           7. ADVANTAGES  —  тёмный фон · 4 карточки · parallax-scroll

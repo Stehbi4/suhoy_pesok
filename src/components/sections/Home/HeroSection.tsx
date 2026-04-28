@@ -333,6 +333,26 @@ const HeroSection = () => {
             </motion.button>
           )}
         </AnimatePresence>
+
+        <AnimatePresence>
+          {showHint && phase === 'idle' && (
+            <motion.div
+              key="lab-link"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { duration: 0.8, delay: 0.2 } }}
+              exit={{ opacity: 0, transition: { duration: 0.3 } }}
+              className="absolute z-10 pointer-events-auto"
+              style={{ bottom: '0.7cm', left: 'calc(50% + 6rem)' }}
+            >
+              <Link
+                to="/hero-lab"
+                className="text-white/50 hover:text-white text-xs tracking-[0.3em] uppercase transition-colors border-b border-white/20 hover:border-white/60 pb-0.5"
+              >
+                Lab →
+              </Link>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
 
       {/* ── Screen 2: quote ──────────────────────────────────────────────── */}
