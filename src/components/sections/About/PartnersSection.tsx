@@ -246,15 +246,16 @@ const PartnersSection = ({ theme = 'light' }: Props) => {
             {/* Стата */}
             <div className="hidden lg:flex gap-10">
               {[
-                { val: partners.length, label: 'клиентов' },
-                { val: '25+',           label: 'лет опыта' },
-              ].map(({ val, label }) => (
+                { val: String(partners.length), redPlus: true,  label: 'клиентов' },
+                { val: '25+',                   redPlus: false, label: 'лет опыта' },
+              ].map(({ val, redPlus, label }) => (
                 <div key={label} className="text-right">
                   <div
                     className={`${palette.stat} font-light leading-none tabular-nums`}
                     style={{ fontSize: 'clamp(2rem, 3vw, 2.5rem)' }}
                   >
                     {val}
+                    {redPlus && <span className="text-brand-red">+</span>}
                   </div>
                   <div className={`${palette.statLbl} text-xs uppercase tracking-[0.35em] mt-1`}>
                     {label}
