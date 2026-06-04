@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, Package, Filter, ArrowLeftRight, Mail } from 'lucide-react';
+import { Check, Package, Filter, ArrowLeftRight, ArrowUpRight } from 'lucide-react';
 import { products, filterOptions } from '@/data/articles';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
@@ -78,14 +78,10 @@ const CatalogPage = () => {
 
             <Link
               to="/compare"
-              className="group inline-flex items-center gap-3 bg-gray-900 text-white pl-5 pr-4 py-3 hover:bg-brand-red transition-all duration-300"
+              className="bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-red transition-all duration-300 inline-flex items-center gap-3"
             >
-              <ArrowLeftRight className="w-4 h-4 transition-transform group-hover:scale-110" />
-              <div className="text-left leading-tight">
-                <div className="text-[10px] uppercase tracking-[0.2em] text-white/60">Матрица · 02</div>
-                <div className="text-sm uppercase tracking-widest font-medium">Сравнить фракции</div>
-              </div>
-              <span className="w-6 h-6 flex items-center justify-center border border-white/20 rounded-full text-xs group-hover:border-white group-hover:translate-x-1 transition-all">→</span>
+              <ArrowLeftRight className="w-4 h-4" />
+              <span>Сравнить фракции</span>
             </Link>
           </div>
         </div>
@@ -120,7 +116,7 @@ const CatalogPage = () => {
                   {hasActiveFilters && (
                     <button
                       onClick={clearFilters}
-                      className="text-sm text-brand-red hover:text-[#1d4ed8] transition-colors"
+                      className="text-sm text-brand-red hover:text-brand-red/70 transition-colors"
                     >
                       Сбросить
                     </button>
@@ -230,11 +226,10 @@ const CatalogPage = () => {
                 </p>
                 <Link
                   to="/contacts"
-                  className="group inline-flex items-center gap-3 bg-white text-gray-900 px-4 py-2.5 hover:bg-white/90 transition-all"
+                  className="inline-flex items-center gap-3 bg-white text-gray-900 px-6 py-3 rounded-lg font-semibold hover:bg-white/90 transition-all duration-300"
                 >
-                  <Mail className="w-4 h-4" />
-                  <span className="text-sm uppercase tracking-widest font-medium">Связаться</span>
-                  <span className="w-5 h-5 flex items-center justify-center border border-gray-900/20 rounded-full text-xs group-hover:translate-x-1 transition-transform">→</span>
+                  <span>Связаться</span>
+                  <ArrowUpRight className="w-4 h-4" />
                 </Link>
               </div>
             </div>
@@ -315,7 +310,7 @@ const CatalogPage = () => {
                   </p>
                   <button
                     onClick={clearFilters}
-                    className="bg-brand-red text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#1d4ed8] transition-colors"
+                    className="bg-brand-red text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-red-light transition-colors"
                   >
                     Сбросить фильтры
                   </button>

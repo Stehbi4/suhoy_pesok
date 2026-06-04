@@ -1,48 +1,193 @@
 import { useParams, Link, Navigate } from 'react-router-dom';
-import { ArrowUpRight, ArrowLeft } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowUpRight, ArrowLeft, ArrowDown } from 'lucide-react';
 import { getArticleBySlug, products } from '@/data/articles';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import { RED, BG_PAGE, BG_ALT, TEXT_DARK } from '@/styles/theme';
 
-// ── Inline markdown → dark-on-light HTML ─────────────────────────────────────
-// Шрифты через clamp() — растут вместе с шириной экрана (2–2.5× от базы)
-let _hIdx = 0;
+// ── Markdown → HTML (секционный парсер) ──────────────────────────────────────
 function renderContent(raw: string): string {
-  _hIdx = 0;
-  return raw
-    // ### раньше ##, иначе ## съедает первые два символа ### → артефакт "#"
-    .replace(/### (.*)/g,
-      `<h3 class="font-medium mt-8 mb-3" style="color:${TEXT_DARK};font-size:clamp(1.15rem,2vw,1.65rem)">$1</h3>`)
-    // используем (_match, heading) вместо $1 — $1 в строке из функции не backreference
-    .replace(/## (.*)/g, (_match, heading: string) => {
-      _hIdx++;
-      return `<div class="flex items-baseline gap-5 mt-14 mb-5 pb-4 border-b border-[#d0cfc9]">
-        <span class="font-mono text-[10px] tracking-[0.3em] text-gray-400 shrink-0">${String(_hIdx).padStart(2,'0')}</span>
-        <h2 class="font-light leading-tight" style="color:${TEXT_DARK};font-size:clamp(1.5rem,2.8vw,2.4rem)">${heading}</h2>
+  const lines = raw.split('\n');
+  let html = '';
+  let i = 0;
+
+  // Responsive CSS — инжектируется один раз в начале
+  html += `<style>
+    .ac-row{display:grid;grid-template-columns:1fr 1fr;gap:0 4rem;padding:3.5rem 0;border-top:1px solid rgba(26,26,27,0.09);align-items:start}
+    .ac-defrow{display:grid;grid-template-columns:1fr 1fr;gap:0 4rem;padding:2rem 0;border-top:1px solid rgba(26,26,27,0.08);align-items:start}
+    .ac-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:0.45rem}
+    .ac-tile{aspect-ratio:4/3;background:#2a2a2a;padding:1.4rem 1.25rem;display:flex;align-items:flex-start;font-size:clamp(1rem,1.5vw,1.3rem);color:#ffffff;font-weight:700;line-height:1.25;letter-spacing:-0.025em}
+    .ac-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:rgba(26,26,27,0.1)}
+    .ac-card{background:${BG_ALT};padding:1.75rem 1.5rem;display:flex;flex-direction:column}
+    .ac-card-dot{width:7px;height:7px;background:${RED};margin-bottom:1.1rem;flex-shrink:0}
+    .ac-card-title{font-size:clamp(0.68rem,0.9vw,0.78rem);font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:${TEXT_DARK};margin:0 0 0.75rem;line-height:1.35}
+    .ac-card-desc{font-size:clamp(0.88rem,1.2vw,1rem);font-weight:300;line-height:1.7;color:rgba(26,26,27,0.58);margin:0}
+    @media(max-width:640px){
+      .ac-row,.ac-defrow{grid-template-columns:1fr;gap:0.75rem}
+      .ac-tiles{grid-template-columns:repeat(2,1fr);gap:0.35rem}
+      .ac-tile{aspect-ratio:1;padding:1rem}
+      .ac-cards{grid-template-columns:1fr}
+    }
+  </style>`;
+
+  while (i < lines.length) {
+    const line = lines[i].trim();
+
+    if (!line) { i++; continue; }
+
+    // ## H2 — пропускаем (текст уже показан в pull-quote выше)
+    if (line.startsWith('## ')) { i++; continue; }
+
+    // ### H3 — собираем весь блок до следующего заголовка
+    if (line.startsWith('### ')) {
+      const label = line.slice(4);
+      i++;
+
+      const sectionLines: string[] = [];
+      while (i < lines.length && !lines[i].trim().startsWith('##')) {
+        sectionLines.push(lines[i]);
+        i++;
+      }
+
+      const nonEmpty = sectionLines.map(l => l.trim()).filter(Boolean);
+      const hasList = nonEmpty.some(l => l.startsWith('- '));
+      const hasBold = nonEmpty.some(l => /^\*\*(.+)\*\*$/.test(l));
+
+      const labelEl = `<p style="font-family:monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:${TEXT_DARK};opacity:0.42;margin:0;padding-top:0.15rem">${label}</p>`;
+
+      if (hasList) {
+        const listItems: string[] = [];
+        const preLines: string[] = [];
+        for (const l of nonEmpty) {
+          if (l.startsWith('- ')) listItems.push(l.slice(2));
+          else if (listItems.length === 0) preLines.push(l);
+        }
+        const prePara = preLines.join(' ');
+
+        // «Области применения» — типографский список как «Преимущества»; иначе — плитки
+        const useTypoList = label === 'Области применения';
+
+        if (prePara && !useTypoList) {
+          // Есть вводный текст → левая: лейбл + крупный текст, правая: тёмные плитки
+          html += `<div class="ac-row">
+            <div>
+              ${labelEl}
+              <p style="color:${TEXT_DARK};font-size:clamp(1.4rem,2.4vw,2.1rem);font-weight:600;line-height:1.25;letter-spacing:-0.02em;margin:1.25rem 0 0">${prePara}</p>
+            </div>
+            <div class="ac-tiles">
+              ${listItems.map(item => `<div class="ac-tile">${item}</div>`).join('')}
+            </div>
+          </div>`;
+        } else {
+          // «Области применения» → заголовок слева, плитки справа
+          html += `<div class="ac-row" style="align-items:start">
+            <div>
+              <p style="color:${TEXT_DARK};font-size:clamp(1.6rem,3vw,3rem);font-weight:600;line-height:1.0;letter-spacing:-0.03em;margin:0">${label}</p>
+            </div>
+            <div class="ac-tiles">
+              ${listItems.map(item => `<div class="ac-tile">${item}</div>`).join('')}
+            </div>
+          </div>`;
+        }
+
+      } else if (hasBold) {
+        // H3 слева крупным заголовком, справа — сетка карточек с акцентом
+        const defItems: string[] = [];
+        let j = 0;
+        while (j < nonEmpty.length) {
+          const sl = nonEmpty[j];
+          const bm = sl.match(/^\*\*(.+)\*\*$/);
+          if (bm) {
+            const title = bm[1];
+            j++;
+            const descParts: string[] = [];
+            while (j < nonEmpty.length && !/^\*\*/.test(nonEmpty[j]) && !nonEmpty[j].startsWith('#')) {
+              descParts.push(nonEmpty[j]);
+              j++;
+            }
+            const desc = descParts.join(' ');
+            defItems.push(`<div style="padding:1.6rem 0;border-top:1px solid rgba(26,26,27,0.09)">
+              <p style="color:${TEXT_DARK};font-size:clamp(1.2rem,1.9vw,1.6rem);font-weight:600;line-height:1.2;margin:0 0 0.65rem;letter-spacing:-0.02em">${title}</p>
+              ${desc ? `<p style="color:rgba(26,26,27,0.52);font-size:clamp(1rem,1.5vw,1.25rem);font-weight:300;line-height:1.75;margin:0">${desc}</p>` : ''}
+            </div>`);
+          } else { j++; }
+        }
+        html += `<div class="ac-row" style="align-items:start">
+          <div>
+            <p style="color:${TEXT_DARK};font-size:clamp(1.6rem,3vw,3rem);font-weight:600;line-height:1.0;letter-spacing:-0.03em;margin:0">${label}</p>
+          </div>
+          <div style="border-top:1px solid rgba(26,26,27,0.09)">
+            ${defItems.join('')}
+          </div>
+        </div>`;
+
+      } else {
+        // H3 слева, параграф справа
+        const paraText = nonEmpty
+          .filter(l => !l.startsWith('#') && !l.startsWith('-'))
+          .join(' ')
+          .replace(/\*\*(.*?)\*\*/g, `<strong style="color:${TEXT_DARK};font-weight:500">$1</strong>`);
+        html += `<div class="ac-row">
+          ${labelEl}
+          <p style="color:rgba(26,26,27,0.62);font-size:clamp(1rem,1.55vw,1.2rem);font-weight:300;line-height:1.85;margin:0">${paraText}</p>
+        </div>`;
+      }
+      continue;
+    }
+
+    // Standalone bold+description (вне H3)
+    const boldMatch = line.match(/^\*\*(.+)\*\*$/);
+    if (boldMatch) {
+      const title = boldMatch[1];
+      i++;
+      const descLines: string[] = [];
+      while (i < lines.length) {
+        const next = lines[i].trim();
+        if (!next || next.startsWith('**') || next.startsWith('#')) break;
+        descLines.push(next);
+        i++;
+      }
+      const desc = descLines.join(' ');
+      html += `<div class="ac-defrow">
+        <p style="color:${TEXT_DARK};font-size:clamp(1.05rem,1.6vw,1.35rem);font-weight:500;line-height:1.3;margin:0;letter-spacing:-0.01em">${title}</p>
+        ${desc ? `<p style="color:rgba(26,26,27,0.52);font-size:clamp(1rem,1.5vw,1.2rem);font-weight:300;line-height:1.8;margin:0">${desc}</p>` : ''}
       </div>`;
-    })
-    .replace(/\*\*(.*?)\*\*/g,
-      `<strong class="font-medium" style="color:${TEXT_DARK}">$1</strong>`)
-    .replace(/- (.*)/g,
-      `<li class="flex items-start gap-3 mb-0.5 list-none text-gray-600">
-        <span class="mt-[7px] w-1.5 h-1.5 rounded-full shrink-0" style="background:${RED}"></span>
-        <span>$1</span>
-      </li>`
-    );
+      continue;
+    }
+
+    // Обычный абзац
+    const para = lines[i].replace(/\*\*(.*?)\*\*/g,
+      `<strong style="color:${TEXT_DARK};font-weight:500">$1</strong>`);
+    html += `<p style="color:rgba(26,26,27,0.62);font-size:clamp(1rem,1.55vw,1.2rem);line-height:1.9;font-weight:300;margin:0 0 1em">${para}</p>`;
+    i++;
+  }
+
+  return html;
 }
+
+// ── Shared section label (matches ProductInfoSection pattern) ─────────────────
+const SLabel = ({ n, text }: { n: string; text: string }) => (
+  <div className="flex items-center gap-4 mb-10 md:mb-14">
+    <span className="h-px w-10 shrink-0" style={{ background: TEXT_DARK, opacity: 0.25 }} />
+    <span
+      className="font-mono text-[10px] uppercase tracking-[0.45em]"
+      style={{ color: TEXT_DARK, opacity: 0.45 }}
+    >
+      {n} · {text}
+    </span>
+  </div>
+);
 
 // ─────────────────────────────────────────────────────────────────────────────
 const ArticlePage = () => {
   const { slug } = useParams<{ slug: string }>();
   const article = slug ? getArticleBySlug(slug) : null;
-
   if (!article) return <Navigate to="/404" replace />;
 
   const relatedProducts = products.filter(p =>
     article.relatedProducts?.some(rp => p.id.includes(rp) || p.fraction.includes(rp))
   );
 
-  // Split shortDescription: first word(s) until second space for red accent
   const descWords = article.shortDescription.split(' ');
   const accentWord = descWords.slice(0, 2).join(' ');
   const descRest   = descWords.slice(2).join(' ');
@@ -50,223 +195,446 @@ const ArticlePage = () => {
   return (
     <main style={{ background: BG_PAGE }}>
 
-      {/* ═══════════════════════════════════════════════════════════════════════
-          1. HERO — фото фон + текст поверх с градиентом
-         ═══════════════════════════════════════════════════════════════════════ */}
-      <section className="relative h-screen flex flex-col justify-between pt-24 md:pt-28 pb-10 px-6 sm:px-10 lg:px-[1cm] overflow-hidden">
-
-        {/* Фоновое изображение */}
+      {/* ══════════════════════════════════════════════════════════════════════
+          HERO — фото + только заголовок (мелкий текст убран)
+         ══════════════════════════════════════════════════════════════════════ */}
+      <section className="relative h-screen overflow-hidden bg-black">
         <img
           src={article.image}
           alt={article.title}
           className="absolute inset-0 w-full h-full object-cover"
         />
 
-        {/* Градиент: тёмный снизу (под заголовком) → прозрачный сверху */}
+        {/* Локальное затемнение под заголовком — без резкого градиента */}
         <div
+          aria-hidden
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.55) 45%, rgba(0,0,0,0.25) 100%)',
+            background:
+              'radial-gradient(ellipse 90% 70% at 10% 92%, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.3) 50%, transparent 80%)',
           }}
         />
+        {/* Тонкая виньетка сверху — хедер читается */}
+        <div
+          aria-hidden
+          className="absolute top-0 left-0 right-0 h-36 pointer-events-none"
+          style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.35), transparent)' }}
+        />
 
-        {/* Top row: breadcrumb + метка */}
-        <div className="relative z-10 flex items-center justify-between">
-          
-
-          <ScrollReveal type="fade-up" delay={0.05}>
-            <span className="font-mono text-[10px] tracking-[0.4em] uppercase text-white/40 hidden sm:block">
-               
-            </span>
-          </ScrollReveal>
-        </div>
-
-        {/* Bottom: теги + гигантский заголовок + линия */}
-        <div className="relative z-10 flex flex-col gap-6">
-          <ScrollReveal type="fade-up" delay={0.05}>
-            <p className="font-mono text-[10px] tracking-[0.5em] uppercase" style={{ color: RED }}>
-              {article.tags.join(' · ')}
-            </p>
-          </ScrollReveal>
-
-          <ScrollReveal type="fade-up" delay={0.1}>
-            <h1
-              className="font-light leading-[1.05] max-w-5xl text-white"
-              style={{ fontSize: 'clamp(2.4rem, 6vw, 5.5rem)' }}
+        <div className="relative z-10 h-full px-6 sm:px-10 lg:px-[1cm] pt-[1cm] pb-[1cm] flex flex-col">
+          {/* Заголовок — у нижнего левого края */}
+          <div className="mt-auto">
+            <motion.h1
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.05, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="text-white leading-[1.0] max-w-5xl"
+              style={{
+                fontWeight: 200,
+                fontSize: 'clamp(2.4rem, 6vw, 5.5rem)',
+                letterSpacing: '-0.02em',
+              }}
             >
               {article.title}
-            </h1>
-          </ScrollReveal>
+            </motion.h1>
 
-          <ScrollReveal type="fade-up" delay={0.15}>
-            <div className="flex items-center justify-between pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.15)' }}>
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-px" style={{ background: RED }} />
-                <span className="font-mono text-[10px] tracking-widest uppercase text-white/40">
-                  Читать далее
-                </span>
-              </div>
-              <div
-                className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center"
-              >
-                <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-                  <path d="M7 2v10M3 8l4 4 4-4" stroke="white" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-            </div>
-          </ScrollReveal>
+            <motion.div
+              initial={{ scaleX: 0, originX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ delay: 0.7, duration: 0.8, ease: 'easeOut' }}
+              className="mt-8 h-px w-28"
+              style={{ background: 'rgba(255,255,255,0.22)' }}
+            />
+          </div>
+
+          {/* Scroll indicator — правый нижний угол */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.1, duration: 0.7 }}
+            className="absolute bottom-[1cm] right-[1cm] flex items-center gap-3"
+            style={{ color: 'rgba(255,255,255,0.45)' }}
+          >
+            <span className="font-mono text-[10px] uppercase tracking-[0.4em] font-light">
+              Прокрутить
+            </span>
+            <motion.div
+              animate={{ y: [0, 6, 0] }}
+              transition={{ repeat: Infinity, duration: 2.0, ease: 'easeInOut' }}
+            >
+              <ArrowDown className="w-4 h-4" strokeWidth={1.25} />
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════════════════
-          2. PULL QUOTE — короткое описание большим текстом
-         ═══════════════════════════════════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════════════════════════════════════
+          01 — INTRO / PULL QUOTE
+         ══════════════════════════════════════════════════════════════════════ */}
       <section
-        className="py-16 md:py-24 px-6 sm:px-10 lg:px-[1cm]"
-        style={{ background: BG_ALT, borderBottom: `1px solid #d0cfc9` }}
+        className="px-6 sm:px-10 lg:px-[1cm] pt-20 md:pt-28 pb-20 md:pb-28"
+        style={{ background: BG_PAGE, borderBottom: '1px solid rgba(26,26,27,0.1)' }}
       >
         <ScrollReveal type="fade-up">
-          <p
-            className="font-light leading-[1.35] max-w-4xl"
-            style={{ fontSize: 'clamp(1.45rem, 2.8vw, 2.5rem)', color: TEXT_DARK }}
-          >
-            <span style={{ color: RED }}>{accentWord} </span>
-            {descRest}
-          </p>
+          <SLabel n="01" text="О применении" />
+        </ScrollReveal>
+
+        <ScrollReveal type="fade-up" delay={0.05}>
+          <div className="flex gap-6 lg:gap-10 max-w-5xl">
+            <div
+              className="w-[3px] shrink-0 self-stretch rounded-full"
+              style={{ background: RED }}
+            />
+            <p
+              className="font-light leading-[1.3]"
+              style={{
+                fontSize: 'clamp(1.4rem, 2.6vw, 2.4rem)',
+                color: TEXT_DARK,
+                letterSpacing: '-0.015em',
+              }}
+            >
+              <span style={{ color: RED }}>{accentWord} </span>
+              {descRest}
+            </p>
+          </div>
         </ScrollReveal>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════════════════
-          3. КОНТЕНТ + САЙДБАР
-         ═══════════════════════════════════════════════════════════════════════ */}
-      <section className="px-6 sm:px-10 lg:px-[1cm] py-16 md:py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_440px] gap-12 lg:gap-20">
-
-          {/* ── Основной текст ─────────────────────────────────────────────── */}
-          <div>
-            <ScrollReveal type="fade-up">
-              <div
-                className="text-gray-600 whitespace-pre-line"
-                style={{ fontSize: 'clamp(1rem, 1.8vw, 1.5rem)', lineHeight: 1.8 }}
-                dangerouslySetInnerHTML={{ __html: renderContent(article.content) }}
-              />
-            </ScrollReveal>
-
-            {/* Назад */}
-            <ScrollReveal type="fade-up" delay={0.05}>
-              <div className="mt-16 pt-8" style={{ borderTop: `1px solid #d0cfc9` }}>
-                <Link
-                  to="/articles"
-                  className="inline-flex items-center gap-2.5 text-sm text-gray-500 hover:text-gray-900 transition-colors"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  <span>Все статьи</span>
-                </Link>
-              </div>
-            </ScrollReveal>
-          </div>
-
-          {/* ── Сайдбар ────────────────────────────────────────────────────── */}
-          <aside className="flex flex-col gap-8 lg:sticky lg:top-[1cm] lg:self-start">
-
-            {/* Фракции */}
-            {relatedProducts.length > 0 && (
-              <ScrollReveal type="fade-up" delay={0.1}>
-                <div style={{ borderTop: `2px solid ${RED}` }} className="pt-5">
-                  <p className="font-mono text-xs tracking-[0.3em] uppercase text-gray-400 mb-5">
-                    Подходящие фракции
-                  </p>
-                  <div className="flex flex-col gap-2">
-                    {relatedProducts.map((product) => (
-                      <Link
-                        key={product.id}
-                        to={`/product/${product.slug}`}
-                        className="group flex items-center justify-between py-3 px-0"
-                        style={{ borderBottom: `1px solid #d0cfc9` }}
-                      >
-                        <span
-                          className="text-base font-light group-hover:text-black transition-colors"
-                          style={{ color: TEXT_DARK }}
-                        >
-                          {product.shortName}
-                        </span>
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs text-gray-400">
-                            {product.gost}
-                          </span>
-                          <ArrowUpRight
-                            className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"
-                            style={{ color: RED }}
-                          />
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </ScrollReveal>
-            )}
-
-            {/* Навигация */}
-            <ScrollReveal type="fade-up" delay={0.15}>
-              <div style={{ borderTop: `1px solid #d0cfc9` }} className="pt-5">
-                <p className="font-mono text-xs tracking-[0.3em] uppercase text-gray-400 mb-5">
-                  Разделы
-                </p>
-                <div className="flex flex-col gap-1">
-                  {[
-                    { to: '/catalog',  label: 'Каталог продукции' },
-                    { to: '/delivery', label: 'Доставка и оплата'  },
-                    { to: '/about',    label: 'О компании'         },
-                    { to: '/contacts', label: 'Контакты'           },
-                  ].map(({ to, label }) => (
-                    <Link
-                      key={to}
-                      to={to}
-                      className="group flex items-center justify-between py-3 text-base text-gray-500 hover:text-gray-900 transition-colors"
-                    >
-                      <span>{label}</span>
-                      <ArrowUpRight
-                        className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"
-                        style={{ color: RED }}
-                      />
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </ScrollReveal>
-          </aside>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════════════════
-          4. CTA — тёмный контраст на фоне светлой страницы
-         ═══════════════════════════════════════════════════════════════════════ */}
-      <section className="bg-black">
-        <div className="px-6 sm:px-10 lg:px-[1cm] py-14 lg:py-20 flex flex-col items-start gap-6">
+      {/* ══════════════════════════════════════════════════════════════════════
+          02 — ПОДХОДЯЩИЕ ФРАКЦИИ
+         ══════════════════════════════════════════════════════════════════════ */}
+      {relatedProducts.length > 0 && (
+        <section
+          className="px-6 sm:px-10 lg:px-[1cm] pt-20 md:pt-28 pb-20 md:pb-28"
+          style={{ background: BG_ALT, borderBottom: '1px solid rgba(26,26,27,0.1)' }}
+        >
           <ScrollReveal type="fade-up">
-            <h2
-              className="font-light leading-tight text-gray-400"
-              style={{ fontSize: 'clamp(1.4rem, 3.5vw, 3rem)' }}
-            >
-              Нужен кварцевый песок для{' '}
-              <span style={{ color: RED }}>{article.tags[0]}</span>?
-            </h2>
-          </ScrollReveal>
-          <ScrollReveal type="fade-up" delay={0.08}>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Link
-                to="/contacts"
-                className="btn-primary rounded-lg inline-flex items-center justify-center gap-3"
-              >
-                <span>Связаться с нами</span>
-                <ArrowUpRight className="w-5 h-5" />
-              </Link>
+            <div className="flex items-end justify-between mb-0">
+              <div>
+                <SLabel n="02" text="Подбор материала" />
+                <h2
+                  className="font-light"
+                  style={{
+                    fontSize: 'clamp(1.8rem, 3.5vw, 3rem)',
+                    color: TEXT_DARK,
+                    letterSpacing: '-0.02em',
+                  }}
+                >
+                  Подходящие фракции
+                </h2>
+              </div>
               <Link
                 to="/catalog"
-                className="px-6 py-3 border border-gray-700 text-white rounded-lg font-semibold tracking-wide hover:border-brand-red hover:text-white transition-all duration-300 flex items-center justify-center gap-3"
+                className="hidden lg:inline-flex items-center gap-2 text-sm transition-colors mb-1"
+                style={{ color: 'rgba(26,26,27,0.4)' }}
+                onMouseEnter={e => (e.currentTarget.style.color = TEXT_DARK)}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(26,26,27,0.4)')}
               >
-                <span>Смотреть каталог</span>
+                <span className="font-mono text-[10px] uppercase tracking-[0.25em]">Весь каталог</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
               </Link>
+            </div>
+          </ScrollReveal>
+
+          {/* Таблица-сетка — стиль ProductInfoSection stats */}
+          <div
+            className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+            style={{ borderTop: '1px solid rgba(26,26,27,0.15)' }}
+          >
+            {relatedProducts.map((product, i) => (
+              <ScrollReveal key={product.id} type="fade-up" delay={i * 0.07}>
+                <Link
+                  to={`/product/${product.slug}`}
+                  className="group relative block py-10 overflow-hidden"
+                  style={{
+                    borderBottom: '1px solid rgba(26,26,27,0.15)',
+                    boxShadow: i > 0 ? 'inset 1px 0 0 rgba(26,26,27,0.15)' : 'none',
+                    paddingRight: '1.5rem',
+                    paddingLeft: i > 0 ? '1.75rem' : '0',
+                  }}
+                >
+                  {/* Index — правый верхний угол */}
+                  <span
+                    className="absolute top-5 right-0 font-mono text-[10px] tracking-[0.15em]"
+                    style={{ color: TEXT_DARK, opacity: 0.25 }}
+                  >
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+
+                  {/* Фракция — огромное тонкое число */}
+                  <div className="flex items-baseline gap-2">
+                    <span
+                      className="group-hover:text-brand-red transition-colors leading-none"
+                      style={{
+                        color: TEXT_DARK,
+                        fontWeight: 200,
+                        fontSize: 'clamp(2rem, 4vw, 3.25rem)',
+                        letterSpacing: '-0.03em',
+                      }}
+                    >
+                      {product.fraction.replace(' мм', '')}
+                    </span>
+                    <span
+                      className="font-mono"
+                      style={{ color: TEXT_DARK, opacity: 0.3, fontSize: '0.7rem', letterSpacing: '0.12em' }}
+                    >
+                      мм
+                    </span>
+                  </div>
+
+                  {/* Specs */}
+                  <div className="mt-5 space-y-1.5">
+                    <p className="font-mono text-xs" style={{ color: TEXT_DARK, opacity: 0.38 }}>
+                      {product.gost}
+                    </p>
+                    {product.specifications?.['SiO₂'] && (
+                      <p className="text-xs font-light" style={{ color: TEXT_DARK, opacity: 0.5 }}>
+                        SiO₂ {product.specifications['SiO₂']}
+                      </p>
+                    )}
+                    <p className="text-xs font-light" style={{ color: TEXT_DARK, opacity: 0.5 }}>
+                      {product.packaging.join(' · ')}
+                    </p>
+                  </div>
+
+                  {/* CTA — fill-sweep button как в ProductInfoSection */}
+                  <div className="mt-8">
+                    <span
+                      className="relative inline-flex items-center justify-between overflow-hidden"
+                      style={{
+                        border: `1px solid rgba(26,26,27,0.18)`,
+                        padding: '0.6rem 1rem',
+                        color: TEXT_DARK,
+                      }}
+                    >
+                      <span
+                        className="absolute inset-0 origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100"
+                        style={{ background: RED }}
+                        aria-hidden
+                      />
+                      <span className="relative z-10 font-mono text-[10px] tracking-[0.3em] uppercase transition-colors duration-500 group-hover:text-white">
+                        Перейти
+                      </span>
+                      <ArrowUpRight
+                        className="relative z-10 w-3.5 h-3.5 ml-2.5 transition-all duration-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                        strokeWidth={1.5}
+                      />
+                    </span>
+                  </div>
+
+                  {/* Red bottom sweep */}
+                  <span
+                    className="absolute bottom-0 left-0 h-[2px] w-0 group-hover:w-full transition-all duration-500"
+                    style={{ background: RED }}
+                    aria-hidden
+                  />
+                </Link>
+              </ScrollReveal>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          03 — КОНТЕНТ
+         ══════════════════════════════════════════════════════════════════════ */}
+      <section
+        className="relative overflow-hidden px-6 sm:px-10 lg:px-[1cm] pt-20 md:pt-28 pb-24 md:pb-40"
+        style={{ background: BG_PAGE }}
+      >
+        {/* ── SVG: рябь песка — диагональный веер из нижнего левого угла ──── */}
+        <svg
+          aria-hidden
+          className="absolute inset-0 w-full h-full pointer-events-none select-none"
+          viewBox="0 0 1400 900"
+          preserveAspectRatio="xMidYMid slice"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {Array.from({ length: 26 }, (_, k) => {
+            const t = k / 25;
+            // Фокальная точка за нижним левым краем
+            const fx = -320, fy = 1080;
+            // Угол веера: от 24° (почти горизонт) до 74° (почти вертикаль)
+            const angleDeg = 24 + t * 50;
+            const angle = angleDeg * Math.PI / 180;
+            const cosA = Math.cos(angle);
+            const sinA = Math.sin(angle);
+
+            // Радиусы: старт чуть за краем viewport, конец далеко
+            const r0 = 200 + t * 180;
+            const r1 = 1700 + t * 1100;
+
+            const x0 = fx + r0 * cosA;
+            const y0 = fy - r0 * sinA;   // SVG: y вниз, поэтому минус
+            const x3 = fx + r1 * cosA;
+            const y3 = fy - r1 * sinA;
+
+            // Перпендикулярный вектор для S-изгиба вдоль рёбра
+            const pxv = sinA, pyv = cosA;
+            const wave = (30 + t * 20) * Math.sin(t * Math.PI * 2.2 + 0.6);
+
+            const rc0 = r0 + (r1 - r0) * 0.32;
+            const rc1 = r0 + (r1 - r0) * 0.68;
+
+            const cx0 = (fx + rc0 * cosA) + pxv * wave;
+            const cy0 = (fy - rc0 * sinA) + pyv * wave;
+            const cx1 = (fx + rc1 * cosA) - pxv * wave * 0.75;
+            const cy1 = (fy - rc1 * sinA) - pyv * wave * 0.75;
+
+            // Более плотные линии в центре веера, прозрачнее по краям
+            const opacity = 0.032 + 0.055 * Math.sin(t * Math.PI) + t * 0.018;
+
+            return (
+              <path
+                key={k}
+                d={`M${x0.toFixed(1)},${y0.toFixed(1)} C${cx0.toFixed(1)},${cy0.toFixed(1)} ${cx1.toFixed(1)},${cy1.toFixed(1)} ${x3.toFixed(1)},${y3.toFixed(1)}`}
+                stroke="#1A1A1B"
+                strokeWidth="0.9"
+                fill="none"
+                opacity={+opacity.toFixed(3)}
+              />
+            );
+          })}
+        </svg>
+
+        {/* ── Контент поверх волн ──────────────────────────────────────────── */}
+        <div className="relative z-10">
+
+        <ScrollReveal type="fade-up">
+          <SLabel n="03" text="Подробнее" />
+        </ScrollReveal>
+
+        <ScrollReveal type="fade-up" delay={0.04}>
+          <div
+            dangerouslySetInnerHTML={{ __html: renderContent(article.content) }}
+          />
+        </ScrollReveal>
+
+        {/* ── Нижняя метаполоса ─────────────────────────────────────────── */}
+        <ScrollReveal type="fade-up" delay={0.06}>
+          <div
+            className="mt-20 pt-10 flex flex-col sm:flex-row sm:items-center gap-8 sm:justify-between"
+            style={{ borderTop: '1px solid rgba(26,26,27,0.1)' }}
+          >
+            {/* ← назад */}
+            <Link
+              to="/articles"
+              className="inline-flex items-center gap-3 shrink-0 transition-colors"
+              style={{ color: 'rgba(26,26,27,0.32)' }}
+              onMouseEnter={e => (e.currentTarget.style.color = TEXT_DARK)}
+              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(26,26,27,0.32)')}
+            >
+              <ArrowLeft className="w-4 h-4" strokeWidth={1.5} />
+              <span className="font-mono text-[10px] uppercase tracking-[0.3em]">Все статьи</span>
+            </Link>
+
+            {/* Фракции как типографская строка */}
+            {relatedProducts.length > 0 && (
+              <div className="flex flex-wrap items-baseline gap-x-7 gap-y-2">
+                <span
+                  className="font-mono text-[9px] uppercase tracking-[0.4em] shrink-0"
+                  style={{ color: TEXT_DARK, opacity: 0.22 }}
+                >
+                  Фракции:
+                </span>
+                {relatedProducts.map((p, i) => (
+                  <span key={p.id} className="inline-flex items-baseline gap-2">
+                    <Link
+                      to={`/product/${p.slug}`}
+                      className="group inline-flex items-baseline gap-1 transition-colors"
+                      style={{ color: 'rgba(26,26,27,0.38)' }}
+                      onMouseEnter={e => (e.currentTarget.style.color = RED)}
+                      onMouseLeave={e => (e.currentTarget.style.color = 'rgba(26,26,27,0.38)')}
+                    >
+                      <span style={{ fontWeight: 200, fontSize: 'clamp(1.05rem, 1.5vw, 1.2rem)', letterSpacing: '-0.02em' }}>
+                        {p.fraction}
+                      </span>
+                    </Link>
+                    {i < relatedProducts.length - 1 && (
+                      <span style={{ color: 'rgba(26,26,27,0.14)', fontSize: '0.75rem' }}>·</span>
+                    )}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </ScrollReveal>
+
+        </div>{/* /relative z-10 */}
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          04 — CTA (тёмная, крупная типографика)
+         ══════════════════════════════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden" style={{ background: '#0d0d0d' }}>
+
+        {/* Фоновое слово — призрак тега */}
+        <div
+          aria-hidden
+          className="absolute inset-0 flex items-center justify-end pointer-events-none select-none pr-[1cm]"
+        >
+          <span
+            className="font-light leading-none whitespace-nowrap"
+            style={{
+              fontSize: 'clamp(6rem, 18vw, 18rem)',
+              fontWeight: 200,
+              letterSpacing: '-0.04em',
+              color: 'rgba(255,255,255,0.028)',
+            }}
+          >
+            {article.tags[0]}
+          </span>
+        </div>
+
+        <div className="relative z-10 px-6 sm:px-10 lg:px-[1cm] py-20 lg:py-32">
+
+          {/* Label */}
+          <div className="flex items-center gap-4 mb-14">
+            <span className="h-px w-10 shrink-0" style={{ background: 'rgba(255,255,255,0.15)' }} />
+            <span className="font-mono text-[10px] uppercase tracking-[0.45em]" style={{ color: 'rgba(255,255,255,0.25)' }}>
+              04 · Заявка
+            </span>
+          </div>
+
+          {/* Heading — большая тонкая */}
+          <ScrollReveal type="fade-up">
+            <h2
+              className="leading-[1.0] mb-14"
+              style={{
+                fontWeight: 200,
+                fontSize: 'clamp(2.2rem, 6vw, 5.5rem)',
+                letterSpacing: '-0.03em',
+                color: 'rgba(255,255,255,0.35)',
+                maxWidth: '18ch',
+              }}
+            >
+              Нужен кварцевый<br />
+              песок для{' '}
+              <span style={{ color: 'rgba(255,255,255,0.75)' }}>{article.tags[0]}</span>
+              <span style={{ color: RED }}>?</span>
+            </h2>
+          </ScrollReveal>
+
+          {/* CTA row */}
+          <ScrollReveal type="fade-up" delay={0.06}>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+
+              <Link
+                to="/contacts"
+                className="bg-brand-red text-white px-8 py-3 rounded-lg font-semibold hover:bg-brand-red-light transition-colors inline-flex items-center gap-3"
+              >
+                <span>Связаться с нами</span>
+                <ArrowUpRight className="w-4 h-4" strokeWidth={1.5} />
+              </Link>
+
+              <Link
+                to="/catalog"
+                className="px-8 py-3 border border-gray-700 text-white rounded-lg font-semibold hover:border-brand-red transition-all duration-300 inline-flex items-center gap-3"
+              >
+                <span>Весь каталог</span>
+                <ArrowUpRight className="w-4 h-4" strokeWidth={1.5} />
+              </Link>
+
             </div>
           </ScrollReveal>
         </div>

@@ -9,7 +9,6 @@ import { ProductDataCubeSection }      from '@/components/sections/Product/Produ
 import { ProductDuneSection }          from '@/components/sections/Product/ProductDuneSection';
 import { ProductApplicationsSection }  from '@/components/sections/Product/ProductApplicationsSection';
 import { ProductCalculatorSection }    from '@/components/sections/Product/ProductCalculatorSection';
-import { ProductPackagingSection }     from '@/components/sections/Product/ProductPackagingSection';
 import { ProductCTASection }           from '@/components/sections/Product/ProductCTASection';
 import { ProductLightbox }             from '@/components/sections/Product/ProductLightbox';
 
@@ -76,9 +75,6 @@ const ProductPage = () => {
 
       {/* 06 — Калькулятор */}
       <ProductCalculatorSection />
-
-      {/* 07 — Упаковка и документация */}
-      <ProductPackagingSection product={product} />
 
       {/* 08 — CTA */}
       <ProductCTASection />

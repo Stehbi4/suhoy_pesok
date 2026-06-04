@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { ArrowUpRight, ZoomIn } from 'lucide-react';
 import { BG_PAGE, TEXT_DARK, RED } from '@/styles/theme';
 import ScrollReveal from '@/components/ui/ScrollReveal';
@@ -9,14 +10,6 @@ interface Props {
   setLightboxIdx: (i: number) => void;
 }
 
-/**
- * Editorial info section — вариант B «horizontal plate».
- * Всё вертикально с ритмом:
- *  1) рубрика + описание
- *  2) горизонтальный ряд 3 портретных фото
- *  3) горизонтальный ряд 3 крупных характеристик
- *  4) PDF-ссылка справа
- */
 export const ProductInfoSection = ({ product, galleryImages, setLightboxIdx }: Props) => {
   const img = product.images;
   const sio2Value = product.technicalData?.['Содержание оксида кремния (SiO₂), %, не менее'] || 85;
@@ -48,17 +41,70 @@ export const ProductInfoSection = ({ product, galleryImages, setLightboxIdx }: P
         </ScrollReveal>
 
         <ScrollReveal type="slide-left" delay={0.05}>
-          <p
-            className="leading-[1.3] max-w-5xl mb-24 lg:mb-32"
-            style={{
-              color: TEXT_DARK,
-              fontWeight: 300,
-              fontSize: 'clamp(1.35rem, 2.2vw, 2.25rem)',
-              letterSpacing: '-0.01em',
-            }}
-          >
-            {product.description}
-          </p>
+          <div className="flex flex-col lg:flex-row lg:items-start gap-12 lg:gap-16 mb-24 lg:mb-32">
+
+            {/* Основной текст */}
+            <p
+              className="leading-[1.3] lg:flex-1"
+              style={{
+                color: TEXT_DARK,
+                fontWeight: 300,
+                fontSize: 'clamp(1.35rem, 2.2vw, 2.25rem)',
+                letterSpacing: '-0.01em',
+              }}
+            >
+              {product.description}
+            </p>
+
+            {/* CTA-карточка */}
+            <div
+              className="shrink-0 lg:w-[272px] xl:w-[300px]"
+              style={{ borderTop: `2px solid ${RED}` }}
+            >
+              <div className="pt-6 flex flex-col">
+
+                {/* Метка */}
+                <p
+                  className="font-mono text-[9px] tracking-[0.5em] uppercase mb-7"
+                  style={{ color: TEXT_DARK, opacity: 0.4 }}
+                >
+                  Запрос информации
+                </p>
+
+                {/* Заголовок */}
+                <p
+                  className="font-light leading-[1.15] mb-5"
+                  style={{
+                    color: TEXT_DARK,
+                    fontWeight: 300,
+                    fontSize: 'clamp(1.4rem, 1.6vw, 1.75rem)',
+                    letterSpacing: '-0.01em',
+                  }}
+                >
+                  Получите условия<br />поставки
+                </p>
+
+                {/* Подпись */}
+                <p
+                  className="text-sm leading-relaxed mb-9"
+                  style={{ color: TEXT_DARK, opacity: 0.45, fontWeight: 300, lineHeight: 1.6 }}
+                >
+                  Технические характеристики, объёмы и индивидуальные условия поставки
+                </p>
+
+                {/* Кнопка */}
+                <Link
+                  to="/contacts"
+                  className="btn-primary rounded-lg inline-flex items-center gap-3"
+                >
+                  <span>Связаться с нами</span>
+                  <ArrowUpRight className="w-4 h-4" strokeWidth={1.5} />
+                </Link>
+
+              </div>
+            </div>
+
+          </div>
         </ScrollReveal>
 
         {/* 2. Ряд 3 портретных фото */}
@@ -199,45 +245,6 @@ export const ProductInfoSection = ({ product, galleryImages, setLightboxIdx }: P
                 </div>
               ))}
             </div>
-          </div>
-        </ScrollReveal>
-
-        {/* 4. PDF — справа, text-link */}
-        <ScrollReveal type="fade-up" delay={0.1}>
-          <div className="flex justify-end">
-            <a
-              href={docPath}
-              download
-              className="group inline-flex items-center gap-4"
-              style={{ color: TEXT_DARK }}
-            >
-              <span
-                className="text-[10px] uppercase tracking-[0.45em]"
-                style={{ opacity: 0.45 }}
-              >
-                Полная спецификация
-              </span>
-              <span
-                className="relative text-base tracking-wide"
-                style={{ fontWeight: 400 }}
-              >
-                Скачать PDF
-                <span
-                  aria-hidden
-                  className="absolute left-0 -bottom-1 h-px w-full origin-left scale-x-100 transition-transform duration-500 group-hover:scale-x-0"
-                  style={{ background: 'currentColor', opacity: 0.4 }}
-                />
-                <span
-                  aria-hidden
-                  className="absolute left-0 -bottom-1 h-px w-full origin-right scale-x-0 transition-transform duration-500 delay-[50ms] group-hover:scale-x-100"
-                  style={{ background: RED }}
-                />
-              </span>
-              <ArrowUpRight
-                className="w-4 h-4 transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1"
-                strokeWidth={1.5}
-              />
-            </a>
           </div>
         </ScrollReveal>
       </div>

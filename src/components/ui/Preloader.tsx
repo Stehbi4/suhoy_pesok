@@ -19,13 +19,7 @@ const PRELOAD_IMAGES = [
   '/Logo/logo-dark.png',
 ];
 
-// Videos preloaded via hidden <video> elements added to the DOM
-const PRELOAD_VIDEOS = [
-  '/HeroSent/part%201.mp4',
-  '/HeroSent/part%202.mp4',
-];
-
-const MIN_SHOW_MS = 2400; // minimum visible time so animation completes at least one cycle
+const MIN_SHOW_MS = 2400;
 
 interface Props {
   onDone: () => void;
@@ -59,22 +53,10 @@ const Preloader = ({ onDone }: Props) => {
       img.src = src;
     });
 
-    // Inject hidden video elements so the browser starts buffering them
-    const videoEls = PRELOAD_VIDEOS.map(src => {
-      const v = document.createElement('video');
-      v.src = src;
-      v.preload = 'auto';
-      v.muted = true;
-      v.style.display = 'none';
-      document.body.appendChild(v);
-      return v;
-    });
-
     const minTimer = setTimeout(() => { minDone = true; tryFinish(); }, MIN_SHOW_MS);
 
     return () => {
       clearTimeout(minTimer);
-      videoEls.forEach(v => v.remove());
     };
   }, [finish]);
 

@@ -5,7 +5,6 @@ import {
   FileText, ShieldCheck, ScrollText, Stamp,
 } from 'lucide-react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
-import ScrollReveal from '@/components/ui/ScrollReveal';
 
 /* ── Данные «Тарифной шкалы» / «Парка» / «Маршрута» — из v2 ─────────── */
 const tariffSteps = [
@@ -17,7 +16,6 @@ const tariffSteps = [
 ];
 
 const fleet = [
-  { type: 'Самосвал',      payload: '20 т', use: 'Навалом, карьер → объект' },
   { type: 'Цементовоз',    payload: '25 т', use: 'Сухие смеси под пневмо-разгрузку' },
   { type: 'Тягач + борт',  payload: '20 т', use: 'МКР по 1000 кг, паллеты' },
   { type: 'Малотоннажник', payload: '5 т',  use: 'Городские объекты с ограничением въезда' },
@@ -99,38 +97,18 @@ const DeliveryPage = () => {
           </p>
 
           <h1
-            className="font-light text-white leading-[0.95] mb-10"
-            style={{ fontSize: 'clamp(3rem, 9vw, 9rem)' }}
+            className="text-white"
+            style={{
+              fontSize: 'clamp(3rem, 9vw, 9rem)',
+              fontWeight: 200,
+              letterSpacing: '-0.02em',
+              lineHeight: 1.0,
+            }}
           >
             Доставка
             <br />
-            <span className="font-medium">и оплата</span>
+            и оплата
           </h1>
-
-          {/* Метрики */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-8 mt-8 pt-10 border-t border-white/10 max-w-5xl">
-            {[
-              { value: '60',   unit: 'км',       label: 'базовый радиус'   },
-              { value: '20+',  unit: 'т / рейс', label: 'грузоподъёмность' },
-              { value: '24/7', unit: '',         label: 'диспетчерская'    },
-              { value: '8',    unit: 'регионов', label: 'дилерская сеть'   },
-            ].map((m, i) => (
-              <ScrollReveal key={i} type="fade-up" delay={0.1 + i * 0.08}>
-                <div>
-                  <div
-                    className="font-light text-white leading-none whitespace-nowrap"
-                    style={{ fontSize: 'clamp(2rem, 3.4vw, 3rem)' }}
-                  >
-                    {m.value}
-                    {m.unit && <span className="text-base lg:text-lg text-white/40 ml-2">{m.unit}</span>}
-                  </div>
-                  <span className="text-white/35 text-[10px] tracking-[0.4em] uppercase mt-2 block">
-                    {m.label}
-                  </span>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
         </motion.div>
       </section>
 
@@ -251,7 +229,7 @@ const DeliveryPage = () => {
               className="font-light text-white leading-none tracking-tighter"
               style={{ fontSize: 'clamp(8rem, 15vw, 12rem)' }}
             >
-              4
+              3
             </span>
             <span className="text-white/30 text-xs tracking-[0.5em] uppercase mt-2">
               типа транспорта
@@ -395,8 +373,8 @@ const DeliveryPage = () => {
       <section className="py-24 lg:py-32 bg-brand-graphite relative overflow-hidden border-t border-white/5">
         <div className="container-custom relative z-10">
           <div className="flex items-center gap-4 mb-8">
-            <div className="w-12 h-px bg-white" />
-            <span className="text-white text-sm tracking-[0.3em] uppercase font-medium">
+            <div className="w-10 h-px bg-white/20" />
+            <span className="font-mono text-[10px] uppercase tracking-[0.45em] text-white/40">
               Документы при поставке
             </span>
           </div>
@@ -420,9 +398,8 @@ const DeliveryPage = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-40px' }}
                   transition={{ duration: 0.45, delay: index * 0.1 }}
-                  whileHover={{ y: -6 }}
-                  className="flex items-start gap-4 card-dark p-6 rounded-lg hover:border-brand-red/40"
-                  style={{ border: '1px solid #222', transition: 'border-color 0.3s ease, transform 0.3s ease' }}
+                  className="flex items-start gap-4 card-dark p-6 hover:border-white/20"
+                  style={{ border: '1px solid rgba(255,255,255,0.08)', transition: 'border-color 0.4s ease' }}
                 >
                   <Icon className="w-6 h-6 text-brand-red flex-shrink-0 mt-0.5" />
                   <div>
@@ -487,10 +464,25 @@ const DeliveryPage = () => {
 
               <Link
                 to="/contacts"
-                className="group inline-flex items-center justify-between gap-6 bg-brand-red hover:bg-brand-red-light transition-colors text-white px-8 py-5 lg:min-w-[360px]"
+                className="group relative inline-flex items-center justify-between overflow-hidden lg:min-w-[360px]"
+                style={{
+                  border: '1px solid rgba(255,255,255,0.18)',
+                  padding: '0.9rem 1.25rem',
+                  color: 'rgba(255,255,255,0.7)',
+                }}
               >
-                <span className="font-medium tracking-wide">Оставить заявку</span>
-                <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                <span
+                  className="absolute inset-0 origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100"
+                  style={{ background: '#f80000' }}
+                  aria-hidden
+                />
+                <span className="relative z-10 font-mono text-[10px] tracking-[0.35em] uppercase transition-colors duration-500 group-hover:text-white">
+                  Оставить заявку
+                </span>
+                <ArrowUpRight
+                  className="relative z-10 w-4 h-4 ml-3 transition-all duration-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  strokeWidth={1.5}
+                />
               </Link>
             </div>
           </div>

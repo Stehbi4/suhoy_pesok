@@ -1,10 +1,8 @@
 import { useRef, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowUpRight } from 'lucide-react';
 
 const stats = [
-  { value: '9',      unit: 'фракций',    label: 'Количество фракций' },
-  { value: '10 000', unit: 'тонн / год', label: 'Производственная мощность' },
+  { value: '5',      unit: 'фракций',    label: 'Количество фракций' },
+  { value: '15 000', unit: 'тонн / год', label: 'Производственная мощность' },
   { value: '0–2,5',  unit: 'мм рассев',  label: 'Диапазон фракций' },
   { value: '27+',    unit: 'лет опыта',  label: 'Опыт работы' },
 ];
