@@ -6,3 +6,4 @@ OUTPOOT/
 # Local Claude settings
 .claude/settings.local.json
 .claude/launch.json
+dist/

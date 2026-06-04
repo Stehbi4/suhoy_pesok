@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { articles } from '@/data/articles';
 
 const ArticlesPage = () => {

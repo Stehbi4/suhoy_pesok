@@ -50,7 +50,6 @@ const StatsStripSection = () => {
       const el = sectionRef.current;
       if (!el || triggeredRef.current) return;
       const rect = el.getBoundingClientRect();
-      const vh   = window.innerHeight;
       // trigger when 45% of section has passed top of viewport
       const passed = -rect.top / rect.height;
       if (passed >= 0.45) {

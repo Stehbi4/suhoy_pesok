@@ -1,4 +1,4 @@
-import { ArrowUpRight } from 'lucide-react';
+import { SweepBtn } from '@/components/ui/SweepBtn';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const PositioningSection = () => {
@@ -30,15 +30,7 @@ const PositioningSection = () => {
                 За более подробной информацией о наших материалах, технологиях и проектах —
                 посетите основной сайт компании.
               </p>
-              <a
-                href="https://np-cmid.ru/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-brand-red text-white px-8 py-4 rounded-lg font-semibold tracking-wide hover:bg-brand-red-light transition-colors inline-flex items-center gap-3"
-              >
-                Перейти на наш сайт
-                <ArrowUpRight className="w-5 h-5" />
-              </a>
+              <SweepBtn href="https://np-cmid.ru/" light>Перейти на наш сайт</SweepBtn>
             </ScrollReveal>
           </div>
 

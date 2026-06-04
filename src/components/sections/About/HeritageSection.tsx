@@ -99,7 +99,7 @@ const HeritageSection = () => {
           className="relative z-10 flex h-full will-change-transform"
           style={{ x, width: `${SLIDE_COUNT * 100}vw` }}
         >
-          {historySlides.map((slide, i) => (
+          {historySlides.map((slide) => (
             <div
               key={slide.id}
               className="relative w-screen h-full flex-shrink-0 flex items-center px-6 sm:px-10 lg:px-[1cm]"

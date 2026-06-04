@@ -94,7 +94,7 @@ const ComparePage = () => {
   /* grouped-bar chart data */
   const chartSeries = selectedProducts
     .filter((p) => p.sieveAnalysis)
-    .map((p, i) => ({
+    .map((p) => ({
       id: p.id,
       label: p.shortName || p.fraction,
       color: SEL_COLORS[selected.indexOf(p.id) % SEL_COLORS.length],

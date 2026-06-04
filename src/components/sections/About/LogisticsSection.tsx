@@ -21,12 +21,6 @@ const LogisticsSection = () => {
   const x3 = useTransform(scrollYProgress, [0.25, 1], [-120, 0]);
   const op3 = useTransform(scrollYProgress, [0.25, 0.85], [0, 1]);
 
-  const transforms = [
-    { x: x1, opacity: op1 },
-    { x: x2, opacity: op2 },
-    { x: x3, opacity: op3 },
-  ];
-
   return (
     <section className="min-h-screen bg-brand-graphite flex flex-col overflow-hidden">
 

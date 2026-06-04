@@ -278,14 +278,14 @@ const HeroScrollSection = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-end">
               <Link
                 to="/catalog"
-                className="bg-brand-red text-white px-8 py-3 rounded-lg font-semibold hover:bg-brand-red-light transition-colors flex items-center justify-center gap-3"
+                className="btn-primary inline-flex items-center gap-2.5"
               >
                 <span>В каталог</span>
-                <ArrowUpRight className="w-5 h-5" />
+                <ArrowUpRight className="w-4 h-4" strokeWidth={1.5} />
               </Link>
               <Link
                 to="/contacts"
-                className="px-8 py-3 border border-gray-700 text-white rounded-lg font-semibold hover:border-brand-red transition-all duration-300 flex items-center justify-center gap-3"
+                className="btn-sec"
               >
                 <span>Связаться</span>
               </Link>

@@ -33,7 +33,7 @@ const Header = () => {
 
   const leftGroup  = [
     { path: '/catalog',  label: 'Продукция' },
-    { path: '/articles', label: 'Статьи'    },
+    { path: '/articles', label: 'Применение' },
   ];
   const rightGroup = [
     { path: '/about',    label: 'О Нас'     },

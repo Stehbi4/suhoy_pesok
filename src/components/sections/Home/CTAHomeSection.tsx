@@ -11,14 +11,14 @@ const CTAHomeSection = () => {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           <Link
             to="/catalog"
-            className="btn-primary rounded-lg inline-flex items-center justify-center gap-3"
+            className="btn-primary inline-flex items-center gap-2.5"
           >
             <span>Смотреть каталог</span>
-            <ArrowUpRight className="w-5 h-5" />
+            <ArrowUpRight className="w-4 h-4" strokeWidth={1.5} />
           </Link>
           <Link
             to="/contacts"
-            className="px-6 py-3 border border-gray-700 text-white rounded-lg font-semibold tracking-wide hover:border-brand-red hover:text-white transition-all duration-300 flex items-center justify-center gap-3"
+            className="btn-sec"
           >
             <span>Связаться с нами</span>
           </Link>

@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
-import { ArrowUpRight, ZoomIn } from 'lucide-react';
+import { ZoomIn } from 'lucide-react';
 import { BG_PAGE, TEXT_DARK, RED } from '@/styles/theme';
 import ScrollReveal from '@/components/ui/ScrollReveal';
+import { SweepBtn } from '@/components/ui/SweepBtn';
 import type { Product } from './types';
 
 interface Props {
@@ -11,9 +11,7 @@ interface Props {
 }
 
 export const ProductInfoSection = ({ product, galleryImages, setLightboxIdx }: Props) => {
-  const img = product.images;
   const sio2Value = product.technicalData?.['Содержание оксида кремния (SiO₂), %, не менее'] || 85;
-  const docPath = `/doc_sand/Фракция ${product.fraction}.pdf`;
 
   const photos = galleryImages.map((src, i) => ({ src, idx: i }));
 
@@ -93,13 +91,7 @@ export const ProductInfoSection = ({ product, galleryImages, setLightboxIdx }: P
                 </p>
 
                 {/* Кнопка */}
-                <Link
-                  to="/contacts"
-                  className="btn-primary rounded-lg inline-flex items-center gap-3"
-                >
-                  <span>Связаться с нами</span>
-                  <ArrowUpRight className="w-4 h-4" strokeWidth={1.5} />
-                </Link>
+                <SweepBtn to="/contacts">Связаться с нами</SweepBtn>
 
               </div>
             </div>

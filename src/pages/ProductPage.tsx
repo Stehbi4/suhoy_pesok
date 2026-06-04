@@ -18,10 +18,11 @@ const ProductPage = () => {
 
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
 
+  const isOtsev = !!product && product.fraction.includes('2,5-20');
+
   const galleryImages = useMemo(() => {
     if (!product) return [];
     const base = product.images.gallery[0]?.replace(/gallery_\d+\.jpg$/, '') ?? '';
-    const isOtsev = product.fraction.includes('2,5-20');
     const extras = isOtsev
       ? [`${base}page_1.jpg`, `${base}page_2.jpg`, `${base}page_3.jpg`]
       : [`${base}page_1.jpg`, `${base}page_2.jpg`];
@@ -65,13 +66,13 @@ const ProductPage = () => {
       <ProductInfoSection product={product} galleryImages={galleryImages} setLightboxIdx={setLightboxIdx} />
 
       {/* 03 — Куб данных (характеристики / гранулометрия / химсостав) */}
-      <ProductDataCubeSection product={product} />
-     
-      {/* 04 — Области применения */}
-      <ProductApplicationsSection product={product} galleryImages={galleryImages} />
+      {!isOtsev && <ProductDataCubeSection product={product} />}
 
-       {/* 05 — Дюна */}
-      <ProductDuneSection product={product} />
+      {/* 04 — Области применения */}
+      <ProductApplicationsSection product={product} />
+
+      {/* 05 — Дюна */}
+      {!isOtsev && <ProductDuneSection product={product} />}
 
       {/* 06 — Калькулятор */}
       <ProductCalculatorSection />
